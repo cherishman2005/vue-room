@@ -236,29 +236,30 @@
       </el-col>
     </el-row>
 
-
     <!--
-    <p class="text-unit">接收ReceiveMessage</p>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{ReceiveMessage}}</p>
-    </div>
-    -->
     <p class="text-unit">接收MQ队列消息</p>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{mq_data}}</p>
     </div>
 
+    <p class="text-unit">接收MQ Channel队列消息</p>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{mq_channel_data}}</p>
+    </div>
+    -->
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex';
-  import { APPID, AREA } from '@/global.js';
+  //import { APPID, AREA } from '@/global.js';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
   import { constants } from 'fs';
   //import Hummer from 'hummer-channel';
 
   const UID = getStorage('uid');
+  const AREA = getStorage("area");
+  const APPID = getStorage("appid");
 
   export default {
     name : 'channel-debug',
@@ -267,6 +268,7 @@
         flag: -1,
         hummer: null,
         channel: null,
+        channels: [],
         appid: APPID,
         uid: UID,
         mq_data: [],
@@ -327,8 +329,6 @@
         },
         SendP2ChannelRes: "",
         queryOnlineStatusForUserRes: '',
-        ReceiveMessage: '',
-        ReceiveChannelMessage: '',
       }
     },
     computed: {
@@ -336,12 +336,11 @@
     watch: {
     },
     created() {
-      let uid = getStorage('uid');
-      let token = getStorage("token");
+      const token = getStorage("token");
 
       // 1. 初始化Hummer
       this.hummer = new Hummer.Hummer({ appid: APPID,
-                                  uid: uid,
+                                  uid: UID,
                                   token: token,
                                   area: AREA,
                                   onConnectStatus: this.onConnectStatus,
@@ -447,7 +446,7 @@
           console.log("sendMessageToChannel Res: " + JSON.stringify(res));
           this.SendP2ChannelRes = JSON.stringify(res);
 
-          console.log("消息队列mq_data: " + JSON.stringify(this.mq_data));
+          console.log("消息队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
         }).catch((err) => {
           console.log(err)
         })
@@ -472,18 +471,23 @@
           return;
 
         let channelId = this.JoinChannelReq.channelId;
+        if (this.channels.indexOf(channelId) > -1) {
+          console.log("already in channel: " + channelId);
+          return;
+        }
 
-        let extra = new Map([
-          ["Name", "阿武"],
-        ]);
-
+        let extra = {"Name": "阿武"};
         let params = { channelId, extra };
         console.log("joinChannel Req: " + JSON.stringify(params));
         
         this.channel.joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
           this.JoinChannelRes = JSON.stringify(res);
+          if (res.rescode == 0) {
+            this.channels.push(channelId);
+          }
         }).catch(err => {
+          console.log("joinChannel: err=", e);
         });
       },
       leaveChannel() {
@@ -491,18 +495,27 @@
           return;
 
         let channelId = this.LeaveChannelReq.channelId;
-        
-         let extra = new Map([
-          ["Name", "阿武"],
-        ]);
+        if (this.channels.indexOf(channelId) < 0) {
+          console.log("already not in channel: " + channelId);
+          return;
+        }
 
+        let extra = {"Name": "阿武"};
         let params = { channelId, extra };
         console.log("leaveChannel Req: " + JSON.stringify(params));
 
         this.channel.leaveChannel(params).then(res => {
           console.log("自己离开频道leaveChannel res:", res);
           this.LeaveChannelRes = JSON.stringify(res);
-        }).catch(err => {
+
+          if (res.rescode == 0) {
+            let index = this.channels.indexOf(channelId);
+            if (index > -1) {
+              this.channels.splice(index, 1);
+            }
+          }
+        }).catch(e => {
+          console.log("leaveChannel: err=", e);
         });
       },
       setUserAttributes() {
@@ -511,16 +524,16 @@
 
         let channelId = this.SetUserAttributesReq.channelId;
 
-        let attributes = new Map([
-          ["Name", "awu"],
-          ["Description", "js_sdk测试"],
-          ["Bulletin", "bull"],
-          ["Extention", "ex"]
-        ]);
+        let attributes = {
+          "Name": "awu",
+          "Description": "js_sdk测试",
+          "Bulletin": "bull",
+          "Extention": "ex"
+        };
   
         let key = this.SetUserAttributesReq.key;
         let prop = this.SetUserAttributesReq.prop;
-        attributes.set(key, prop);
+        attributes[key] = prop;
         
         let params = { channelId, attributes };
         this.channel.setUserAttributes(params).then((res) => {

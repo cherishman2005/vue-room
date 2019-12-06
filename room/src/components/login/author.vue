@@ -4,6 +4,34 @@
     <h2 style="text-align:left;">输入UID</h2>
     <el-col :span="24"  style="height: 45px;text-align:left;" >
       <el-form :inline="true" :model="filters" size="small">
+        <el-form-item label="appid">
+          <!--<el-input v-model="appid"></el-input>-->
+          <template>
+            <el-select v-model="appid" placeholder="appid">
+              <el-option
+                v-for="item in appids"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
+
+        <el-form-item label="area">
+          <!--<el-input v-model="area"></el-input>-->
+          <template>
+            <el-select v-model="area" placeholder="area">
+              <el-option
+                v-for="item in areas"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
+
         <el-form-item label="uid">
           <el-input v-model="uid"></el-input>
         </el-form-item>
@@ -26,9 +54,31 @@
     data() {
         return {
           uid: '',
+          appid: 1504984159,
+          area: 'CN',
           token: '',
           reportType: 0,
-        }
+          appids: [{
+              value: 1504984159,
+              label: '1504984159'
+            }, {
+              value: 1350626568,
+              label: '1350626568'
+            }],
+          areas: [{
+              value: 'CN',
+              label: 'CN'
+            }, {
+              value: 'CN-TEST',
+              label: 'shenzhen/test/2'
+            }, {
+              value: 'CN-TEST1',
+              label: 'shenzhen/test/1'
+            }, {
+              value: 'CN-INNER',
+              label: 'inner'
+            }],
+      }
     },
     created() {
     },
@@ -56,7 +106,7 @@
     },
     methods: {
       getUserToken(uid) {
-        const appid = APPID;
+        const appid = this.appid || APPID;
         this.$axios.get(authURL + '/user/token?uid=' + this.uid+'&appid=' + appid)
           .then(res => {
             if (res.status === 200) {
@@ -65,6 +115,8 @@
               if (body.uid && body.token) {
                 setStorage("uid", body.uid.toString());
                 setStorage("token", body.token);
+                setStorage("area", this.area);
+                setStorage("appid", appid);
                 
                 let redirect = getBeforeLoginUrl() || '/';
                 this.$router.push({ path: redirect });

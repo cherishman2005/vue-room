@@ -72,26 +72,6 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{SendP2ChannelRes}}</p>
     </div>
 
-
-    <!--
-    <p class="text-unit">获取GrpSysMaxSeqId</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="channelName">
-            <el-input v-model="GetGrpSysMaxSeqIdReq.channelName"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="getGrpSysMaxSeqId" style="border-radius: 4px">getGrpSysMaxSeqId</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{GetGrpSysMaxSeqIdRes}}</p>
-    </div>
-    -->
-
     <p class="text-unit">加入Channel</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -188,11 +168,13 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { APPID, AREA } from '@/global.js';
+  //import { APPID, AREA } from '@/global.js';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
   import { constants } from 'fs';
 
   const UID = getStorage('uid');
+  const AREA = getStorage("area");
+  const APPID = getStorage("appid");
 
   export default {
     name : 'signal-debug',
@@ -228,12 +210,12 @@
         },
         GetGroupUserListRes: '',
         queryOnlineStatusForUserParams: {
-          uid: '',
+          uid: '54321',
         },
         SendP2PChatParams: {
           option: { reliable: 'no' },
           content: 'js_sdk SendP2PChat',
-          receiver: '123',
+          receiver: '54321',
         },
         SendP2PChatRes: {
         },
@@ -252,12 +234,11 @@
     watch: {
     },
     created() {
-      let uid = getStorage('uid');
       let token = getStorage("token");
 
       // 1. 初始化Hummer
       this.hummer = new Hummer.Hummer({ appid: APPID,
-                                  uid: uid,
+                                  uid: UID,
                                   token: token,
                                   area: AREA,
                                   onConnectStatus: this.onConnectStatus,
@@ -316,7 +297,7 @@
           return;
 
         this.signal.getInstance().then(res => {
-          console.log("getInstance: " + JSON.stringify(res));
+          console.log("getInstance: ", res);
           this.GetInstanceRes = res;
         }).catch(err => {
           console.log(err);
@@ -358,7 +339,7 @@
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
           option: { reliable: reliable }
         }).then(res => {
-          console.log("sendMessageToChannel Res: " + JSON.stringify(res));
+          console.log("sendMessageToChannel Res: ", res);
           this.SendP2ChannelRes = JSON.stringify(res);
 
           console.log("消息队列mq_data: " + JSON.stringify(this.mq_data));
@@ -366,33 +347,15 @@
           console.log(err)
         })
       },
-      getGrpSysMaxSeqId() {
-        if (!this.signal)
-          return;
-
-        let channelName = this.GetGrpSysMaxSeqIdReq.channelName;
-  
-        let params = { channelName };
-        console.log("getGrpSysMaxSeqId Req: " + JSON.stringify(params));
-        
-        this.signal.getGrpSysMaxSeqId(channelName).then(res => {
-          console.log("getGrpSysMaxSeqId res:", res);
-          this.GetGrpSysMaxSeqIdRes = JSON.stringify(res);
-        }).catch(err => {
-        });
-      },
       joinChannel() {
         if (!this.signal)
           return;
 
         let channelName = this.JoinChannelReq.channelName;
 
-        let extra = new Map([
-          ["Name", "阿武"],
-        ]);
-
+        let extra ={ "Name": "阿武" };
         let params = {channelName, extra};
-        console.log("joinChannel Req: " + JSON.stringify(params));
+        console.log("joinChannel Req: ", params);
         
         this.signal.joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
@@ -406,10 +369,7 @@
 
         let channelName = this.LeaveChannelReq.channelName;
         
-         let extra = new Map([
-          ["Name", "阿武"],
-        ]);
-
+        let extra ={ "Name": "阿武" };
         let params = {channelName, extra};
         console.log("leaveChannel Req: " + JSON.stringify(params));
 
