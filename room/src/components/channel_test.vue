@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <h2 style="text-align:left;">ChannelService调测系统（调用channel js_sdk，提供调测接口）</h2>
 
-    <!-- 初始化im -->
+    <!-- 初始化channel -->
     <el-row type="flex">
       <el-col :span="24"  style="height:30px;text-align:left;" >
         <el-form :inline="true"  size="small">
@@ -30,13 +30,23 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="reliable">
-            <el-input v-model="SendP2PChatParams.option.reliable"></el-input>
+            <!--<el-input v-model="SendP2PChatReq.option.reliable"></el-input>-->
+            <template>
+              <el-select v-model="SendP2PChatReq.option.reliable" placeholder="reliable">
+                <el-option
+                  v-for="item in reliable"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
           </el-form-item>
           <el-form-item label="content">
-            <el-input v-model="SendP2PChatParams.content"></el-input>
+            <el-input v-model="SendP2PChatReq.content"></el-input>
           </el-form-item>
           <el-form-item label="receiver">
-            <el-input v-model="SendP2PChatParams.receiver"></el-input>
+            <el-input v-model="SendP2PChatReq.receiver"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="sendMessageToUser" style="border-radius: 4px">sendMessageToUser</el-button>
@@ -53,13 +63,23 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="reliable">
-            <el-input v-model="SendP2ChannelParams.option.reliable"></el-input>
+            <!--<el-input v-model="SendP2ChannelReq.option.reliable"></el-input>-->
+            <template>
+              <el-select v-model="SendP2ChannelReq.option.reliable" placeholder="reliable">
+                <el-option
+                  v-for="item in reliable"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
           </el-form-item>
           <el-form-item label="content">
-            <el-input v-model="SendP2ChannelParams.content"></el-input>
+            <el-input v-model="SendP2ChannelReq.content"></el-input>
           </el-form-item>
           <el-form-item label="channelId">
-            <el-input v-model="SendP2ChannelParams.channelId"></el-input>
+            <el-input v-model="SendP2ChannelReq.channelId"></el-input>
           </el-form-item>
 
           <el-form-item class="search">
@@ -71,25 +91,6 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{SendP2ChannelRes}}</p>
     </div>
-
-    <!--
-    <p class="text-unit">获取GrpSysMaxSeqId</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="channelId">
-            <el-input v-model="GetGrpSysMaxSeqIdReq.channelId"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="getGrpSysMaxSeqId" style="border-radius: 4px">getGrpSysMaxSeqId</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{GetGrpSysMaxSeqIdRes}}</p>
-    </div>
-    -->
 
     <p class="text-unit">加入Channel</p>
     <el-row type="flex" class="row-bg">
@@ -268,11 +269,17 @@
         flag: -1,
         hummer: null,
         channel: null,
-        channels: [],
         appid: APPID,
         uid: UID,
         mq_data: [],
         mq_channel_data: [],
+        reliable: [{
+            value: 'yes',
+            label: 'yes'
+          }, {
+            value: 'no',
+            label: 'no'
+          }],
         GetInstanceRes: {
         },
         GetMaxSeqIdRes: {
@@ -316,13 +323,13 @@
         queryOnlineStatusForUserParams: {
           uid: '54321',
         },
-        SendP2PChatParams: {
+        SendP2PChatReq: {
           option: { reliable: 'no' },
           content: 'js_sdk SendP2PChat',
           receiver: '54321',
         },
         SendP2PChatRes: "",
-        SendP2ChannelParams: {
+        SendP2ChannelReq: {
           option: { reliable: 'no' },
           content: 'js_sdk SendP2Channel',
           channelId: 'test_channel1',
@@ -411,9 +418,9 @@
         if (!this.channel)
           return;
 
-        let reliable = this.SendP2PChatParams.option.reliable;
-        let content = this.SendP2PChatParams.content;
-        let receiver = this.SendP2PChatParams.receiver;
+        let reliable = this.SendP2PChatReq.option.reliable;
+        let content = this.SendP2PChatReq.content;
+        let receiver = this.SendP2PChatReq.receiver;
 
         this.channel.sendMessageToUser({
           receiver: receiver, 
@@ -433,9 +440,9 @@
         if (!this.channel)
           return;
 
-        let reliable = this.SendP2ChannelParams.option.reliable;
-        let content = this.SendP2ChannelParams.content;
-        let channelId = this.SendP2ChannelParams.channelId;
+        let reliable = this.SendP2ChannelReq.option.reliable;
+        let content = this.SendP2ChannelReq.content;
+        let channelId = this.SendP2ChannelReq.channelId;
 
         this.channel.sendMessageToChannel({
           channelId: channelId, 
@@ -471,11 +478,6 @@
           return;
 
         let channelId = this.JoinChannelReq.channelId;
-        if (this.channels.indexOf(channelId) > -1) {
-          console.log("already in channel: " + channelId);
-          return;
-        }
-
         let extra = {"Name": "阿武"};
         let params = { channelId, extra };
         console.log("joinChannel Req: " + JSON.stringify(params));
@@ -483,10 +485,7 @@
         this.channel.joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
           this.JoinChannelRes = JSON.stringify(res);
-          if (res.rescode == 0) {
-            this.channels.push(channelId);
-          }
-        }).catch(err => {
+        }).catch(e => {
           console.log("joinChannel: err=", e);
         });
       },
@@ -495,11 +494,6 @@
           return;
 
         let channelId = this.LeaveChannelReq.channelId;
-        if (this.channels.indexOf(channelId) < 0) {
-          console.log("already not in channel: " + channelId);
-          return;
-        }
-
         let extra = {"Name": "阿武"};
         let params = { channelId, extra };
         console.log("leaveChannel Req: " + JSON.stringify(params));
@@ -507,13 +501,6 @@
         this.channel.leaveChannel(params).then(res => {
           console.log("自己离开频道leaveChannel res:", res);
           this.LeaveChannelRes = JSON.stringify(res);
-
-          if (res.rescode == 0) {
-            let index = this.channels.indexOf(channelId);
-            if (index > -1) {
-              this.channels.splice(index, 1);
-            }
-          }
         }).catch(e => {
           console.log("leaveChannel: err=", e);
         });
@@ -612,8 +599,8 @@
       /* 消息接收模块 */
       onReceiveMessage(obj) {
         this.ReceiveMessage = JSON.stringify(obj);
-        console.log("接收消息ReceiveMessage: " + JSON.stringify(obj));
         obj.message.data = Hummer.Utify.decodeUtf8BytesToString(obj.message.data);
+        console.log("接收消息ReceiveMessage: " + JSON.stringify(obj));
         this.mq_data.push(obj);
 
         this.$message({
@@ -627,9 +614,8 @@
       /* 组播消息接收模块 */
       onReceiveChannelMessage(obj) {
         this.ReceiveChannelMessage = JSON.stringify(obj);
-        console.log("接收组播消息ReceiveChannelMessage: " + JSON.stringify(obj));
-
         obj.message.data = Hummer.Utify.decodeUtf8BytesToString(obj.message.data);
+        console.log("接收组播消息ReceiveChannelMessage: " + JSON.stringify(obj));
         this.mq_channel_data.push(obj);
 
         this.$message({
