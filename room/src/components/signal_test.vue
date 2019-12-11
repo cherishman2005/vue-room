@@ -157,11 +157,12 @@
       </el-col>
     </el-row>
 
-
+    <!--
     <p class="text-unit">接收MQ队列消息</p>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{mq_data}}</p>
     </div>
+    -->
 
   </div>
 </template>
@@ -171,13 +172,14 @@
   //import { APPID, AREA } from '@/global.js';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
   import { constants } from 'fs';
+  //import Hummer from 'hummer-signal';
 
   const UID = getStorage('uid');
   const AREA = getStorage("area");
   const APPID = getStorage("appid");
 
   export default {
-    name : 'signal-debug',
+    name : 'signal-test',
     data() {
       return {
         flag: -1,
@@ -413,8 +415,8 @@
 
       /* 消息接收模块 */
       onReceiveMessage(obj) {
-        console.log("接收消息ReceiveMessage: " + JSON.stringify(obj));
         obj.message.data = Hummer.Utify.decodeUtf8BytesToString(obj.message.data);
+        console.log("接收消息ReceiveMessage: " + JSON.stringify(obj));
         this.mq_data.push(obj);
 
         this.$message({
@@ -428,9 +430,9 @@
       /* 组播消息接收模块 */
       onReceiveChannelMessage(obj) {
         this.ReceiveChannelMessage = JSON.stringify(obj);
+        obj.message.data = Hummer.Utify.decodeUtf8BytesToString(obj.message.data);
         console.log("接收组播消息ReceiveChannelMessage: " + JSON.stringify(obj));
 
-        obj.message.data = Hummer.Utify.decodeUtf8BytesToString(obj.message.data);
         this.mq_channel_data.push(obj);
 
         this.$message({

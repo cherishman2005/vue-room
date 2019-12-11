@@ -1,6 +1,6 @@
 {
   "name": "Hummer",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Hummer Demo",
   "author": "zhangbiwu",
   "private": true,
@@ -34,7 +34,9 @@
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
     "vux": "^2.9.2",
-    "hummer-channel": "1.0.3"
+    "hummer-channel": "1.0.5",
+    "hummer-signal": "1.0.3",
+    "hummer-im": "1.0.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

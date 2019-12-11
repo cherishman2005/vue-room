@@ -3,7 +3,7 @@
     <!--<iframe src="javascript:void(0);" ref="regIframe"  frameborder="0" class="app-login"  style="width: 100%;height: 302px;" scrolling=auto></iframe>-->
     <h2 style="text-align:left;">输入UID</h2>
     <el-col :span="24"  style="height: 45px;text-align:left;" >
-      <el-form :inline="true" :model="filters" size="small">
+      <el-form :inline="true" size="small">
         <el-form-item label="appid">
           <!--<el-input v-model="appid"></el-input>-->
           <template>
@@ -36,7 +36,7 @@
           <el-input v-model="uid"></el-input>
         </el-form-item>
         <el-form-item class="search">
-          <el-button type="primary"  @click="getUserToken" style="border-radius: 4px"><span class="el-icon-search margin"></span>进入聊天室</el-button>
+          <el-button type="primary"  @click="getUserToken" style="border-radius: 4px"><span class="el-icon-search margin"></span>进入房间</el-button>
         </el-form-item>
       </el-form>
     </el-col>

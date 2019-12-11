@@ -106,11 +106,13 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { APPID, AREA } from '@/global.js';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
   import { constants } from 'fs';
-  
+  //import Hummer from 'hummer-im';
+ 
   const UID = getStorage('uid');
+  const AREA = getStorage("area");
+  const APPID = getStorage("appid");
 
   export default {
     name : 'im',
@@ -134,7 +136,7 @@
         SendP2PChatParams: {
           uuid: '',
           content: "js_sdk SendP2PChat",
-          receiver: '135666911222',
+          receiver: '54321',
         },
         SendP2PChatRes: {
         },
@@ -146,12 +148,11 @@
     watch: {
     },
     created() {
-      let uid = getStorage('uid');
       let token = getStorage("token");
 
       // 1. 初始化Hummer
-      this.hummer = new Hummer.Hummer({ appid: APPID, 
-                                  uid: uid,
+      this.hummer = new Hummer.Hummer({ appid: this.appid, 
+                                  uid: this.uid,
                                   token: token,
                                   token_type: 'TOKEN_3RD',
                                   area: AREA,
@@ -207,8 +208,8 @@
         this.im.getInstance().then(res => {
           console.log("GetInstance: " + JSON.stringify(res));
           this.GetInstanceRes = res;
-        }).catch(err => {
-          console.log(err);
+        }).catch(e => {
+          console.log(e);
         });
       },
       onGetMaxSeqId() {
@@ -218,8 +219,8 @@
         this.im.getMaxSeqId().then(res => {
           console.log("GetInstance: " + JSON.stringify(res));
           this.GetMaxSeqIdRes = res;
-        }).catch(err => {
-          console.log(err);
+        }).catch(e => {
+          console.log(e);
         });
       },
       onInitPullMsg() {
@@ -230,7 +231,7 @@
         this.im.initPullMsg({ mode }).then(res => {
           console.log("InitPullMsg: " + JSON.stringify(res));
           this.InitPullMsgRes = res;
-        }).catch(err => {
+        }).catch(e => {
         });
       },
       onSendP2PMessage() {
@@ -255,8 +256,8 @@
           this.SendP2PChatRes = JSON.stringify(res);
           
           console.log("MQ队列mq_data: " + JSON.stringify(this.mq_data));
-        }).catch((err) => {
-          console.log(err)
+        }).catch((e) => {
+          console.log(e)
         })
       },
 
