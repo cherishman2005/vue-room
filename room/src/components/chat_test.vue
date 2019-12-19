@@ -92,13 +92,13 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="uid">
-            <el-input v-model="KickOffUserParams.uid"></el-input>
+            <el-input v-model="KickOffUserReq.uid"></el-input>
           </el-form-item>
           <el-form-item label="secs">
-            <el-input v-model="KickOffUserParams.secs"></el-input>
+            <el-input v-model="KickOffUserReq.secs"></el-input>
           </el-form-item>
           <el-form-item label="reason">
-            <el-input v-model="KickOffUserParams.reason"></el-input>
+            <el-input v-model="KickOffUserReq.reason"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="kickOffUser" style="border-radius: 4px">kickOffUser</el-button>
@@ -115,7 +115,7 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="content">
-            <el-input v-model="SendGroupBcParams.content"></el-input>
+            <el-input v-model="SendGroupBcReq.content"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="sendGroupBc" style="border-radius: 4px">sendGroupBc</el-button>
@@ -132,10 +132,10 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="content">
-            <el-input v-model="SendSingleUserDataParams.content"></el-input>
+            <el-input v-model="SendSingleUserDataReq.content"></el-input>
           </el-form-item>
           <el-form-item label="receiver">
-            <el-input v-model="SendSingleUserDataParams.receiver"></el-input>
+            <el-input v-model="SendSingleUserDataReq.receiver"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="sendSingleUserData" style="border-radius: 4px">sendSingleUserData</el-button>
@@ -152,7 +152,7 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="chat">
-            <el-input v-model="SendTextChatParams.chat"></el-input>
+            <el-input v-model="SendTextChatReq.chat"></el-input>
           </el-form-item>
          <el-form-item class="search">
             <el-button type="primary"  @click="sendTextChat" style="border-radius: 4px">sendTextChat</el-button>
@@ -183,7 +183,7 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="roler">
-            <el-input v-model="GetChatRoomManagerParams.roler" disabled></el-input>
+            <el-input v-model="GetChatRoomManagerReq.roler" disabled></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="getChatRoomManager" style="border-radius: 4px">getChatRoomManager</el-button>
@@ -214,10 +214,10 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
          <el-form-item label="num">
-            <el-input v-model="GetUserListParams.num"></el-input>
+            <el-input v-model="GetUserListReq.num"></el-input>
           </el-form-item>
           <el-form-item label="pos">
-            <el-input v-model="GetUserListParams.pos"></el-input>
+            <el-input v-model="GetUserListReq.pos"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="getUserList" style="border-radius: 4px">GetUserList</el-button>
@@ -268,14 +268,16 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { APPID, AREA } from '@/global.js';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
-  
+  //import Hummer from 'hummer-chatroom'
+ 
   const UID = getStorage('uid');
   const ROOMID = Number(getStorage('roomid'));
+  const AREA = getStorage("area");
+  const APPID = getStorage("appid");
 
   export default {
-    name : 'chatroom',
+    name : 'chatroom-test',
     data() {
       return {
         flag: -1,
@@ -285,7 +287,7 @@
         roomid: ROOMID,
         uid: UID,
         GetInstanceRes: '',
-        JoinChatRoomParams: {
+        JoinChatRoomReq: {
           joinProps: "",
         },
         JoinChatRoomRes: '',
@@ -293,33 +295,33 @@
         CreateChatRoomIdRes: '',
         UpdateChatRoomInfoRes: '',
         DismissChatRoomRes: '',
-        KickOffUserParams: {
+        KickOffUserReq: {
           admin: UID,
           uid: '0',
           secs: 3000,
           reason: "js test KickOffUser",
         },
         KickOffUserRes: '',
-        SendGroupBcParams: {
+        SendGroupBcReq: {
           content: "js_sdk SendGroupBc",
         },
         SendGroupBcRes: '',
-        SendSingleUserDataParams: {
+        SendSingleUserDataReq: {
           content: "js_sdk sendUnicast",
           receiver: '123',
         },
         SendSingleUserDataRes: '',
-        SendTextChatParams: {
+        SendTextChatReq: {
           chat: "js_sdk sendTextChat",
         },
         SendTextChatRes: '',
         GetChatRoomInfoRes: '',
-        GetChatRoomManagerParams: {
+        GetChatRoomManagerReq: {
           roler: "owner"
         },
         GetChatRoomManagerRes: '',
         GetUserCountRes: '',
-        GetUserListParams: {
+        GetUserListReq: {
           num: 10,
           pos: 0,
         },
@@ -340,23 +342,27 @@
     watch: {
     },
     created() {
-      let uid = getStorage('uid');
       let token = getStorage("token");
-      let roomid = Number(getStorage('roomid'));
 
       // 1. 初始化Hummer
       this.hummer = new Hummer.Hummer({ appid: APPID, 
-                                  uid: uid,
+                                  uid: this.uid,
                                   token: token,
                                   area: AREA,
                                   onConnectStatus: this.onConnectStatus,
                                   onLoginStatus: this.onLoginStatus,
-                                  onerror: (d) => {
-                                    console.log('new hummer: d=' + JSON.stringify(d));
-                                    this.flag = d.code;
+                                  onerror: (data) => {
+                                    console.log('new hummer: d=' + JSON.stringify(data));
+                                    this.flag = data.code;
                                   }
                                 });
 
+      if (this.flag != 0) {
+        this.hummer = null;
+        return;
+      }
+
+      this.hummer.setLogLevel({level: -1});
     },
     destroyed() {
     },
@@ -366,6 +372,7 @@
       initChatRoom() {
         if (!this.hummer) {
           console.log("hummer is null");
+          return;
         }
 
         if (this.chatroom) {
@@ -385,10 +392,17 @@
                                       onUserCountBc: this.onUserCountBc,
                                       onUserOnlineChangeBc: this.onUserOnlineChangeBc,
                                       onNotifyUserAttributesSet: this.onNotifyUserAttributesSet,
-                                      onerror: (d) => {
-                                        console.log('new chatroom: d=' + JSON.stringify(d));
+                                      onerror: (data) => {
+                                        console.log('new chatroom: data=' + JSON.stringify(data));
+                                        this.flag = data.code;
                                       } 
                                     });
+
+        if (this.flag != 0) {
+          delete this.chatroom;
+          this.chatroom = null;
+          return;
+        }
 
         setStorage("roomid", this.roomid);
       },
@@ -417,7 +431,7 @@
               this.roomid = res.roomid;
               setStorage("roomid", this.roomid);
             }
-          }).catch((err) => {
+          }).catch(err => {
             console.log(err)
           });
 
@@ -442,12 +456,9 @@
         if (!this.chatroom)
           return;
         
-        let joinProps = new Map([
-          ["H5_sdk", 'js_sdk']
-        ]);
-        
-        let params = { joinProps }
-        this.chatroom.joinChatRoom(params).then((res) => {
+        let joinProps = { "H5_sdk": 'js_sdk' };
+        let req = { joinProps }
+        this.chatroom.joinChatRoom(req).then((res) => {
           console.log("joinChatRoom Res: " + JSON.stringify(res));
           this.JoinChatRoomRes = res;
         }).catch((err) => {
@@ -469,15 +480,15 @@
         if (!this.chatroom)
           return;
 
-        let props = new Map([
-          ["Name", "阿武"],
-          ["Description", "js_sdk测试"],
-          ["Bulletin", "bull"],
-          ["Extention", "ex"],
-        ]);
+        let props = {
+          "Name": "阿武",
+          "Description": "js_sdk测试",
+          "Bulletin": "bull",
+          "Extention": "ex",
+        };
         
-        let params = { props };
-        this.chatroom.updateChatRoomInfo(params).then((res) => {
+        let req = { props };
+        this.chatroom.updateChatRoomInfo(req).then((res) => {
           this.UpdateChatRoomInfoRes = res;
           console.log("updateChatRoomInfo Res: " + JSON.stringify(res));
         }).catch((err) => {
@@ -504,12 +515,12 @@
         if (!this.chatroom)
           return;
 
-        let uid = this.KickOffUserParams.uid;
-        let secs = this.KickOffUserParams.secs;
-        let reason = this.KickOffUserParams.reason;
+        let uid = this.KickOffUserReq.uid;
+        let secs = this.KickOffUserReq.secs;
+        let reason = this.KickOffUserReq.reason;
 
-        let params = { uid, secs, reason }
-        this.chatroom.kickOffUser(params).then((res) => {
+        let req = { uid, secs, reason }
+        this.chatroom.kickOffUser(req).then((res) => {
           this.KickOffUserRes = res;
           console.log("kickOffUser Res: ", res);
         }).catch((err) => {
@@ -520,10 +531,9 @@
         if (!this.chatroom)
           return;
           
-        let content = this.SendGroupBcParams.content;
-
-        let params = { content }
-        this.chatroom.sendGroupBc(params).then((res) => {
+        let content = this.SendGroupBcReq.content;
+        let req = { content }
+        this.chatroom.sendGroupBc(req).then((res) => {
           console.log("sendGroupBc Res: ", res);
           this.SendGroupBcRes = res;
         }).catch((err) => {
@@ -534,11 +544,11 @@
         if (!this.chatroom)
           return;
           
-        let content = this.SendSingleUserDataParams.content;
-        let receiver = this.SendSingleUserDataParams.receiver;
+        let content = this.SendSingleUserDataReq.content;
+        let receiver = this.SendSingleUserDataReq.receiver;
 
-        let params = { content, receiver }
-        this.chatroom.sendSingleUserData(params).then((res) => {
+        let req = { content, receiver }
+        this.chatroom.sendSingleUserData(req).then((res) => {
           console.log("sendSingleUserData Res: ", res);
           this.SendSingleUserDataRes = res;
         }).catch((err) => {
@@ -549,12 +559,12 @@
         if (!this.chatroom)
           return;
           
-        let chat = this.SendTextChatParams.chat;
+        let chat = this.SendTextChatReq.chat;
         let chatProps = { "Name": "名称chatProps" };
         let extProps = { "Name": "名称extProps" };
   
-        let params = { chat, chatProps, extProps }
-        this.chatroom.sendTextChat(params).then((res) => {
+        let req = { chat, chatProps, extProps }
+        this.chatroom.sendTextChat(req).then((res) => {
           console.log("sendTextChat Res: " + JSON.stringify(res));
           this.SendTextChatRes = res;
         }).catch((err) => {
@@ -576,7 +586,7 @@
         if (!this.chatroom)
           return;
           
-        let roler = this.GetChatRoomManagerParams.roler;
+        let roler = this.GetChatRoomManagerReq.roler;
 
         let params = { roler }
         this.chatroom.getChatRoomManager(params).then((res) => {
@@ -601,11 +611,11 @@
         if (!this.chatroom)
           return;
           
-        let num = this.GetUserListParams.num;
-        let pos = this.GetUserListParams.pos;
+        let num = this.GetUserListReq.num;
+        let pos = this.GetUserListReq.pos;
 
-        let params = { num, pos }
-        this.chatroom.getUserList(params).then((res) => {
+        let req = { num, pos }
+        this.chatroom.getUserList(req).then((res) => {
           console.log("getUserList Res: " + JSON.stringify(res));
           this.GetUserListRes = JSON.stringify(res);
         }).catch((err) => {
@@ -616,26 +626,18 @@
         if (!this.chatroom)
           return;
 
-        /*
-        let attributes = new Map([
-          ["Name", "awu"],
-          ["Description", "js_sdk测试"],
-          ["Bulletin", "bull"],
-          ["Extention", "ex"]
-        ]);
-
-        let key = this.SetUserAttributesReq.key;
-        let prop = this.SetUserAttributesReq.prop;
-        attributes.set(key, prop);
-        */
-
-        let attributes = { "Name": "awu", "Description": "js_sdk测试", "Bulletin": "bull", "Extention": "ex" };
+        let attributes = { 
+          "Name": "awu", 
+          "Description": "js_sdk测试", 
+          "Bulletin": "bull", 
+          "Extention": "ex" 
+        };
         let key = this.SetUserAttributesReq.key;
         let prop = this.SetUserAttributesReq.prop;
         attributes[key] = prop;
         
-        let params = { attributes };
-        this.chatroom.setUserAttributes(params).then((res) => {
+        let req = { attributes };
+        this.chatroom.setUserAttributes(req).then((res) => {
           console.log("setUserAttributes Res: ", res);
           this.SetUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -655,86 +657,86 @@
       },
 
       /*  消息接收模块 */
-      onRecvSingleUserData(obj) {
-        console.log("接收消息RecvSingleUserData： " + JSON.stringify(obj));
+      onRecvSingleUserData(data) {
+        console.log("接收消息RecvSingleUserData： " + JSON.stringify(data));
 
         this.$message({
           duration: 3000,
-          message: "接收消息RecvSingleUserData： " + JSON.stringify(obj),
+          message: "接收消息RecvSingleUserData： " + JSON.stringify(data),
           type: 'success'
         });
       },
       onDismissChatRoomBc(data) {
         console.log("接收消息DismissChatRoomBc： " + JSON.stringify(data));
       },
-      onUpdateChatRoomInfoBc(obj)  {
-        console.log("接收消息UpdateChatRoomInfoBc： " + JSON.stringify(obj));
+      onUpdateChatRoomInfoBc(data)  {
+        console.log("接收消息UpdateChatRoomInfoBc： " + JSON.stringify(data));
 
         this.$message({
           duration: 3000,
-          message: "接收消息UpdateChatRoomInfoBc： " + JSON.stringify(obj),
+          message: "接收消息UpdateChatRoomInfoBc： " + JSON.stringify(data),
           type: 'success'
         });
       },
-      onKickOffUserBc(obj) {
-        console.log("接收消息KickOffUserBc： " + JSON.stringify(obj));
+      onKickOffUserBc(data) {
+        console.log("接收消息KickOffUserBc： " + JSON.stringify(data));
 
         this.$message({
           duration: 3000,
-          message: "接收消息KickOffUserBc： " + JSON.stringify(obj),
+          message: "接收消息KickOffUserBc： " + JSON.stringify(data),
           type: 'success'
         });
       },
-      onRecvGroupBc(obj) {
-        console.log("接收消息RecvGroupBc： " + JSON.stringify(obj));
+      onRecvGroupBc(data) {
+        console.log("接收消息RecvGroupBc： " + JSON.stringify(data));
 
         this.$message({
           duration: 3000,
-          message: "接收消息RecvGroupBc: " + JSON.stringify(obj),
+          message: "接收消息RecvGroupBc: " + JSON.stringify(data),
           type: 'success'
         });
       },
-      onTextChatBc(obj) {
-        console.log("接收消息TextChatBc： " + JSON.stringify(obj));
+      onTextChatBc(data) {
+        console.log("接收消息TextChatBc： " + JSON.stringify(data));
 
         this.$message({
           duration: 3000,
-          message: "接收消息TextChatBc： " + JSON.stringify(obj),
+          message: "接收消息TextChatBc： " + JSON.stringify(data),
           type: 'success'
         });
       },
-      onUserCountBc(obj) {
-        console.log("接收消息UserCountBc：" + JSON.stringify(obj));
+      onUserCountBc(data) {
+        console.log("接收消息UserCountBc：" + JSON.stringify(data));
 
         this.$message({
           duration: 3000,
-          message: "接收消息UserCountBc：" + JSON.stringify(obj),
+          message: "接收消息UserCountBc：" + JSON.stringify(data),
           type: 'success'
         });
       },
-      onNotifyUserAttributesSet(obj) {
-        console.log("接收消息UserAttributesSet： " + JSON.stringify(obj));
+      onNotifyUserAttributesSet(data) {
+        console.log("接收消息UserAttributesSet： " + JSON.stringify(data));
 
         this.$message({
           duration: 3000,
-          message: "接收消息UserAttributesSet：" + JSON.stringify(obj),
+          message: "接收消息UserAttributesSet：" + JSON.stringify(data),
           type: 'success'
         });
       },
-      onUserOnlineChangeBc(obj) {
-        console.log("接收消息UserOnlineChangeBc：" + JSON.stringify(obj));
+      onUserOnlineChangeBc(data) {
+        console.log("接收消息UserOnlineChangeBc：" + JSON.stringify(data));
 
         this.$message({
           duration: 3000,
-          message: "接收消息UserOnlineChangeBc：" + JSON.stringify(obj),
+          message: "接收消息UserOnlineChangeBc：" + JSON.stringify(data),
           type: 'success'
         });
       },
-      onConnectStatus(obj) {
-        console.log("===connect status===:", obj);
+      onConnectStatus(data) {
+        console.log("===connect status===:", data);
       },
-      onLoginStatus(obj) {
-        console.log("===login status===:", obj);
+      onLoginStatus(data) {
+        console.log("===login status===:", data);
       }
     }
   }
