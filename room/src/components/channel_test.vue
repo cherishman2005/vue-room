@@ -253,7 +253,6 @@
 
 <script>
   import { mapState } from 'vuex';
-  //import { APPID, AREA } from '@/global.js';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
   import { constants } from 'fs';
   //import Hummer from 'hummer-channel';
@@ -263,7 +262,7 @@
   const APPID = getStorage("appid");
 
   export default {
-    name : 'channel-debug',
+    name : 'channel-test',
     data() {
       return {
         flag: -1,
@@ -345,16 +344,16 @@
     created() {
       const token = getStorage("token");
 
-      // 1. 初始化Hummer
+      // 初始化Hummer
       this.hummer = new Hummer.Hummer({ appid: APPID,
                                   uid: UID,
                                   token: token,
                                   area: AREA,
                                   onConnectStatus: this.onConnectStatus,
                                   onLoginStatus: this.onLoginStatus,
-                                  onerror: (d) => {
-                                    console.log('new hummer: d=' + JSON.stringify(d));
-                                    this.flag = d.code;
+                                  onerror: (data) => {
+                                    console.log('new hummer: data=' + JSON.stringify(data));
+                                    this.flag = data.code;
                                   }
                                 });
       
@@ -389,9 +388,10 @@
             onNotifyUserAttributesUpdated: this.onNotifyUserAttributesUpdated,
             onNotifyUserAttributesSet: this.onNotifyUserAttributesSet,
             onNotifyUserAttributesDelete: this.onNotifyUserAttributesDelete,
-            onerror: (d) => {
-              console.log('new channel: d=' + JSON.stringify(d));
-              this.flag = d.code;
+            onNotifyUserCountChange: this.onNotifyUserCountChange,
+            onerror: (data) => {
+              console.log('new channel: data=' + JSON.stringify(data));
+              this.flag = data.code;
             }
         });
 
@@ -522,8 +522,8 @@
         let prop = this.SetUserAttributesReq.prop;
         attributes[key] = prop;
         
-        let params = { channelId, attributes };
-        this.channel.setUserAttributes(params).then((res) => {
+        let req = { channelId, attributes };
+        this.channel.setUserAttributes(req).then((res) => {
           console.log("setUserAttributes Res: ", res);
           this.SetUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -544,8 +544,8 @@
           keys.push(k);
         }
 
-        let params = { channelId, keys };
-        this.channel.deleteUserAttributesByKeys(params).then((res) => {
+        let req = { channelId, keys };
+        this.channel.deleteUserAttributesByKeys(req).then((res) => {
           console.log("deleteUserAttributesByKeys Res: ", res);
           this.DeleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -597,72 +597,80 @@
       },
 
       /* 消息接收模块 */
-      onReceiveMessage(obj) {
-        this.ReceiveMessage = JSON.stringify(obj);
-        obj.message.data = Hummer.Utify.decodeUtf8BytesToString(obj.message.data);
-        console.log("接收消息ReceiveMessage: " + JSON.stringify(obj));
-        this.mq_data.push(obj);
+      onReceiveMessage(data) {
+        this.ReceiveMessage = JSON.stringify(data);
+        obj.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
+        console.log("接收消息ReceiveMessage: " + JSON.stringify(data));
+        this.mq_data.push(data);
 
         this.$message({
           duration: 3000,
-          message: "ReceiveMessage: " + JSON.stringify(obj),
+          message: "ReceiveMessage: " + JSON.stringify(data),
           type: 'success'
         });
 
         console.log("MQ队列mq_data: " + JSON.stringify(this.mq_data));
       },
       /* 组播消息接收模块 */
-      onReceiveChannelMessage(obj) {
-        this.ReceiveChannelMessage = JSON.stringify(obj);
-        obj.message.data = Hummer.Utify.decodeUtf8BytesToString(obj.message.data);
-        console.log("接收组播消息ReceiveChannelMessage: " + JSON.stringify(obj));
-        this.mq_channel_data.push(obj);
+      onReceiveChannelMessage(data) {
+        this.ReceiveChannelMessage = JSON.stringify(data);
+        obj.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
+        console.log("接收组播消息ReceiveChannelMessage: " + JSON.stringify(data));
+        this.mq_channel_data.push(data);
 
         this.$message({
           duration: 3000,
-          message: "ReceiveChannelMessage: " + JSON.stringify(obj),
+          message: "ReceiveChannelMessage: " + JSON.stringify(data),
           type: 'success'
         });
 
         console.log("组播MQ队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
       },
-      onNotifyJoinChannel(obj) {
-        console.log("接收消息NotifyJoinChannel: " + JSON.stringify(obj));
+      onNotifyJoinChannel(data) {
+        console.log("接收消息NotifyJoinChannel: " + JSON.stringify(data));
         this.$message({
           duration: 3000,
-          message: "JoinChannel: " + JSON.stringify(obj),
+          message: "JoinChannel: " + JSON.stringify(data),
           type: 'success'
         });
       },
-      onNotifyLeaveChannel(obj) {
-        console.log("接收消息NotifyLeaveChannel: " + JSON.stringify(obj));
+      onNotifyLeaveChannel(data) {
+        console.log("接收消息NotifyLeaveChannel: " + JSON.stringify(data));
         this.$message({
           duration: 3000,
-          message: "LeaveChannel: " + JSON.stringify(obj),
+          message: "LeaveChannel: " + JSON.stringify(data),
           type: 'success'
         });
       },
-      onNotifyUserAttributesSet(obj) {
-        console.log("用户属性设置UserAttributesSet: " + JSON.stringify(obj));
+      onNotifyUserAttributesSet(data) {
+        console.log("用户属性设置UserAttributesSet: " + JSON.stringify(data));
         this.$message({
           duration: 3000,
-          message: "UserAttributesSet: " + JSON.stringify(obj),
+          message: "UserAttributesSet: " + JSON.stringify(data),
           type: 'success'
         });
       },
-      onNotifyUserAttributesDelete(obj) {
-        console.log("用户属性删除UserAttributesDelete: " + JSON.stringify(obj));
+      onNotifyUserAttributesDelete(data) {
+        console.log("用户属性删除UserAttributesDelete: " + JSON.stringify(data));
         this.$message({
           duration: 3000,
-          message: "UserAttributesDelete: " + JSON.stringify(obj),
+          message: "UserAttributesDelete: " + JSON.stringify(data),
           type: 'success'
         });
       },
-      onConnectStatus(obj) {
-        console.log("===channel status===:", obj);
+      onNotifyUserCountChange(data) {
+        console.log("用户数量变更UserCountChange: " + JSON.stringify(data));
+        this.$message({
+          duration: 3000,
+          message: "UserCountChange: " + JSON.stringify(obj),
+          type: 'success'
+        });
       },
-      onLoginStatus(obj) {
-        console.log("===login status===:", obj);
+      onConnectStatus(data) {
+        console.log("===channel status===:" + JSON.stringify(data));
+      },
+      onLoginStatus(data) {
+        console.log("===login status===:" + JSON.stringify(data));
       }
     }
   }

@@ -37,7 +37,7 @@
     "hummer-channel": "1.0.5",
     "hummer-signal": "1.0.3",
     "hummer-im": "1.0.4",
-    "hummer-chatroom": "1.0.4"
+    "hummer-chatroom": "1.0.5"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
