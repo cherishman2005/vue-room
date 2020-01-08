@@ -638,7 +638,7 @@
       /* 消息接收模块 */
       onReceiveMessage(data) {
         this.ReceiveMessage = JSON.stringify(data);
-        obj.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
+        data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
         console.log("接收消息ReceiveMessage: " + JSON.stringify(data));
         this.mq_data.push(data);
 
@@ -653,7 +653,7 @@
       /* 组播消息接收模块 */
       onReceiveChannelMessage(data) {
         this.ReceiveChannelMessage = JSON.stringify(data);
-        obj.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
+        data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
         console.log("接收组播消息ReceiveChannelMessage: " + JSON.stringify(data));
         this.mq_channel_data.push(data);
 
