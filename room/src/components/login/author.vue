@@ -77,6 +77,9 @@
             }, {
               value: 'CN-INNER',
               label: 'inner'
+            }, {
+              value: 'CN-INNER1',
+              label: 'inner1'
             }],
       }
     },

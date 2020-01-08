@@ -214,7 +214,7 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="uid">
-            <el-input v-model="queryOnlineStatusForUserParams.uid"></el-input>
+            <el-input v-model="queryOnlineStatusForUserReq.uid"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="queryOnlineStatusForUser" style="border-radius: 4px">queryOnlineStatusForUser</el-button>
@@ -224,6 +224,23 @@
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{queryOnlineStatusForUserRes}}</p>
+    </div>
+    
+    <p class="text-unit">批量查询用户数</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="channelIds">
+            <el-input v-model="batchGetChannelUserCountReq.channelIds"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="batchGetChannelUserCount" style="border-radius: 4px">batchGetChannelUserCount</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{batchGetChannelUserCountRes}}</p>
     </div>
 
     <p class="text-unit">清除MQ队列</p>
@@ -319,9 +336,10 @@
           prop: 'teacher',
         },
         GetGroupUserListByAttributeRes: '',
-        queryOnlineStatusForUserParams: {
+        queryOnlineStatusForUserReq: {
           uid: '54321',
         },
+        queryOnlineStatusForUserRes: '',
         SendP2PChatReq: {
           option: { reliable: 'no' },
           content: 'js_sdk SendP2PChat',
@@ -334,7 +352,10 @@
           channelId: 'test_channel1',
         },
         SendP2ChannelRes: "",
-        queryOnlineStatusForUserRes: '',
+        batchGetChannelUserCountReq: {
+          channelIds: 'test_channel1'
+        },
+        batchGetChannelUserCountRes: '',
       }
     },
     computed: {
@@ -581,7 +602,7 @@
         if (!this.channel)
           return;
 
-        let uid = this.queryOnlineStatusForUserParams.uid;
+        let uid = this.queryOnlineStatusForUserReq.uid;
         this.channel.queryOnlineStatusForUser({uid: uid}).then(res => {
           console.log("queryOnlineStatusForUser res:", res);
           this.queryOnlineStatusForUserRes = JSON.stringify(res);
@@ -589,7 +610,25 @@
         });
 
       },
-      clearMqData(){
+      batchGetChannelUserCount() {
+        if (!this.channel)
+          return;
+
+        let channelIdsStr = this.batchGetChannelUserCountReq.channelIds;
+        let channelIds = [];
+
+        let elements = channelIdsStr.split(",");
+        for (let k of elements) {
+          channelIds.push(k);
+        }
+        this.channel.batchGetChannelUserCount({ channelIds: channelIds }).then(res => {
+          console.log("batchGetChannelUserCount res:", res);
+          this.batchGetChannelUserCountRes = JSON.stringify(res);
+        }).catch(err => {
+        });
+
+      },
+      clearMqData() {
         this.mq_data = [];
         this.mq_channel_data = [];
         this.ReceiveChannelMessage = '';
@@ -662,7 +701,7 @@
         console.log("用户数量变更UserCountChange: " + JSON.stringify(data));
         this.$message({
           duration: 3000,
-          message: "UserCountChange: " + JSON.stringify(obj),
+          message: "UserCountChange: " + JSON.stringify(data),
           type: 'success'
         });
       },
