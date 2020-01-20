@@ -132,19 +132,19 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="content">
-            <el-input v-model="SendSingleUserDataReq.content"></el-input>
+            <el-input v-model="sendSingleUserMessageReq.content"></el-input>
           </el-form-item>
           <el-form-item label="receiver">
-            <el-input v-model="SendSingleUserDataReq.receiver"></el-input>
+            <el-input v-model="sendSingleUserMessageReq.receiver"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="sendSingleUserData" style="border-radius: 4px">sendSingleUserData</el-button>
+            <el-button type="primary"  @click="sendSingleUserMessage" style="border-radius: 4px">sendSingleUserMessage</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{SendSingleUserDataRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendSingleUserMessageRes}}</p>
     </div>
 
     <p class="text-unit">客户端发送公屏</p>
@@ -306,11 +306,11 @@
           content: "js_sdk SendGroupBc",
         },
         SendGroupBcRes: '',
-        SendSingleUserDataReq: {
+        sendSingleUserMessageReq: {
           content: "js_sdk sendUnicast",
           receiver: '123',
         },
-        SendSingleUserDataRes: '',
+        sendSingleUserMessageRes: '',
         SendTextChatReq: {
           chat: "js_sdk sendTextChat",
         },
@@ -352,7 +352,7 @@
                                   onConnectStatus: this.onConnectStatus,
                                   onLoginStatus: this.onLoginStatus,
                                   onerror: (data) => {
-                                    console.log('new hummer: d=' + JSON.stringify(data));
+                                    console.log('new hummer: data=' + JSON.stringify(data));
                                     this.flag = data.code;
                                   }
                                 });
@@ -383,7 +383,7 @@
 
         this.chatroom = new Hummer.ChatRoom(this.hummer, {  
                                       roomid: this.roomid,
-                                      onRecvSingleUserData: this.onRecvSingleUserData,
+                                      onRecvSingleUserMessage: this.onRecvSingleUserMessage,
                                       onDismissChatRoomBc: this.onDismissChatRoomBc,
                                       onUpdateChatRoomInfoBc: this.onUpdateChatRoomInfoBc,
                                       onKickOffUserBc: this.onKickOffUserBc,
@@ -499,17 +499,29 @@
         if (!this.chatroom)
           return;
 
-        this.chatroom.dismissChatRoom().then((res) => {
-          console.log("dismissChatRoom Res: ", res);
-          this.DismissChatRoomRes = res;
-          if (res.rescode == 0) {
-            delete this.chatroom;
-            this.chatroom = null;
-            this.roomid = 0;
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
+
+        this.$confirm("解散聊天室RoomId吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+
+          this.chatroom.dismissChatRoom().then((res) => {
+            console.log("dismissChatRoom Res: ", res);
+            this.DismissChatRoomRes = res;
+            if (res.rescode == 0) {
+              delete this.chatroom;
+              this.chatroom = null;
+              this.roomid = 0;
+              setStorage("roomid", this.roomid);
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
+
+        }).catch(e => {
+          console.log(e);
+        });
       },
       kickOffUser() {
         if (!this.chatroom)
@@ -540,17 +552,17 @@
           console.log(err)
         })
       },
-      sendSingleUserData() {
+      sendSingleUserMessage() {
         if (!this.chatroom)
           return;
           
-        let content = this.SendSingleUserDataReq.content;
-        let receiver = this.SendSingleUserDataReq.receiver;
+        let content = this.sendSingleUserMessageReq.content;
+        let receiver = this.sendSingleUserMessageReq.receiver;
 
         let req = { content, receiver }
-        this.chatroom.sendSingleUserData(req).then((res) => {
-          console.log("sendSingleUserData Res: ", res);
-          this.SendSingleUserDataRes = res;
+        this.chatroom.sendSingleUserMessage(req).then((res) => {
+          console.log("sendSingleUserMessage Res: ", res);
+          this.sendSingleUserMessageRes = res;
         }).catch((err) => {
           console.log(err)
         })
@@ -657,7 +669,7 @@
       },
 
       /*  消息接收模块 */
-      onRecvSingleUserData(data) {
+      onRecvSingleUserMessage(data) {
         console.log("接收消息RecvSingleUserData： " + JSON.stringify(data));
 
         this.$message({
