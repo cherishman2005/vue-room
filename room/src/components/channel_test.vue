@@ -243,6 +243,23 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{batchGetChannelUserCountRes}}</p>
     </div>
 
+    <p class="text-unit">批量查询登录在线状态</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="uids">
+            <el-input v-model="batchQueryOnlineStatusForUserReq.uids"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="batchQueryOnlineStatusForUser" style="border-radius: 4px">batchQueryOnlineStatusForUser</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{batchQueryOnlineStatusForUserRes}}</p>
+    </div>
+
     <p class="text-unit">清除MQ队列</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -356,6 +373,10 @@
           channelIds: 'test_channel1'
         },
         batchGetChannelUserCountRes: '',
+        batchQueryOnlineStatusForUserReq: {
+          uids: '999000'
+        },
+        batchQueryOnlineStatusForUserRes: '',
       }
     },
     computed: {
@@ -624,6 +645,24 @@
         this.channel.batchGetChannelUserCount({ channelIds: channelIds }).then(res => {
           console.log("batchGetChannelUserCount res:", res);
           this.batchGetChannelUserCountRes = JSON.stringify(res);
+        }).catch(err => {
+        });
+
+      },
+      batchQueryOnlineStatusForUser() {
+        if (!this.channel)
+          return;
+
+        let uidsStr = this.batchQueryOnlineStatusForUserReq.uids;
+        let uids = [];
+
+        let elements = uidsStr.split(",");
+        for (let k of elements) {
+          uids.push(k);
+        }
+        this.channel.batchQueryOnlineStatusForUser({ uids: uids }).then(res => {
+          console.log("batchQueryOnlineStatusForUser res:", res);
+          this.batchQueryOnlineStatusForUserRes = JSON.stringify(res);
         }).catch(err => {
         });
 

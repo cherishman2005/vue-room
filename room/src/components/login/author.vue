@@ -80,7 +80,14 @@
             }, {
               value: 'CN-INNER1',
               label: 'inner1'
-            }],
+            }, {
+              value: 'cn',
+              label: 'cn'
+            }, {
+              value: 'ap_southeast',
+              label: 'ap_southeast'
+            }
+          ],
       }
     },
     created() {
