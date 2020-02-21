@@ -22,7 +22,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{GetInstanceRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getInstanceRes}}</p>
     </div>
 
     <p class="text-unit">A给B发送消息</p>
@@ -30,9 +30,8 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="reliable">
-            <!--<el-input v-model="SendP2PChatReq.option.reliable"></el-input>-->
             <template>
-              <el-select v-model="SendP2PChatReq.option.reliable" placeholder="reliable">
+              <el-select v-model="sendMessageToUserReq.option.reliable" placeholder="reliable">
                 <el-option
                   v-for="item in reliable"
                   :key="item.value"
@@ -43,10 +42,10 @@
             </template>
           </el-form-item>
           <el-form-item label="content">
-            <el-input v-model="SendP2PChatReq.content"></el-input>
+            <el-input v-model="sendMessageToUserReq.content"></el-input>
           </el-form-item>
           <el-form-item label="receiver">
-            <el-input v-model="SendP2PChatReq.receiver"></el-input>
+            <el-input v-model="sendMessageToUserReq.receiver"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="sendMessageToUser" style="border-radius: 4px">sendMessageToUser</el-button>
@@ -55,7 +54,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{SendP2PChatRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToUserRes}}</p>
     </div>
 
     <p class="text-unit">A给群组发消息</p>
@@ -63,9 +62,8 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="reliable">
-            <!--<el-input v-model="SendP2ChannelReq.option.reliable"></el-input>-->
             <template>
-              <el-select v-model="SendP2ChannelReq.option.reliable" placeholder="reliable">
+              <el-select v-model="sendMessageToChannelReq.option.reliable" placeholder="reliable">
                 <el-option
                   v-for="item in reliable"
                   :key="item.value"
@@ -76,10 +74,10 @@
             </template>
           </el-form-item>
           <el-form-item label="content">
-            <el-input v-model="SendP2ChannelReq.content"></el-input>
+            <el-input v-model="sendMessageToChannelReq.content"></el-input>
           </el-form-item>
           <el-form-item label="channelId">
-            <el-input v-model="SendP2ChannelReq.channelId"></el-input>
+            <el-input v-model="sendMessageToChannelReq.channelId"></el-input>
           </el-form-item>
 
           <el-form-item class="search">
@@ -89,7 +87,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{SendP2ChannelRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToChannelRes}}</p>
     </div>
 
     <p class="text-unit">加入Channel</p>
@@ -97,7 +95,7 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="channelId">
-            <el-input v-model="JoinChannelReq.channelId"></el-input>
+            <el-input v-model="joinChannelReq.channelId"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="joinChannel" style="border-radius: 4px">joinChannel</el-button>
@@ -106,7 +104,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{JoinChannelRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{joinChannelRes}}</p>
     </div>
 
     <p class="text-unit">离开Channel</p>
@@ -114,7 +112,7 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="channelId">
-            <el-input v-model="LeaveChannelReq.channelId"></el-input>
+            <el-input v-model="leaveChannelReq.channelId"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="leaveChannel" style="border-radius: 4px">leaveChannel</el-button>
@@ -123,7 +121,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{LeaveChannelRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{leaveChannelRes}}</p>
     </div>
 
     <p class="text-unit">设置用户属性</p>
@@ -131,13 +129,13 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="channelId">
-            <el-input v-model="SetUserAttributesReq.channelId"></el-input>
+            <el-input v-model="setUserAttributesReq.channelId"></el-input>
           </el-form-item>
           <el-form-item label="key">
-            <el-input v-model="SetUserAttributesReq.key"></el-input>
+            <el-input v-model="setUserAttributesReq.key"></el-input>
           </el-form-item>
           <el-form-item label="prop">
-            <el-input v-model="SetUserAttributesReq.prop"></el-input>
+            <el-input v-model="setUserAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
@@ -146,7 +144,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{SetUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">删除用户某些属性</p>
@@ -154,10 +152,10 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="channelId">
-            <el-input v-model="DeleteUserAttributesReq.channelId"></el-input>
+            <el-input v-model="deleteUserAttributesReq.channelId"></el-input>
           </el-form-item>
           <el-form-item label="keys">
-            <el-input v-model="DeleteUserAttributesReq.keys"></el-input>
+            <el-input v-model="deleteUserAttributesReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="deleteUserAttributesByKeys" style="border-radius: 4px">deleteUserAttributesByKeys</el-button>
@@ -166,7 +164,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{DeleteUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{deleteUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">查询用户列表</p>
@@ -174,7 +172,7 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="channelId">
-            <el-input v-model="GetChannelUserListReq.channelId"></el-input>
+            <el-input v-model="getChannelUserListReq.channelId"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="getChannelUserList" style="border-radius: 4px">getChannelUserList</el-button>
@@ -183,7 +181,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{GetGroupUserListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getGroupUserListRes}}</p>
     </div>
 
     <p class="text-unit">查询某一属性的用户列表</p>
@@ -191,13 +189,13 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="channelId">
-            <el-input v-model="GetChannelUserListByAttributeReq.channelId"></el-input>
+            <el-input v-model="getChannelUserListByAttributeReq.channelId"></el-input>
           </el-form-item>
           <el-form-item label="key">
-            <el-input v-model="GetChannelUserListByAttributeReq.key"></el-input>
+            <el-input v-model="getChannelUserListByAttributeReq.key"></el-input>
           </el-form-item>
           <el-form-item label="prop">
-            <el-input v-model="GetChannelUserListByAttributeReq.prop"></el-input>
+            <el-input v-model="getChannelUserListByAttributeReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="getChannelUserListByAtrribute" style="border-radius: 4px">getChannelUserListByAtrribute</el-button>
@@ -206,7 +204,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{GetGroupUserListByAttributeRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getGroupUserListByAttributeRes}}</p>
     </div>
     
     <p class="text-unit">查询queryOnlineStatusForUser</p>
@@ -260,6 +258,23 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{batchQueryOnlineStatusForUserRes}}</p>
     </div>
 
+    <p class="text-unit">登录/登出</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary"  @click="login" style="border-radius: 4px">login</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="logout" style="border-radius: 4px">logout</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{loginRes}}</p>
+    </div>
+
     <p class="text-unit">清除MQ队列</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -294,6 +309,7 @@
   const UID = getStorage('uid');
   const AREA = getStorage("area");
   const APPID = getStorage("appid");
+  const TOKEN = getStorage("token");
 
   export default {
     name : 'channel-test',
@@ -304,6 +320,7 @@
         channel: null,
         appid: APPID,
         uid: UID,
+        token: TOKEN,
         mq_data: [],
         mq_channel_data: [],
         reliable: [{
@@ -313,62 +330,60 @@
             value: 'no',
             label: 'no'
           }],
-        GetInstanceRes: {
+        getInstanceRes: {
         },
-        GetMaxSeqIdRes: {
-        },
-        GetGrpSysMaxSeqIdReq: {
+        getGrpSysMaxSeqIdReq: {
           channelId: 'test_channel1',
         },
-        GetGrpSysMaxSeqIdRes: {
+        getGrpSysMaxSeqIdRes: {
         },
-        JoinChannelReq: {
+        joinChannelReq: {
           channelId: 'test_channel1',
         },
-        JoinChannelRes: '',
-        LeaveChannelReq: {
+        joinChannelRes: '',
+        leaveChannelReq: {
           channelId: 'test_channel1',
         },
-        LeaveChannelRes: '',
-        SetUserAttributesReq: {
+        leaveChannelRes: '',
+        setUserAttributesReq: {
           key: 'role',
           prop: 'teacher',
           channelId: 'test_channel1',
         },
-        SetUserAttributesRes: '',
-        DeleteUserAttributesReq: {
+        setUserAttributesRes: '',
+        deleteUserAttributesReq: {
           keys: 'role',
           channelId: 'test_channel1',
         },
-        DeleteUserAttributesRes: '',
-        GetChannelUserListReq: {
+        deleteUserAttributesRes: '',
+        getChannelUserListReq: {
           channelId: 'test_channel1',
           pos: 0,
           num: 100,
         },
-        GetGroupUserListRes: '',
-        GetChannelUserListByAttributeReq: {
+        getGroupUserListRes: '',
+        getChannelUserListByAttributeReq: {
           channelId: 'test_channel1',
           key: 'role',
           prop: 'teacher',
         },
-        GetGroupUserListByAttributeRes: '',
+        getGroupUserListByAttributeRes: '',
         queryOnlineStatusForUserReq: {
-          uid: '54321',
+          uid: '999000',
         },
         queryOnlineStatusForUserRes: '',
-        SendP2PChatReq: {
+        sendMessageToUserReq: {
           option: { reliable: 'no' },
           content: 'js_sdk SendP2PChat',
-          receiver: '54321',
+          receiver: '999000',
         },
-        SendP2PChatRes: "",
-        SendP2ChannelReq: {
+        sendMessageToUserRes: "",
+        sendMessageToChannelReq: {
           option: { reliable: 'no' },
           content: 'js_sdk SendP2Channel',
           channelId: 'test_channel1',
         },
-        SendP2ChannelRes: "",
+        sendMessageToChannelRes: "",
         batchGetChannelUserCountReq: {
           channelIds: 'test_channel1'
         },
@@ -377,6 +392,7 @@
           uids: '999000'
         },
         batchQueryOnlineStatusForUserRes: '',
+        loginRes: '',
       }
     },
     computed: {
@@ -384,12 +400,10 @@
     watch: {
     },
     created() {
-      const token = getStorage("token");
-
       // 初始化Hummer
-      this.hummer = new Hummer.Hummer({ appid: APPID,
-                                  uid: UID,
-                                  token: token,
+      this.hummer = new Hummer.Hummer({ appid: this.appid,
+                                  uid: this.uid,
+                                  token: this.token,
                                   area: AREA,
                                   onConnectStatus: this.onConnectStatus,
                                   onLoginStatus: this.onLoginStatus,
@@ -448,10 +462,11 @@
       getInstance() {
         if (!this.channel)
           return;
-
+          
+        this.getInstanceRes = '';
         this.channel.getInstance().then(res => {
-          console.log("getInstance: " + JSON.stringify(res));
-          this.GetInstanceRes = res;
+          console.log("getInstance: ", res);
+          this.getInstanceRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err);
         });
@@ -460,10 +475,11 @@
         if (!this.channel)
           return;
 
-        let reliable = this.SendP2PChatReq.option.reliable;
-        let content = this.SendP2PChatReq.content;
-        let receiver = this.SendP2PChatReq.receiver;
-
+        let reliable = this.sendMessageToUserReq.option.reliable;
+        let content = this.sendMessageToUserReq.content;
+        let receiver = this.sendMessageToUserReq.receiver;
+        
+        this.sendMessageToUserRes = '';
         this.channel.sendMessageToUser({
           receiver: receiver, 
           type: "100", 
@@ -471,7 +487,7 @@
           option: { reliable: reliable }
         }).then(res => {
           console.log("sendMessageToUser Res: " + JSON.stringify(res));
-          this.SendP2PChatRes = JSON.stringify(res);
+          this.sendMessageToUserRes = JSON.stringify(res);
 
           console.log("消息队列mq_data: " + JSON.stringify(this.mq_data));
         }).catch((err) => {
@@ -482,10 +498,11 @@
         if (!this.channel)
           return;
 
-        let reliable = this.SendP2ChannelReq.option.reliable;
-        let content = this.SendP2ChannelReq.content;
-        let channelId = this.SendP2ChannelReq.channelId;
-
+        let reliable = this.sendMessageToChannelReq.option.reliable;
+        let content = this.sendMessageToChannelReq.content;
+        let channelId = this.sendMessageToChannelReq.channelId;
+        
+        this.sendMessageToChannelRes = '';
         this.channel.sendMessageToChannel({
           channelId: channelId, 
           type: "100", 
@@ -493,7 +510,7 @@
           option: { reliable: reliable }
         }).then(res => {
           console.log("sendMessageToChannel Res: " + JSON.stringify(res));
-          this.SendP2ChannelRes = JSON.stringify(res);
+          this.sendMessageToChannelRes = JSON.stringify(res);
 
           console.log("消息队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
         }).catch((err) => {
@@ -504,14 +521,15 @@
         if (!this.channel)
           return;
 
-        let channelId = this.GetGrpSysMaxSeqIdReq.channelId;
+        let channelId = this.getGrpSysMaxSeqIdReq.channelId;
   
         let params = { channelId };
         console.log("getGrpSysMaxSeqId Req: " + JSON.stringify(params));
         
+        this.getGrpSysMaxSeqIdRes = '';
         this.channel.getGrpSysMaxSeqId(channelId).then(res => {
           console.log("getGrpSysMaxSeqId res:", res);
-          this.GetGrpSysMaxSeqIdRes = JSON.stringify(res);
+          this.getGrpSysMaxSeqIdRes = JSON.stringify(res);
         }).catch(err => {
         });
       },
@@ -519,14 +537,15 @@
         if (!this.channel)
           return;
 
-        let channelId = this.JoinChannelReq.channelId;
+        let channelId = this.joinChannelReq.channelId;
         let extra = {"Name": "阿武"};
         let params = { channelId, extra };
         console.log("joinChannel Req: " + JSON.stringify(params));
         
+        this.joinChannelRes = '';
         this.channel.joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
-          this.JoinChannelRes = JSON.stringify(res);
+          this.joinChannelRes = JSON.stringify(res);
         }).catch(e => {
           console.log("joinChannel: err=", e);
         });
@@ -535,14 +554,15 @@
         if (!this.channel)
           return;
 
-        let channelId = this.LeaveChannelReq.channelId;
+        let channelId = this.leaveChannelReq.channelId;
         let extra = {"Name": "阿武"};
         let params = { channelId, extra };
         console.log("leaveChannel Req: " + JSON.stringify(params));
 
+        this.leaveChannelRes = '';
         this.channel.leaveChannel(params).then(res => {
           console.log("自己离开频道leaveChannel res:", res);
-          this.LeaveChannelRes = JSON.stringify(res);
+          this.leaveChannelRes = JSON.stringify(res);
         }).catch(e => {
           console.log("leaveChannel: err=", e);
         });
@@ -551,7 +571,7 @@
         if (!this.channel)
           return;
 
-        let channelId = this.SetUserAttributesReq.channelId;
+        let channelId = this.setUserAttributesReq.channelId;
 
         let attributes = {
           "Name": "awu",
@@ -560,14 +580,15 @@
           "Extention": "ex"
         };
   
-        let key = this.SetUserAttributesReq.key;
-        let prop = this.SetUserAttributesReq.prop;
+        let key = this.setUserAttributesReq.key;
+        let prop = this.setUserAttributesReq.prop;
         attributes[key] = prop;
         
         let req = { channelId, attributes };
+        this.setUserAttributesRes = '';
         this.channel.setUserAttributes(req).then((res) => {
           console.log("setUserAttributes Res: ", res);
-          this.SetUserAttributesRes = JSON.stringify(res);
+          this.setUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
           console.log(err)
         })
@@ -576,8 +597,8 @@
         if (!this.channel)
           return;
 
-        let channelId = this.DeleteUserAttributesReq.channelId;
-        let keys_str = this.DeleteUserAttributesReq.keys;
+        let channelId = this.deleteUserAttributesReq.channelId;
+        let keys_str = this.deleteUserAttributesReq.keys;
 
         let keys = [];
 
@@ -587,9 +608,11 @@
         }
 
         let req = { channelId, keys };
+        this.deleteUserAttributesRes = '';
+
         this.channel.deleteUserAttributesByKeys(req).then((res) => {
           console.log("deleteUserAttributesByKeys Res: ", res);
-          this.DeleteUserAttributesRes = JSON.stringify(res);
+          this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
           console.log(err)
         })
@@ -598,10 +621,11 @@
         if (!this.channel)
           return;
 
-        let channelId = this.GetChannelUserListReq.channelId;
+        let channelId = this.getChannelUserListReq.channelId;
+        this.getGroupUserListRes = '';
         this.channel.getChannelUserList({ channelId }).then(res => {
           console.log("getChannelUserList res:", res);
-          this.GetGroupUserListRes = JSON.stringify(res);
+          this.getGroupUserListRes = JSON.stringify(res);
         }).catch(err => {
         });
       },
@@ -609,19 +633,22 @@
         if (!this.channel)
           return;
 
-        let channelId = this.GetChannelUserListByAttributeReq.channelId;
-        let key = this.GetChannelUserListByAttributeReq.key;
-        let prop = this.GetChannelUserListByAttributeReq.prop;
+        let channelId = this.getChannelUserListByAttributeReq.channelId;
+        let key = this.getChannelUserListByAttributeReq.key;
+        let prop = this.getChannelUserListByAttributeReq.prop;
+        this.getGroupUserListByAttributeRes = '';
 
         this.channel.getChannelUserListByAtrribute({ channelId, key, prop }).then(res => {
           console.log("getChannelUserListByAtrribute res:", res);
-          this.GetGroupUserListByAttributeRes = JSON.stringify(res);
+          this.getGroupUserListByAttributeRes = JSON.stringify(res);
         }).catch(err => {
         });
       },
       queryOnlineStatusForUser() {
         if (!this.channel)
           return;
+
+        this.queryOnlineStatusForUserRes = '';
 
         let uid = this.queryOnlineStatusForUserReq.uid;
         this.channel.queryOnlineStatusForUser({uid: uid}).then(res => {
@@ -642,6 +669,8 @@
         for (let k of elements) {
           channelIds.push(k);
         }
+        this.batchGetChannelUserCountRes = '';
+
         this.channel.batchGetChannelUserCount({ channelIds: channelIds }).then(res => {
           console.log("batchGetChannelUserCount res:", res);
           this.batchGetChannelUserCountRes = JSON.stringify(res);
@@ -660,12 +689,37 @@
         for (let k of elements) {
           uids.push(k);
         }
+        this.batchQueryOnlineStatusForUserRes = '';
+
         this.channel.batchQueryOnlineStatusForUser({ uids: uids }).then(res => {
           console.log("batchQueryOnlineStatusForUser res:", res);
           this.batchQueryOnlineStatusForUserRes = JSON.stringify(res);
         }).catch(err => {
         });
-
+      },
+      login() {
+        if (!this.hummer)
+          return;
+        
+        this.loginRes = '';
+        this.hummer.login({uid: this.uid, token: this.token}).then((res) => {
+          console.log("login Res: " + JSON.stringify(res));
+          this.loginRes = JSON.stringify(res);
+        }).catch(err => {
+          console.log(err);
+        })
+      },
+      logout() {
+        if (!this.hummer)
+          return;
+        
+        this.loginRes = '';
+        this.hummer.logout().then((res) => {
+          console.log("logout Res: " + JSON.stringify(res));
+          this.loginRes = JSON.stringify(res);
+        }).catch(err => {
+          console.log(err);
+        });
       },
       clearMqData() {
         this.mq_data = [];

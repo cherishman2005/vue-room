@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import { APPID, authURL, redirectURL } from '@/global.js';
+  import { APPID, authURL, redirectURL, areas } from '@/global.js';
   import { getBeforeLoginUrl, removeBeforeLoginUrl } from '@/utils/auth'
   import { getStorage, setStorage } from '@/utils/BaseUtil'
 
@@ -65,29 +65,7 @@
               value: 1350626568,
               label: '1350626568'
             }],
-          areas: [{
-              value: 'CN',
-              label: 'CN'
-            }, {
-              value: 'CN-TEST',
-              label: 'shenzhen/test/2'
-            }, {
-              value: 'CN-TEST1',
-              label: 'shenzhen/test/1'
-            }, {
-              value: 'CN-INNER',
-              label: 'inner'
-            }, {
-              value: 'CN-INNER1',
-              label: 'inner1'
-            }, {
-              value: 'cn',
-              label: 'cn'
-            }, {
-              value: 'ap_southeast',
-              label: 'ap_southeast'
-            }
-          ],
+          areas: areas,
       }
     },
     created() {
