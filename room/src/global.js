@@ -13,6 +13,24 @@ export const AREA = "CN";
 
 export const areas =[
     {
+      value: 'cn',
+      label: 'cn'
+    }, {
+      value: 'ap_southeast',
+      label: 'ap_southeast'
+    }, {
+      value: 'ap_south',
+      label: 'ap_south'
+    }, {
+      value: 'us',
+      label: 'us'
+    }, {
+      value: 'me_east',
+      label: 'me_east'
+    }, {
+      value: 'sa_east',
+      label: 'sa_east'
+    }, {
       value: 'CN',
       label: 'CN'
     }, {
@@ -45,23 +63,5 @@ export const areas =[
     }, {
       value: 'bra',
       label: 'bra'
-    }, {
-      value: 'cn',
-      label: 'cn'
-    }, {
-      value: 'ap_southeast',
-      label: 'ap_southeast'
-    }, {
-      value: 'ap_south',
-      label: 'ap_south'
-    }, {
-      value: 'us',
-      label: 'us'
-    }, {
-      value: 'me_east',
-      label: 'me_east'
-    }, {
-      value: 'sa_east',
-      label: 'sa_east'
     }
   ];

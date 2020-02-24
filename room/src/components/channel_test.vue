@@ -303,13 +303,12 @@
 <script>
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
-  import { constants } from 'fs';
   //import Hummer from 'hummer-channel';
 
   const UID = getStorage('uid');
-  const AREA = getStorage("area");
-  const APPID = getStorage("appid");
-  const TOKEN = getStorage("token");
+  const AREA = getStorage('area');
+  const APPID = getStorage('appid');
+  const TOKEN = getStorage('token');
 
   export default {
     name : 'channel-test',
@@ -330,8 +329,7 @@
             value: 'no',
             label: 'no'
           }],
-        getInstanceRes: {
-        },
+        getInstanceRes: '',
         getGrpSysMaxSeqIdReq: {
           channelId: 'test_channel1',
         },
