@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <h2 style="text-align:left;">ChannelService调测系统（调用channel js_sdk，提供调测接口）</h2>
+    <h2 style="text-align:left;">Channel调测系统（调用channel js_sdk，提供调测接口）</h2>
 
     <!-- 初始化channel -->
     <el-row type="flex">
@@ -23,71 +23,6 @@
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getInstanceRes}}</p>
-    </div>
-
-    <p class="text-unit">A给B发送消息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="reliable">
-            <template>
-              <el-select v-model="sendMessageToUserReq.option.reliable" placeholder="reliable">
-                <el-option
-                  v-for="item in reliable"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          <el-form-item label="content">
-            <el-input v-model="sendMessageToUserReq.content"></el-input>
-          </el-form-item>
-          <el-form-item label="receiver">
-            <el-input v-model="sendMessageToUserReq.receiver"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="sendMessageToUser" style="border-radius: 4px">sendMessageToUser</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToUserRes}}</p>
-    </div>
-
-    <p class="text-unit">A给群组发消息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="reliable">
-            <template>
-              <el-select v-model="sendMessageToChannelReq.option.reliable" placeholder="reliable">
-                <el-option
-                  v-for="item in reliable"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          <el-form-item label="content">
-            <el-input v-model="sendMessageToChannelReq.content"></el-input>
-          </el-form-item>
-          <el-form-item label="channelId">
-            <el-input v-model="sendMessageToChannelReq.channelId"></el-input>
-          </el-form-item>
-
-          <el-form-item class="search">
-            <el-button type="primary"  @click="sendMessageToChannel" style="border-radius: 4px">sendMessageToChannel</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToChannelRes}}</p>
     </div>
 
     <p class="text-unit">加入Channel</p>
@@ -122,6 +57,39 @@
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{leaveChannelRes}}</p>
+    </div>
+
+    <p class="text-unit">A给频道发消息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="reliable">
+            <template>
+              <el-select v-model="sendMessageToChannelReq.option.reliable" placeholder="reliable">
+                <el-option
+                  v-for="item in reliable"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+          <el-form-item label="content">
+            <el-input v-model="sendMessageToChannelReq.content"></el-input>
+          </el-form-item>
+          <el-form-item label="channelId">
+            <el-input v-model="sendMessageToChannelReq.channelId"></el-input>
+          </el-form-item>
+
+          <el-form-item class="search">
+            <el-button type="primary"  @click="sendMessageToChannel" style="border-radius: 4px">sendMessageToChannel</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToChannelRes}}</p>
     </div>
 
     <p class="text-unit">设置用户属性</p>
@@ -167,23 +135,6 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{deleteUserAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">查询用户列表</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="channelId">
-            <el-input v-model="getChannelUserListReq.channelId"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="getChannelUserList" style="border-radius: 4px">getChannelUserList</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getGroupUserListRes}}</p>
-    </div>
-
     <p class="text-unit">查询某一属性的用户列表</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -206,8 +157,74 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getGroupUserListByAttributeRes}}</p>
     </div>
+
+    <p class="text-unit">查询频道用户列表</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="channelId">
+            <el-input v-model="getChannelUserListReq.channelId"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="getChannelUserList" style="border-radius: 4px">getChannelUserList</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getGroupUserListRes}}</p>
+    </div>
+
+    <p class="text-unit">查询单个或多个频道的成员人数</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="channelIds">
+            <el-input v-model="getChannelUserCountReq.channelIds"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="getChannelUserCount" style="border-radius: 4px">getChannelUserCount</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelUserCountRes}}</p>
+    </div>
+
+    <p class="text-unit">A给B发送消息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="reliable">
+            <template>
+              <el-select v-model="sendMessageToUserReq.option.reliable" placeholder="reliable">
+                <el-option
+                  v-for="item in reliable"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+          <el-form-item label="content">
+            <el-input v-model="sendMessageToUserReq.content"></el-input>
+          </el-form-item>
+          <el-form-item label="receiver">
+            <el-input v-model="sendMessageToUserReq.receiver"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="sendMessageToUser" style="border-radius: 4px">sendMessageToUser</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToUserRes}}</p>
+    </div>
     
-    <p class="text-unit">查询queryOnlineStatusForUser</p>
+    <p class="text-unit">查询单人登录在线状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
@@ -224,38 +241,21 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{queryOnlineStatusForUserRes}}</p>
     </div>
     
-    <p class="text-unit">批量查询用户数</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="channelIds">
-            <el-input v-model="batchGetChannelUserCountReq.channelIds"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="batchGetChannelUserCount" style="border-radius: 4px">batchGetChannelUserCount</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{batchGetChannelUserCountRes}}</p>
-    </div>
-
     <p class="text-unit">批量查询登录在线状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="uids">
-            <el-input v-model="batchQueryOnlineStatusForUserReq.uids"></el-input>
+            <el-input v-model="queryUsersOnlineStatusReq.uids"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="batchQueryOnlineStatusForUser" style="border-radius: 4px">batchQueryOnlineStatusForUser</el-button>
+            <el-button type="primary"  @click="queryUsersOnlineStatus" style="border-radius: 4px">queryUsersOnlineStatus</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{batchQueryOnlineStatusForUserRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{queryUsersOnlineStatusRes}}</p>
     </div>
 
     <p class="text-unit">登录/登出</p>
@@ -330,11 +330,6 @@
             label: 'no'
           }],
         getInstanceRes: '',
-        getGrpSysMaxSeqIdReq: {
-          channelId: 'test_channel1',
-        },
-        getGrpSysMaxSeqIdRes: {
-        },
         joinChannelReq: {
           channelId: 'test_channel1',
         },
@@ -356,8 +351,6 @@
         deleteUserAttributesRes: '',
         getChannelUserListReq: {
           channelId: 'test_channel1',
-          pos: 0,
-          num: 100,
         },
         getGroupUserListRes: '',
         getChannelUserListByAttributeReq: {
@@ -370,26 +363,26 @@
           uid: '999000',
         },
         queryOnlineStatusForUserRes: '',
-        sendMessageToUserReq: {
-          option: { reliable: 'no' },
-          content: 'js_sdk SendP2PChat',
-          receiver: '999000',
-        },
-        sendMessageToUserRes: "",
         sendMessageToChannelReq: {
           option: { reliable: 'no' },
-          content: 'js_sdk SendP2Channel',
+          content: 'js_sdk sendMessageToChannel',
           channelId: 'test_channel1',
         },
         sendMessageToChannelRes: "",
-        batchGetChannelUserCountReq: {
+        sendMessageToUserReq: {
+          option: { reliable: 'no' },
+          content: 'js_sdk sendMessageToUser',
+          receiver: '999000',
+        },
+        sendMessageToUserRes: "",
+        getChannelUserCountReq: {
           channelIds: 'test_channel1'
         },
-        batchGetChannelUserCountRes: '',
-        batchQueryOnlineStatusForUserReq: {
+        getChannelUserCountRes: '',
+        queryUsersOnlineStatusReq: {
           uids: '999000'
         },
-        batchQueryOnlineStatusForUserRes: '',
+        queryUsersOnlineStatusRes: '',
         loginRes: '',
       }
     },
@@ -469,68 +462,6 @@
           console.log(err);
         });
       },
-      sendMessageToUser() {
-        if (!this.channel)
-          return;
-
-        let reliable = this.sendMessageToUserReq.option.reliable;
-        let content = this.sendMessageToUserReq.content;
-        let receiver = this.sendMessageToUserReq.receiver;
-        
-        this.sendMessageToUserRes = '';
-        this.channel.sendMessageToUser({
-          receiver: receiver, 
-          type: "100", 
-          content: Hummer.Utify.encodeStringToUtf8Bytes(content),
-          option: { reliable: reliable }
-        }).then(res => {
-          console.log("sendMessageToUser Res: " + JSON.stringify(res));
-          this.sendMessageToUserRes = JSON.stringify(res);
-
-          console.log("消息队列mq_data: " + JSON.stringify(this.mq_data));
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
-      sendMessageToChannel() {
-        if (!this.channel)
-          return;
-
-        let reliable = this.sendMessageToChannelReq.option.reliable;
-        let content = this.sendMessageToChannelReq.content;
-        let channelId = this.sendMessageToChannelReq.channelId;
-        
-        this.sendMessageToChannelRes = '';
-        this.channel.sendMessageToChannel({
-          channelId: channelId, 
-          type: "100", 
-          content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
-          option: { reliable: reliable }
-        }).then(res => {
-          console.log("sendMessageToChannel Res: " + JSON.stringify(res));
-          this.sendMessageToChannelRes = JSON.stringify(res);
-
-          console.log("消息队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
-      getGrpSysMaxSeqId() {
-        if (!this.channel)
-          return;
-
-        let channelId = this.getGrpSysMaxSeqIdReq.channelId;
-  
-        let params = { channelId };
-        console.log("getGrpSysMaxSeqId Req: " + JSON.stringify(params));
-        
-        this.getGrpSysMaxSeqIdRes = '';
-        this.channel.getGrpSysMaxSeqId(channelId).then(res => {
-          console.log("getGrpSysMaxSeqId res:", res);
-          this.getGrpSysMaxSeqIdRes = JSON.stringify(res);
-        }).catch(err => {
-        });
-      },
       joinChannel() {
         if (!this.channel)
           return;
@@ -564,6 +495,29 @@
         }).catch(e => {
           console.log("leaveChannel: err=", e);
         });
+      },
+      sendMessageToChannel() {
+        if (!this.channel)
+          return;
+
+        let reliable = this.sendMessageToChannelReq.option.reliable;
+        let content = this.sendMessageToChannelReq.content;
+        let channelId = this.sendMessageToChannelReq.channelId;
+        
+        this.sendMessageToChannelRes = '';
+        this.channel.sendMessageToChannel({
+          channelId: channelId, 
+          type: "100", 
+          content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
+          option: { reliable: reliable }
+        }).then(res => {
+          console.log("sendMessageToChannel Res: " + JSON.stringify(res));
+          this.sendMessageToChannelRes = JSON.stringify(res);
+
+          console.log("消息队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
+        }).catch((err) => {
+          console.log(err)
+        })
       },
       setUserAttributes() {
         if (!this.channel)
@@ -642,6 +596,49 @@
         }).catch(err => {
         });
       },
+      getChannelUserCount() {
+        if (!this.channel)
+          return;
+
+        let channelIdsStr = this.getChannelUserCountReq.channelIds;
+        let channelIds = [];
+
+        let elements = channelIdsStr.split(",");
+        for (let k of elements) {
+          channelIds.push(k);
+        }
+        this.getChannelUserCountRes = '';
+
+        this.channel.getChannelUserCount({ channelIds: channelIds }).then(res => {
+          console.log("getChannelUserCount res:", res);
+          this.getChannelUserCountRes = JSON.stringify(res);
+        }).catch(err => {
+        });
+
+      },
+      sendMessageToUser() {
+        if (!this.channel)
+          return;
+
+        let reliable = this.sendMessageToUserReq.option.reliable;
+        let content = this.sendMessageToUserReq.content;
+        let receiver = this.sendMessageToUserReq.receiver;
+        
+        this.sendMessageToUserRes = '';
+        this.channel.sendMessageToUser({
+          receiver: receiver, 
+          type: "100", 
+          content: Hummer.Utify.encodeStringToUtf8Bytes(content),
+          option: { reliable: reliable }
+        }).then(res => {
+          console.log("sendMessageToUser Res: " + JSON.stringify(res));
+          this.sendMessageToUserRes = JSON.stringify(res);
+
+          console.log("消息队列mq_data: " + JSON.stringify(this.mq_data));
+        }).catch((err) => {
+          console.log(err)
+        })
+      },
       queryOnlineStatusForUser() {
         if (!this.channel)
           return;
@@ -656,42 +653,22 @@
         });
 
       },
-      batchGetChannelUserCount() {
+      queryUsersOnlineStatus() {
         if (!this.channel)
           return;
 
-        let channelIdsStr = this.batchGetChannelUserCountReq.channelIds;
-        let channelIds = [];
-
-        let elements = channelIdsStr.split(",");
-        for (let k of elements) {
-          channelIds.push(k);
-        }
-        this.batchGetChannelUserCountRes = '';
-
-        this.channel.batchGetChannelUserCount({ channelIds: channelIds }).then(res => {
-          console.log("batchGetChannelUserCount res:", res);
-          this.batchGetChannelUserCountRes = JSON.stringify(res);
-        }).catch(err => {
-        });
-
-      },
-      batchQueryOnlineStatusForUser() {
-        if (!this.channel)
-          return;
-
-        let uidsStr = this.batchQueryOnlineStatusForUserReq.uids;
+        let uidsStr = this.queryUsersOnlineStatusReq.uids;
         let uids = [];
 
         let elements = uidsStr.split(",");
         for (let k of elements) {
           uids.push(k);
         }
-        this.batchQueryOnlineStatusForUserRes = '';
+        this.queryUsersOnlineStatusRes = '';
 
-        this.channel.batchQueryOnlineStatusForUser({ uids: uids }).then(res => {
-          console.log("batchQueryOnlineStatusForUser res:", res);
-          this.batchQueryOnlineStatusForUserRes = JSON.stringify(res);
+        this.channel.queryUsersOnlineStatus({ uids: uids }).then(res => {
+          console.log("queryUsersOnlineStatus res:", res);
+          this.queryUsersOnlineStatusRes = JSON.stringify(res);
         }).catch(err => {
         });
       },
@@ -722,13 +699,10 @@
       clearMqData() {
         this.mq_data = [];
         this.mq_channel_data = [];
-        this.ReceiveChannelMessage = '';
-        this.ReceiveMessage = '';
       },
 
       /* 消息接收模块 */
       onReceiveMessage(data) {
-        this.ReceiveMessage = JSON.stringify(data);
         data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
         console.log("接收消息ReceiveMessage: " + JSON.stringify(data));
         this.mq_data.push(data);
@@ -743,7 +717,6 @@
       },
       /* 组播消息接收模块 */
       onReceiveChannelMessage(data) {
-        this.ReceiveChannelMessage = JSON.stringify(data);
         data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
         console.log("接收组播消息ReceiveChannelMessage: " + JSON.stringify(data));
         this.mq_channel_data.push(data);
