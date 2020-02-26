@@ -544,7 +544,7 @@
         
         let req = { channelId, attributes };
         this.setUserAttributesRes = '';
-        this.channel.setUserAttributes(req).then((res) => {
+        this.channel.setUserAttributes(req).then(res => {
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -569,7 +569,7 @@
         let req = { channelId, keys };
         this.deleteUserAttributesRes = '';
 
-        this.channel.deleteUserAttributesByKeys(req).then((res) => {
+        this.channel.deleteUserAttributesByKeys(req).then(res => {
           console.log("deleteUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -696,7 +696,7 @@
           return;
         
         this.loginRes = '';
-        this.hummer.login({uid: this.uid, token: this.token}).then((res) => {
+        this.hummer.login({uid: this.uid, token: this.token}).then(res => {
           console.log("login Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
         }).catch(err => {
@@ -709,7 +709,7 @@
           return;
         
         this.loginRes = '';
-        this.hummer.logout().then((res) => {
+        this.hummer.logout().then(res => {
           console.log("logout Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
         }).catch(err => {
