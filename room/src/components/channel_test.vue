@@ -22,7 +22,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getInstanceRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{result}}</p>
     </div>
 
     <p class="text-unit">加入Channel</p>
@@ -329,7 +329,7 @@
             value: 'no',
             label: 'no'
           }],
-        getInstanceRes: '',
+        result: '',
         joinChannelReq: {
           channelId: 'test_channel1',
         },
@@ -424,6 +424,7 @@
 
         if (this.channel) {
             console.log("channel is ready");
+            this.result = JSON.stringify({code: 0, msg: "channel is ready"});
             return;
         }
 
@@ -439,6 +440,7 @@
             onerror: (data) => {
               console.log('new channel: data=' + JSON.stringify(data));
               this.flag = data.code;
+              this.result = JSON.stringify(data);
             }
         });
 
@@ -454,12 +456,13 @@
         if (!this.channel)
           return;
           
-        this.getInstanceRes = '';
+        this.result = '';
         this.channel.getInstance().then(res => {
           console.log("getInstance: ", res);
-          this.getInstanceRes = JSON.stringify(res);
+          this.result = JSON.stringify(res);
         }).catch(err => {
-          console.log(err);
+          console.error("getInstance err:", err);
+          this.result = JSON.stringify(err);
         });
       },
       joinChannel() {
@@ -475,8 +478,9 @@
         this.channel.joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
           this.joinChannelRes = JSON.stringify(res);
-        }).catch(e => {
-          console.log("joinChannel: err=", e);
+        }).catch(err => {
+          console.error("joinChannel err:", err);
+          this.joinChannelRes = JSON.stringify(err);
         });
       },
       leaveChannel() {
@@ -492,8 +496,9 @@
         this.channel.leaveChannel(params).then(res => {
           console.log("自己离开频道leaveChannel res:", res);
           this.leaveChannelRes = JSON.stringify(res);
-        }).catch(e => {
-          console.log("leaveChannel: err=", e);
+        }).catch(err => {
+          console.error("leaveChannel err:", err);
+          this.leaveChannelRes = JSON.stringify(err);
         });
       },
       sendMessageToChannel() {
@@ -516,8 +521,9 @@
 
           console.log("消息队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
         }).catch((err) => {
-          console.log(err)
-        })
+          console.error("sendMessageToChannel err:", err);
+          this.sendMessageToChannelRes = JSON.stringify(err);
+        });
       },
       setUserAttributes() {
         if (!this.channel)
@@ -541,9 +547,10 @@
         this.channel.setUserAttributes(req).then((res) => {
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
-        }).catch((err) => {
-          console.log(err)
-        })
+        }).catch(err => {
+          console.error("setUserAttributes err:", err);
+          this.setUserAttributesRes = JSON.stringify(err);
+        });
       },
       deleteUserAttributesByKeys() {
         if (!this.channel)
@@ -566,8 +573,9 @@
           console.log("deleteUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
-          console.log(err)
-        })
+          console.error("deleteUserAttributesByKeys err:", err);
+          this.deleteUserAttributesRes = JSON.stringify(err);
+        });
       },
       getChannelUserList() {
         if (!this.channel)
@@ -579,6 +587,8 @@
           console.log("getChannelUserList res:", res);
           this.getGroupUserListRes = JSON.stringify(res);
         }).catch(err => {
+          console.error("getChannelUserList err:", err);
+          this.getGroupUserListRes = JSON.stringify(err);
         });
       },
       getChannelUserListByAtrribute() {
@@ -594,6 +604,8 @@
           console.log("getChannelUserListByAtrribute res:", res);
           this.getGroupUserListByAttributeRes = JSON.stringify(res);
         }).catch(err => {
+          console.error("getChannelUserListByAtrribute err:", err);
+          this.getGroupUserListByAttributeRes = JSON.stringify(err);
         });
       },
       getChannelUserCount() {
@@ -614,7 +626,6 @@
           this.getChannelUserCountRes = JSON.stringify(res);
         }).catch(err => {
           console.error("getChannelUserCount err:", err);
-          
           this.getChannelUserCountRes = JSON.stringify(err);
         });
 
@@ -638,9 +649,10 @@
           this.sendMessageToUserRes = JSON.stringify(res);
 
           console.log("消息队列mq_data: " + JSON.stringify(this.mq_data));
-        }).catch((err) => {
-          console.log(err)
-        })
+        }).catch(err => {
+          console.error("sendMessageToUser err:", err);
+          this.sendMessageToUserRes = JSON.stringify(err);
+        });
       },
       queryOnlineStatusForUser() {
         if (!this.channel)
@@ -653,6 +665,8 @@
           console.log("queryOnlineStatusForUser res:", res);
           this.queryOnlineStatusForUserRes = JSON.stringify(res);
         }).catch(err => {
+          console.error("queryOnlineStatusForUser err:", err);
+          this.queryOnlineStatusForUserRes = JSON.stringify(err);
         });
 
       },
@@ -673,6 +687,8 @@
           console.log("queryUsersOnlineStatus res:", res);
           this.queryUsersOnlineStatusRes = JSON.stringify(res);
         }).catch(err => {
+          console.error("queryUsersOnlineStatus err:", err);
+          this.queryUsersOnlineStatusRes = JSON.stringify(err);
         });
       },
       login() {
@@ -684,8 +700,9 @@
           console.log("login Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
         }).catch(err => {
-          console.log(err);
-        })
+          console.error("login err:", err);
+          this.loginRes = JSON.stringify(err);
+        });
       },
       logout() {
         if (!this.hummer)
@@ -696,7 +713,8 @@
           console.log("logout Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
         }).catch(err => {
-          console.log(err);
+          console.error("logout err:", err);
+          this.loginRes = JSON.stringify(err);
         });
       },
       clearMqData() {
