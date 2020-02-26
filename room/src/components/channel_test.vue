@@ -196,6 +196,32 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="region">
+            <template>
+              <el-select v-model="setUserRegionReq.region" placeholder="region">
+                <el-option
+                  v-for="item in regions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px">setUserRegion</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{setUserRegionRes}}</p>
+    </div>
+
+    <p class="text-unit">A给B发送消息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
           <el-form-item label="reliable">
             <template>
               <el-select v-model="sendMessageToUserReq.option.reliable" placeholder="reliable">
@@ -310,6 +336,15 @@
   const APPID = getStorage('appid');
   const TOKEN = getStorage('token');
 
+  const getRegions = () => {
+    const regionList = [ 'cn', 'ap_southeast', 'ap_south', 'us', 'me_east', 'sa_east' ];
+    let regions = [];
+    for (let region of regionList) {
+      regions.push({value: region, label: region});
+    }
+    return regions;
+  }
+
   export default {
     name : 'channel-test',
     data() {
@@ -320,6 +355,7 @@
         appid: APPID,
         uid: UID,
         token: TOKEN,
+        regions: getRegions(),
         mq_data: [],
         mq_channel_data: [],
         reliable: [{
@@ -330,6 +366,10 @@
             label: 'no'
           }],
         result: '',
+        setUserRegionReq: {
+          region: 'cn',
+        },
+        setUserRegionRes: '',
         joinChannelReq: {
           channelId: 'test_channel1',
         },
@@ -450,6 +490,8 @@
           return;
         }
 
+        //this.setUserRegion();
+
       },
       // ------------------ 测试接口 --------------------
       getInstance() {
@@ -520,7 +562,7 @@
           this.sendMessageToChannelRes = JSON.stringify(res);
 
           console.log("消息队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
-        }).catch((err) => {
+        }).catch(err => {
           console.error("sendMessageToChannel err:", err);
           this.sendMessageToChannelRes = JSON.stringify(err);
         });
@@ -629,6 +671,20 @@
           this.getChannelUserCountRes = JSON.stringify(err);
         });
 
+      },
+      setUserRegion() {
+        if (!this.channel)
+          return;
+
+        this.setUserRegionRes = '';
+        let region = this.setUserRegionReq.region;
+        this.channel.setUserRegion({ region }).then(res => {
+          console.log("setUserRegion res:", res);
+          this.setUserRegionRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("setUserRegion err:", err);
+          this.setUserRegionRes = JSON.stringify(err);
+        });
       },
       sendMessageToUser() {
         if (!this.channel)
