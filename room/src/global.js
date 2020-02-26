@@ -11,7 +11,17 @@ export const redirectURL = "/channel-test";
 export const APPID = 1350626568;
 export const AREA = "CN";
 
-export const areas =[
+const appidList = [ 1504984159, 1350626568 ];
+
+export function getAppids() {
+  let appids = [];
+  for (let appid of appidList) {
+    appids.push({value: appid, label: appid.toString()});
+  }
+  return appids;
+}
+
+export const areas = [
     {
       value: 'cn',
       label: 'cn'

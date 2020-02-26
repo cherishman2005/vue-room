@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import { APPID, authURL, redirectURL, areas } from '@/global.js';
+  import { APPID, authURL, redirectURL, areas, getAppids } from '@/global.js';
   import { getBeforeLoginUrl, removeBeforeLoginUrl } from '@/utils/auth'
   import { getStorage, setStorage } from '@/utils/BaseUtil'
 
@@ -58,13 +58,7 @@
           area: 'cn',
           token: '',
           reportType: 0,
-          appids: [{
-              value: 1504984159,
-              label: '1504984159'
-            }, {
-              value: 1350626568,
-              label: '1350626568'
-            }],
+          appids: getAppids(),
           areas: areas,
       }
     },

@@ -613,6 +613,9 @@
           console.log("getChannelUserCount res:", res);
           this.getChannelUserCountRes = JSON.stringify(res);
         }).catch(err => {
+          console.error("getChannelUserCount err:", err);
+          
+          this.getChannelUserCountRes = JSON.stringify(err);
         });
 
       },
