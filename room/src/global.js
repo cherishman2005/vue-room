@@ -75,3 +75,13 @@ export const areas = [
       label: 'bra'
     }
   ];
+
+// use to set user region
+export const getRegions = () => {
+  const regionList = [ 'cn', 'ap_southeast', 'ap_south', 'us', 'me_east', 'sa_east' ];
+  let regions = [];
+  for (let region of regionList) {
+    regions.push({value: region, label: region});
+  }
+  return regions;
+}

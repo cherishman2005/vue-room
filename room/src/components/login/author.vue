@@ -5,7 +5,6 @@
     <el-col :span="24"  style="height: 45px;text-align:left;" >
       <el-form :inline="true" size="small">
         <el-form-item label="appid">
-          <!--<el-input v-model="appid"></el-input>-->
           <template>
             <el-select v-model="appid" placeholder="appid">
               <el-option
@@ -19,11 +18,23 @@
         </el-form-item>
 
         <el-form-item label="area">
-          <!--<el-input v-model="area"></el-input>-->
           <template>
             <el-select v-model="area" placeholder="area">
               <el-option
                 v-for="item in areas"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
+
+        <el-form-item label="用户归属地">
+          <template>
+            <el-select v-model="region" placeholder="region">
+              <el-option
+                v-for="item in regions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -45,7 +56,7 @@
 </template>
 
 <script>
-  import { APPID, authURL, redirectURL, areas, getAppids } from '@/global.js';
+  import { APPID, authURL, redirectURL, areas, getAppids, getRegions } from '@/global.js';
   import { getBeforeLoginUrl, removeBeforeLoginUrl } from '@/utils/auth'
   import { getStorage, setStorage } from '@/utils/BaseUtil'
 
@@ -56,6 +67,8 @@
           uid: '',
           appid: 1504984159,
           area: 'cn',
+          regions: getRegions(),
+          region: 'cn',
           token: '',
           reportType: 0,
           appids: getAppids(),
@@ -99,6 +112,7 @@
                 setStorage("token", body.token);
                 setStorage("area", this.area);
                 setStorage("appid", appid);
+                setStorage("region", this.region);
                 
                 let redirect = getBeforeLoginUrl() || '/';
                 this.$router.push({ path: redirect });
