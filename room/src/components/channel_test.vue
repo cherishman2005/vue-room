@@ -44,6 +44,18 @@
           <el-form-item label="用户归属地">
             <el-input v-model="region" disabled></el-input>
           </el-form-item>
+          <el-form-item label="area">
+            <template>
+              <el-select v-model="area" placeholder="area">
+                <el-option
+                  v-for="item in areas"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px">setUserRegion</el-button>
           </el-form-item>
@@ -326,7 +338,8 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { getStorage, setStorage } from '@/utils/BaseUtil'
+  import { getStorage, setStorage } from '@/utils/BaseUtil';
+  import { getRegions } from '@/global.js';
   //import Hummer from 'hummer-channel';
 
   const UID = getStorage('uid');
@@ -341,11 +354,14 @@
       return {
         flag: -1,
         hummer: null,
+        channels: [],
         channel: null,
         appid: APPID,
         uid: UID,
         token: TOKEN,
         region: REGION || 'cn',
+        area: 'cn',
+        areas: getRegions(),
         setRegionFlag: false,
         mq_data: [],
         mq_channel_data: [],
@@ -466,13 +482,14 @@
           return;
         }
 
-        if (this.channel) {
+        if (this.channels[this.area]) {
             console.log("channel is ready");
             this.result = JSON.stringify({code: 0, msg: "channel is ready"});
             return;
         }
 
-        this.channel = new Hummer.ChannelService(this.hummer, {
+        this.channels[this.area] = new Hummer.ChannelService(this.hummer, {
+            area: this.area,
             onReceiveMessage: this.onReceiveMessage,
             onReceiveChannelMessage: this.onReceiveChannelMessage,
             onNotifyJoinChannel: this.onNotifyJoinChannel,
@@ -487,6 +504,8 @@
               this.result = JSON.stringify(data);
             }
         });
+
+        this.channel = this.channels[this.area];
 
         if (this.flag != 0) {
           delete this.channel;
