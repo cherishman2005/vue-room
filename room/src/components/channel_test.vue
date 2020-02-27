@@ -2,6 +2,33 @@
   <div class="dashboard-container">
     <h2 style="text-align:left;">Channel调测系统（调用channel js_sdk，提供调测接口）</h2>
 
+    <p class="text-unit">设置用户归属地</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="region">
+            <template>
+              <el-select v-model="setUserRegionReq.region" placeholder="region">
+                <el-option
+                  v-for="item in regions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                  :disabled="setRegionFlag">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px" :disabled="setRegionFlag===true">setUserRegion</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{setUserRegionRes}}</p>
+    </div>
+
     <!-- 初始化channel -->
     <el-row type="flex">
       <el-col :span="24"  style="height:30px;text-align:left;" >
@@ -196,32 +223,6 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="region">
-            <template>
-              <el-select v-model="setUserRegionReq.region" placeholder="region">
-                <el-option
-                  v-for="item in regions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px">setUserRegion</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{setUserRegionRes}}</p>
-    </div>
-
-    <p class="text-unit">A给B发送消息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
           <el-form-item label="reliable">
             <template>
               <el-select v-model="sendMessageToUserReq.option.reliable" placeholder="reliable">
@@ -366,6 +367,7 @@
             label: 'no'
           }],
         result: '',
+        setRegionFlag: false,  // only set once
         setUserRegionReq: {
           region: 'cn',
         },
@@ -456,6 +458,33 @@
     mounted() {
     },
     methods: {
+      setUserRegion() {
+        if (!this.hummer)
+          return;
+
+        this.$confirm(`设置用户归属地: ${this.setUserRegionReq.region}`, "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          
+          this.setUserRegionRes = '';
+          let region = this.setUserRegionReq.region;
+          this.hummer.setUserRegion({ region }).then(res => {
+            console.log("setUserRegion res:", res);
+            this.setUserRegionRes = JSON.stringify(res);
+            if (res.rescode == 0) {
+              this.setRegionFlag = true;
+            }
+          }).catch(err => {
+            console.error("setUserRegion err:", err);
+            this.setUserRegionRes = JSON.stringify(err);
+          });
+
+        }).catch(e => {
+          console.log(e);
+        });
+      },
       initChannel() {
         if (!this.hummer) {
           console.log("hummer is null");
@@ -671,20 +700,6 @@
           this.getChannelUserCountRes = JSON.stringify(err);
         });
 
-      },
-      setUserRegion() {
-        if (!this.channel)
-          return;
-
-        this.setUserRegionRes = '';
-        let region = this.setUserRegionReq.region;
-        this.channel.setUserRegion({ region }).then(res => {
-          console.log("setUserRegion res:", res);
-          this.setUserRegionRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("setUserRegion err:", err);
-          this.setUserRegionRes = JSON.stringify(err);
-        });
       },
       sendMessageToUser() {
         if (!this.channel)
