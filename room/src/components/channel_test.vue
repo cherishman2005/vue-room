@@ -515,11 +515,11 @@
       },
       // ------------------ 测试接口 --------------------
       getInstance() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
           
         this.result = '';
-        this.channel.getInstance().then(res => {
+        this.channels[this.area].getInstance().then(res => {
           console.log("getInstance: ", res);
           this.result = JSON.stringify(res);
         }).catch(err => {
@@ -528,7 +528,7 @@
         });
       },
       joinChannel() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let channelId = this.joinChannelReq.channelId;
@@ -537,7 +537,7 @@
         console.log("joinChannel Req: " + JSON.stringify(params));
         
         this.joinChannelRes = '';
-        this.channel.joinChannel(params).then(res => {
+        this.channels[this.area].joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
           this.joinChannelRes = JSON.stringify(res);
         }).catch(err => {
@@ -546,7 +546,7 @@
         });
       },
       leaveChannel() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let channelId = this.leaveChannelReq.channelId;
@@ -555,7 +555,7 @@
         console.log("leaveChannel Req: " + JSON.stringify(params));
 
         this.leaveChannelRes = '';
-        this.channel.leaveChannel(params).then(res => {
+        this.channels[this.area].leaveChannel(params).then(res => {
           console.log("自己离开频道leaveChannel res:", res);
           this.leaveChannelRes = JSON.stringify(res);
         }).catch(err => {
@@ -564,7 +564,7 @@
         });
       },
       sendMessageToChannel() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let reliable = this.sendMessageToChannelReq.option.reliable;
@@ -572,7 +572,7 @@
         let channelId = this.sendMessageToChannelReq.channelId;
         
         this.sendMessageToChannelRes = '';
-        this.channel.sendMessageToChannel({
+        this.channels[this.area].sendMessageToChannel({
           channelId: channelId, 
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
@@ -588,7 +588,7 @@
         });
       },
       setUserAttributes() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let channelId = this.setUserAttributesReq.channelId;
@@ -606,7 +606,7 @@
         
         let req = { channelId, attributes };
         this.setUserAttributesRes = '';
-        this.channel.setUserAttributes(req).then(res => {
+        this.channels[this.area].setUserAttributes(req).then(res => {
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -615,7 +615,7 @@
         });
       },
       deleteUserAttributesByKeys() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let channelId = this.deleteUserAttributesReq.channelId;
@@ -631,7 +631,7 @@
         let req = { channelId, keys };
         this.deleteUserAttributesRes = '';
 
-        this.channel.deleteUserAttributesByKeys(req).then(res => {
+        this.channels[this.area].deleteUserAttributesByKeys(req).then(res => {
           console.log("deleteUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -640,12 +640,12 @@
         });
       },
       getChannelUserList() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let channelId = this.getChannelUserListReq.channelId;
         this.getGroupUserListRes = '';
-        this.channel.getChannelUserList({ channelId }).then(res => {
+        this.channels[this.area].getChannelUserList({ channelId }).then(res => {
           console.log("getChannelUserList res:", res);
           this.getGroupUserListRes = JSON.stringify(res);
         }).catch(err => {
@@ -654,7 +654,7 @@
         });
       },
       getChannelUserListByAtrribute() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let channelId = this.getChannelUserListByAttributeReq.channelId;
@@ -662,7 +662,7 @@
         let prop = this.getChannelUserListByAttributeReq.prop;
         this.getGroupUserListByAttributeRes = '';
 
-        this.channel.getChannelUserListByAtrribute({ channelId, key, prop }).then(res => {
+        this.channels[this.area].getChannelUserListByAtrribute({ channelId, key, prop }).then(res => {
           console.log("getChannelUserListByAtrribute res:", res);
           this.getGroupUserListByAttributeRes = JSON.stringify(res);
         }).catch(err => {
@@ -671,7 +671,7 @@
         });
       },
       getChannelUserCount() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let channelIdsStr = this.getChannelUserCountReq.channelIds;
@@ -683,7 +683,7 @@
         }
         this.getChannelUserCountRes = '';
 
-        this.channel.getChannelUserCount({ channelIds: channelIds }).then(res => {
+        this.channels[this.area].getChannelUserCount({ channelIds: channelIds }).then(res => {
           console.log("getChannelUserCount res:", res);
           this.getChannelUserCountRes = JSON.stringify(res);
         }).catch(err => {
@@ -693,7 +693,7 @@
 
       },
       sendMessageToUser() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let reliable = this.sendMessageToUserReq.option.reliable;
@@ -701,7 +701,7 @@
         let receiver = this.sendMessageToUserReq.receiver;
         
         this.sendMessageToUserRes = '';
-        this.channel.sendMessageToUser({
+        this.channels[this.area].sendMessageToUser({
           receiver: receiver, 
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content),
@@ -717,13 +717,13 @@
         });
       },
       queryOnlineStatusForUser() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         this.queryOnlineStatusForUserRes = '';
 
         let uid = this.queryOnlineStatusForUserReq.uid;
-        this.channel.queryOnlineStatusForUser({uid: uid}).then(res => {
+        this.channels[this.area].queryOnlineStatusForUser({uid: uid}).then(res => {
           console.log("queryOnlineStatusForUser res:", res);
           this.queryOnlineStatusForUserRes = JSON.stringify(res);
         }).catch(err => {
@@ -733,7 +733,7 @@
 
       },
       queryUsersOnlineStatus() {
-        if (!this.channel)
+        if (!this.channels[this.area])
           return;
 
         let uidsStr = this.queryUsersOnlineStatusReq.uids;
@@ -745,7 +745,7 @@
         }
         this.queryUsersOnlineStatusRes = '';
 
-        this.channel.queryUsersOnlineStatus({ uids: uids }).then(res => {
+        this.channels[this.area].queryUsersOnlineStatus({ uids: uids }).then(res => {
           console.log("queryUsersOnlineStatus res:", res);
           this.queryUsersOnlineStatusRes = JSON.stringify(res);
         }).catch(err => {
