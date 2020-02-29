@@ -76,9 +76,6 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="channelId">
-            <el-input v-model="joinChannelReq.channelId"></el-input>
-          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="joinChannel" style="border-radius: 4px">joinChannel</el-button>
           </el-form-item>
@@ -89,13 +86,10 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{joinChannelRes}}</p>
     </div>
 
-    <p class="text-unit">离开Channel</p>
+    <p class="text-unit">退出Channel</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="channelId">
-            <el-input v-model="leaveChannelReq.channelId"></el-input>
-          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="leaveChannel" style="border-radius: 4px">leaveChannel</el-button>
           </el-form-item>
@@ -125,9 +119,6 @@
           <el-form-item label="content">
             <el-input v-model="sendMessageToChannelReq.content"></el-input>
           </el-form-item>
-          <el-form-item label="channelId">
-            <el-input v-model="sendMessageToChannelReq.channelId"></el-input>
-          </el-form-item>
 
           <el-form-item class="search">
             <el-button type="primary"  @click="sendMessageToChannel" style="border-radius: 4px">sendMessageToChannel</el-button>
@@ -143,9 +134,6 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="channelId">
-            <el-input v-model="setUserAttributesReq.channelId"></el-input>
-          </el-form-item>
           <el-form-item label="key">
             <el-input v-model="setUserAttributesReq.key"></el-input>
           </el-form-item>
@@ -166,9 +154,6 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="channelId">
-            <el-input v-model="deleteUserAttributesReq.channelId"></el-input>
-          </el-form-item>
           <el-form-item label="keys">
             <el-input v-model="deleteUserAttributesReq.keys"></el-input>
           </el-form-item>
@@ -186,9 +171,6 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="channelId">
-            <el-input v-model="getChannelUserListByAttributeReq.channelId"></el-input>
-          </el-form-item>
           <el-form-item label="key">
             <el-input v-model="getChannelUserListByAttributeReq.key"></el-input>
           </el-form-item>
@@ -355,6 +337,7 @@
         flag: -1,
         hummer: null,
         client: null,
+        channel: null,
         channels: [],
         appid: APPID,
         uid: UID,
@@ -363,6 +346,7 @@
         area: 'cn',
         areas: getRegions(),
         setRegionFlag: false,
+        regionChannelId: null,
         mq_data: [],
         mq_channel_data: [],
         reliable: [{
@@ -462,6 +446,9 @@
     mounted() {
     },
     methods: {
+      getRegionChannelId(region, channelId) {
+        return `${region}:${channelId}`;
+      },
       setUserRegion() {
         if (!this.hummer)
           return;
@@ -504,15 +491,36 @@
           return;
         }
 
+        let channelId = 'ch123';
+        let region = 'cn';
+        this.regionChannelId = this.getRegionChannelId(region, channelId);
+        if (this.channels[this.regionChannelId]) {
+          console.log('total channels=', this.channels);
+          return;
+        }
+
+        this.channel = this.client.createChannel({channelId, region});
+        if (!this.channel) {
+          return;
+        }
+        
+        this.channels[this.regionChannelId] = {
+          channel: this.channel,
+          channelId: channelId,
+          region: region
+        }
+
+        console.log('all channels=', this.channels);
+
         // 接收消息
         this.onReceiveMessage();
         this.onReceiveChannelMessage();
         this.onNotifyJoinChannel();
         this.onNotifyLeaveChannel();
-        //this.onNotifyUserAttributesUpdated();
         this.onNotifyUserAttributesSet();
         this.onNotifyUserAttributesDelete();
         this.onNotifyUserCountChange();
+        console.log('InitChannel End');
       },
       // ------------------ 测试接口 --------------------
       getInstance() {
@@ -529,16 +537,15 @@
         });
       },
       joinChannel() {
-        if (!this.client)
+        if (!this.channel)
           return;
 
-        let channelId = this.joinChannelReq.channelId;
         let extra = {"Name": "阿武"};
-        let params = { channelId, extra };
+        let params = { extra };
         console.log("joinChannel Req: " + JSON.stringify(params));
         
         this.joinChannelRes = '';
-        this.client.joinChannel(params).then(res => {
+        this.channel.joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
           this.joinChannelRes = JSON.stringify(res);
         }).catch(err => {
@@ -547,16 +554,15 @@
         });
       },
       leaveChannel() {
-        if (!this.client)
+        if (!this.channel)
           return;
 
-        let channelId = this.leaveChannelReq.channelId;
         let extra = {"Name": "阿武"};
-        let params = { channelId, extra };
+        let params = { extra };
         console.log("leaveChannel Req: " + JSON.stringify(params));
 
         this.leaveChannelRes = '';
-        this.client.leaveChannel(params).then(res => {
+        this.channel.leaveChannel(params).then(res => {
           console.log("自己离开频道leaveChannel res:", res);
           this.leaveChannelRes = JSON.stringify(res);
         }).catch(err => {
@@ -565,16 +571,14 @@
         });
       },
       sendMessageToChannel() {
-        if (!this.client)
+        if (!this.channel)
           return;
 
         let reliable = this.sendMessageToChannelReq.option.reliable;
         let content = this.sendMessageToChannelReq.content;
-        let channelId = this.sendMessageToChannelReq.channelId;
         
         this.sendMessageToChannelRes = '';
-        this.client.sendMessageToChannel({
-          channelId: channelId, 
+        this.channel.sendMessageToChannel({
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
           option: { reliable: reliable }
@@ -589,10 +593,8 @@
         });
       },
       setUserAttributes() {
-        if (!this.client)
+        if (!this.channel)
           return;
-
-        let channelId = this.setUserAttributesReq.channelId;
 
         let attributes = {
           "Name": "awu",
@@ -605,9 +607,9 @@
         let prop = this.setUserAttributesReq.prop;
         attributes[key] = prop;
         
-        let req = { channelId, attributes };
+        let req = { attributes };
         this.setUserAttributesRes = '';
-        this.client.setUserAttributes(req).then(res => {
+        this.channel.setUserAttributes(req).then(res => {
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -616,10 +618,9 @@
         });
       },
       deleteUserAttributesByKeys() {
-        if (!this.client)
+        if (!this.channel)
           return;
 
-        let channelId = this.deleteUserAttributesReq.channelId;
         let keys_str = this.deleteUserAttributesReq.keys;
 
         let keys = [];
@@ -629,10 +630,10 @@
           keys.push(k);
         }
 
-        let req = { channelId, keys };
+        let req = { keys };
         this.deleteUserAttributesRes = '';
 
-        this.client.deleteUserAttributesByKeys(req).then(res => {
+        this.channel.deleteUserAttributesByKeys(req).then(res => {
           console.log("deleteUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -641,12 +642,13 @@
         });
       },
       getChannelUserList() {
-        if (!this.client)
+        if (!this.channel)
           return;
 
-        let channelId = this.getChannelUserListReq.channelId;
+        let channelId = this.getChannelUserCountReq.channelId;
+
         this.getGroupUserListRes = '';
-        this.client.getChannelUserList({ channelId }).then(res => {
+        this.channel.getChannelUserList({ channelId }).then(res => {
           console.log("getChannelUserList res:", res);
           this.getGroupUserListRes = JSON.stringify(res);
         }).catch(err => {
@@ -655,7 +657,7 @@
         });
       },
       getChannelUserListByAtrribute() {
-        if (!this.client)
+        if (!this.channel)
           return;
 
         let channelId = this.getChannelUserListByAttributeReq.channelId;
@@ -663,7 +665,7 @@
         let prop = this.getChannelUserListByAttributeReq.prop;
         this.getGroupUserListByAttributeRes = '';
 
-        this.client.getChannelUserListByAtrribute({ channelId, key, prop }).then(res => {
+        this.channel.getChannelUserListByAtrribute({ key, prop }).then(res => {
           console.log("getChannelUserListByAtrribute res:", res);
           this.getGroupUserListByAttributeRes = JSON.stringify(res);
         }).catch(err => {
@@ -672,7 +674,7 @@
         });
       },
       getChannelUserCount() {
-        if (!this.client)
+        if (!this.channel)
           return;
 
         let channelIdsStr = this.getChannelUserCountReq.channelIds;
@@ -684,7 +686,7 @@
         }
         this.getChannelUserCountRes = '';
 
-        this.client.getChannelUserCount({ channelIds: channelIds }).then(res => {
+        this.channel.getChannelUserCount({ channelIds: channelIds }).then(res => {
           console.log("getChannelUserCount res:", res);
           this.getChannelUserCountRes = JSON.stringify(res);
         }).catch(err => {
@@ -804,7 +806,7 @@
       },
       /* 组播消息接收模块 */
       onReceiveChannelMessage() {
-        this.client.on('ChannelMessage', (data) => {
+        this.channel.on('ChannelMessage', (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
           console.log("接收组播消息ChannelMessage: " + JSON.stringify(data));
           this.mq_channel_data.push(data);
@@ -819,7 +821,7 @@
         });
       },
       onNotifyJoinChannel() {
-        this.client.on('NotifyJoinChannel', (data) => {
+        this.channel.on('NotifyJoinChannel', (data) => {
           console.log("接收消息NotifyJoinChannel: " + JSON.stringify(data));
           this.$message({
             duration: 3000,
@@ -829,7 +831,7 @@
         });
       },
       onNotifyLeaveChannel() {
-        this.client.on('NotifyLeaveChannel', (data) => {
+        this.channel.on('NotifyLeaveChannel', (data) => {
           console.log("接收消息NotifyLeaveChannel: " + JSON.stringify(data));
           this.$message({
             duration: 3000,
@@ -839,7 +841,7 @@
         });
       },
       onNotifyUserAttributesSet() {
-        this.client.on('NotifyUserAttributesSet', (data) => {
+        this.channel.on('NotifyUserAttributesSet', (data) => {
           console.log("用户属性设置NotifyUserAttributesSet: " + JSON.stringify(data));
           this.$message({
             duration: 3000,
@@ -849,7 +851,7 @@
         });
       },
       onNotifyUserAttributesDelete() {
-        this.client.on('NotifyUserAttributesDelete', (data) => {
+        this.channel.on('NotifyUserAttributesDelete', (data) => {
           console.log("用户属性删除NotifyUserAttributesDelete: " + JSON.stringify(data));
           this.$message({
             duration: 3000,
@@ -859,7 +861,7 @@
         });
       },
       onNotifyUserCountChange() {
-        this.client.on('NotifyUserCountChange', (data) => {
+        this.channel.on('NotifyUserCountChange', (data) => {
           console.log("用户数量变更NotifyUserCountChange: " + JSON.stringify(data));
           this.$message({
             duration: 3000,
