@@ -354,8 +354,8 @@
       return {
         flag: -1,
         hummer: null,
+        client: null,
         channels: [],
-        channel: null,
         appid: APPID,
         uid: UID,
         token: TOKEN,
@@ -482,44 +482,45 @@
           return;
         }
 
-        if (this.channels[this.area]) {
-            console.log("channel is ready");
-            this.result = JSON.stringify({code: 0, msg: "channel is ready"});
-            return;
-        }
-
-        this.channels[this.area] = new Hummer.ChannelService(this.hummer, {
-            area: this.area,
-            onReceiveMessage: this.onReceiveMessage,
-            onReceiveChannelMessage: this.onReceiveChannelMessage,
-            onNotifyJoinChannel: this.onNotifyJoinChannel,
-            onNotifyLeaveChannel: this.onNotifyLeaveChannel,
-            onNotifyUserAttributesUpdated: this.onNotifyUserAttributesUpdated,
-            onNotifyUserAttributesSet: this.onNotifyUserAttributesSet,
-            onNotifyUserAttributesDelete: this.onNotifyUserAttributesDelete,
-            onNotifyUserCountChange: this.onNotifyUserCountChange,
-            onerror: (data) => {
-              console.log('new channel: data=' + JSON.stringify(data));
-              this.flag = data.code;
-              this.result = JSON.stringify(data);
-            }
-        });
-
-        this.channel = this.channels[this.area];
-
-        if (this.flag != 0) {
-          delete this.channel;
-          this.channel = null;
+        if (this.client) {
+          console.log("channel is ready");
+          this.result = JSON.stringify({code: 0, msg: "channel is ready"});
           return;
         }
+
+        this.client = new Hummer.ChannelService(this.hummer, {
+           area: this.area,
+        });
+
+        this.client.on('Error', (data) => {
+          console.log('new channel: data=' + JSON.stringify(data));
+          this.flag = data.code;
+          this.result = JSON.stringify(data);
+        });
+
+        if (this.flag != 0) {
+          delete this.client;
+          this.client = null;
+          return;
+        }
+
+        // 接收消息
+        this.onReceiveMessage();
+        this.onReceiveChannelMessage();
+        this.onNotifyJoinChannel();
+        this.onNotifyLeaveChannel();
+        //this.onNotifyUserAttributesUpdated();
+        this.onNotifyUserAttributesSet();
+        this.onNotifyUserAttributesDelete();
+        this.onNotifyUserCountChange();
       },
       // ------------------ 测试接口 --------------------
       getInstance() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
           
         this.result = '';
-        this.channels[this.area].getInstance().then(res => {
+        this.client.getInstance().then(res => {
           console.log("getInstance: ", res);
           this.result = JSON.stringify(res);
         }).catch(err => {
@@ -528,7 +529,7 @@
         });
       },
       joinChannel() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let channelId = this.joinChannelReq.channelId;
@@ -537,7 +538,7 @@
         console.log("joinChannel Req: " + JSON.stringify(params));
         
         this.joinChannelRes = '';
-        this.channels[this.area].joinChannel(params).then(res => {
+        this.client.joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
           this.joinChannelRes = JSON.stringify(res);
         }).catch(err => {
@@ -546,7 +547,7 @@
         });
       },
       leaveChannel() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let channelId = this.leaveChannelReq.channelId;
@@ -555,7 +556,7 @@
         console.log("leaveChannel Req: " + JSON.stringify(params));
 
         this.leaveChannelRes = '';
-        this.channels[this.area].leaveChannel(params).then(res => {
+        this.client.leaveChannel(params).then(res => {
           console.log("自己离开频道leaveChannel res:", res);
           this.leaveChannelRes = JSON.stringify(res);
         }).catch(err => {
@@ -564,7 +565,7 @@
         });
       },
       sendMessageToChannel() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let reliable = this.sendMessageToChannelReq.option.reliable;
@@ -572,7 +573,7 @@
         let channelId = this.sendMessageToChannelReq.channelId;
         
         this.sendMessageToChannelRes = '';
-        this.channels[this.area].sendMessageToChannel({
+        this.client.sendMessageToChannel({
           channelId: channelId, 
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
@@ -588,7 +589,7 @@
         });
       },
       setUserAttributes() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let channelId = this.setUserAttributesReq.channelId;
@@ -606,7 +607,7 @@
         
         let req = { channelId, attributes };
         this.setUserAttributesRes = '';
-        this.channels[this.area].setUserAttributes(req).then(res => {
+        this.client.setUserAttributes(req).then(res => {
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -615,7 +616,7 @@
         });
       },
       deleteUserAttributesByKeys() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let channelId = this.deleteUserAttributesReq.channelId;
@@ -631,7 +632,7 @@
         let req = { channelId, keys };
         this.deleteUserAttributesRes = '';
 
-        this.channels[this.area].deleteUserAttributesByKeys(req).then(res => {
+        this.client.deleteUserAttributesByKeys(req).then(res => {
           console.log("deleteUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -640,12 +641,12 @@
         });
       },
       getChannelUserList() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let channelId = this.getChannelUserListReq.channelId;
         this.getGroupUserListRes = '';
-        this.channels[this.area].getChannelUserList({ channelId }).then(res => {
+        this.client.getChannelUserList({ channelId }).then(res => {
           console.log("getChannelUserList res:", res);
           this.getGroupUserListRes = JSON.stringify(res);
         }).catch(err => {
@@ -654,7 +655,7 @@
         });
       },
       getChannelUserListByAtrribute() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let channelId = this.getChannelUserListByAttributeReq.channelId;
@@ -662,7 +663,7 @@
         let prop = this.getChannelUserListByAttributeReq.prop;
         this.getGroupUserListByAttributeRes = '';
 
-        this.channels[this.area].getChannelUserListByAtrribute({ channelId, key, prop }).then(res => {
+        this.client.getChannelUserListByAtrribute({ channelId, key, prop }).then(res => {
           console.log("getChannelUserListByAtrribute res:", res);
           this.getGroupUserListByAttributeRes = JSON.stringify(res);
         }).catch(err => {
@@ -671,7 +672,7 @@
         });
       },
       getChannelUserCount() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let channelIdsStr = this.getChannelUserCountReq.channelIds;
@@ -683,7 +684,7 @@
         }
         this.getChannelUserCountRes = '';
 
-        this.channels[this.area].getChannelUserCount({ channelIds: channelIds }).then(res => {
+        this.client.getChannelUserCount({ channelIds: channelIds }).then(res => {
           console.log("getChannelUserCount res:", res);
           this.getChannelUserCountRes = JSON.stringify(res);
         }).catch(err => {
@@ -693,7 +694,7 @@
 
       },
       sendMessageToUser() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let reliable = this.sendMessageToUserReq.option.reliable;
@@ -701,7 +702,7 @@
         let receiver = this.sendMessageToUserReq.receiver;
         
         this.sendMessageToUserRes = '';
-        this.channels[this.area].sendMessageToUser({
+        this.client.sendMessageToUser({
           receiver: receiver, 
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content),
@@ -717,13 +718,13 @@
         });
       },
       queryOnlineStatusForUser() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         this.queryOnlineStatusForUserRes = '';
 
         let uid = this.queryOnlineStatusForUserReq.uid;
-        this.channels[this.area].queryOnlineStatusForUser({uid: uid}).then(res => {
+        this.client.queryOnlineStatusForUser({uid: uid}).then(res => {
           console.log("queryOnlineStatusForUser res:", res);
           this.queryOnlineStatusForUserRes = JSON.stringify(res);
         }).catch(err => {
@@ -733,7 +734,7 @@
 
       },
       queryUsersOnlineStatus() {
-        if (!this.channels[this.area])
+        if (!this.client)
           return;
 
         let uidsStr = this.queryUsersOnlineStatusReq.uids;
@@ -745,7 +746,7 @@
         }
         this.queryUsersOnlineStatusRes = '';
 
-        this.channels[this.area].queryUsersOnlineStatus({ uids: uids }).then(res => {
+        this.client.queryUsersOnlineStatus({ uids: uids }).then(res => {
           console.log("queryUsersOnlineStatus res:", res);
           this.queryUsersOnlineStatusRes = JSON.stringify(res);
         }).catch(err => {
@@ -785,71 +786,86 @@
       },
 
       /* 消息接收模块 */
-      onReceiveMessage(data) {
-        data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-        console.log("接收消息ReceiveMessage: " + JSON.stringify(data));
-        this.mq_data.push(data);
+      onReceiveMessage() {
+        this.client.on('MessageFromPeer', (data) => {
+          data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
+          console.log("接收消息MessageFromPeer: " + JSON.stringify(data));
+          this.mq_data.push(data);
 
-        this.$message({
-          duration: 3000,
-          message: "ReceiveMessage: " + JSON.stringify(data),
-          type: 'success'
+          this.$message({
+            duration: 3000,
+            message: "MessageFromPeer: " + JSON.stringify(data),
+            type: 'success'
+          });
+
+          console.log("MQ队列mq_data: " + JSON.stringify(this.mq_data));
         });
 
-        console.log("MQ队列mq_data: " + JSON.stringify(this.mq_data));
       },
       /* 组播消息接收模块 */
-      onReceiveChannelMessage(data) {
-        data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-        console.log("接收组播消息ReceiveChannelMessage: " + JSON.stringify(data));
-        this.mq_channel_data.push(data);
+      onReceiveChannelMessage() {
+        this.client.on('ChannelMessage', (data) => {
+          data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
+          console.log("接收组播消息ChannelMessage: " + JSON.stringify(data));
+          this.mq_channel_data.push(data);
 
-        this.$message({
-          duration: 3000,
-          message: "ReceiveChannelMessage: " + JSON.stringify(data),
-          type: 'success'
-        });
+          this.$message({
+            duration: 3000,
+            message: "ChannelMessage: " + JSON.stringify(data),
+            type: 'success'
+          });
 
-        console.log("组播MQ队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
-      },
-      onNotifyJoinChannel(data) {
-        console.log("接收消息NotifyJoinChannel: " + JSON.stringify(data));
-        this.$message({
-          duration: 3000,
-          message: "JoinChannel: " + JSON.stringify(data),
-          type: 'success'
+          console.log("组播MQ队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
         });
       },
-      onNotifyLeaveChannel(data) {
-        console.log("接收消息NotifyLeaveChannel: " + JSON.stringify(data));
-        this.$message({
-          duration: 3000,
-          message: "LeaveChannel: " + JSON.stringify(data),
-          type: 'success'
+      onNotifyJoinChannel() {
+        this.client.on('NotifyJoinChannel', (data) => {
+          console.log("接收消息NotifyJoinChannel: " + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: "JoinChannel: " + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onNotifyUserAttributesSet(data) {
-        console.log("用户属性设置UserAttributesSet: " + JSON.stringify(data));
-        this.$message({
-          duration: 3000,
-          message: "UserAttributesSet: " + JSON.stringify(data),
-          type: 'success'
+      onNotifyLeaveChannel() {
+        this.client.on('NotifyLeaveChannel', (data) => {
+          console.log("接收消息NotifyLeaveChannel: " + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: "LeaveChannel: " + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onNotifyUserAttributesDelete(data) {
-        console.log("用户属性删除UserAttributesDelete: " + JSON.stringify(data));
-        this.$message({
-          duration: 3000,
-          message: "UserAttributesDelete: " + JSON.stringify(data),
-          type: 'success'
+      onNotifyUserAttributesSet() {
+        this.client.on('NotifyUserAttributesSet', (data) => {
+          console.log("用户属性设置NotifyUserAttributesSet: " + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: "NotifyUserAttributesSet: " + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onNotifyUserCountChange(data) {
-        console.log("用户数量变更UserCountChange: " + JSON.stringify(data));
-        this.$message({
-          duration: 3000,
-          message: "UserCountChange: " + JSON.stringify(data),
-          type: 'success'
+      onNotifyUserAttributesDelete() {
+        this.client.on('NotifyUserAttributesDelete', (data) => {
+          console.log("用户属性删除NotifyUserAttributesDelete: " + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: "NotifyUserAttributesDelete: " + JSON.stringify(data),
+            type: 'success'
+          });
+        });
+      },
+      onNotifyUserCountChange() {
+        this.client.on('NotifyUserCountChange', (data) => {
+          console.log("用户数量变更NotifyUserCountChange: " + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: "NotifyUserCountChange: " + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
       onConnectStatus(data) {
