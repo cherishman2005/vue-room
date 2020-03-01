@@ -545,7 +545,7 @@
         });
       },
       joinChannel() {
-        if (!this.channel)
+        if (!this.channels[this.regionChannelId])
           return;
 
         let extra = {"Name": "阿武"};
@@ -553,7 +553,7 @@
         console.log("joinChannel Req: " + JSON.stringify(params));
         
         this.joinChannelRes = '';
-        this.channel.joinChannel(params).then(res => {
+        this.channels[this.regionChannelId].channel.joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
           this.joinChannelRes = JSON.stringify(res);
         }).catch(err => {
@@ -562,7 +562,7 @@
         });
       },
       leaveChannel() {
-        if (!this.channel)
+        if (!this.channels[this.regionChannelId])
           return;
 
         let extra = {"Name": "阿武"};
@@ -570,7 +570,7 @@
         console.log("leaveChannel Req: " + JSON.stringify(params));
 
         this.leaveChannelRes = '';
-        this.channel.leaveChannel(params).then(res => {
+        this.channels[this.regionChannelId].channel.leaveChannel(params).then(res => {
           console.log("自己离开频道leaveChannel res:", res);
           this.leaveChannelRes = JSON.stringify(res);
         }).catch(err => {
@@ -579,14 +579,14 @@
         });
       },
       sendMessageToChannel() {
-        if (!this.channel)
+        if (!this.channels[this.regionChannelId])
           return;
 
         let reliable = this.sendMessageToChannelReq.option.reliable;
         let content = this.sendMessageToChannelReq.content;
         
         this.sendMessageToChannelRes = '';
-        this.channel.sendMessageToChannel({
+        this.channels[this.regionChannelId].channel.sendMessageToChannel({
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
           option: { reliable: reliable }
@@ -601,7 +601,7 @@
         });
       },
       setUserAttributes() {
-        if (!this.channel)
+        if (!this.channels[this.regionChannelId])
           return;
 
         let attributes = {
@@ -617,7 +617,7 @@
         
         let req = { attributes };
         this.setUserAttributesRes = '';
-        this.channel.setUserAttributes(req).then(res => {
+        this.channels[this.regionChannelId].channel.setUserAttributes(req).then(res => {
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -626,7 +626,7 @@
         });
       },
       deleteUserAttributesByKeys() {
-        if (!this.channel)
+        if (!this.channels[this.regionChannelId])
           return;
 
         let keys_str = this.deleteUserAttributesReq.keys;
@@ -641,7 +641,7 @@
         let req = { keys };
         this.deleteUserAttributesRes = '';
 
-        this.channel.deleteUserAttributesByKeys(req).then(res => {
+        this.channels[this.regionChannelId].channel.deleteUserAttributesByKeys(req).then(res => {
           console.log("deleteUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -650,13 +650,13 @@
         });
       },
       getChannelUserList() {
-        if (!this.channel)
+        if (!this.channels[this.regionChannelId])
           return;
 
         let channelId = this.getChannelUserCountReq.channelId;
 
         this.getGroupUserListRes = '';
-        this.channel.getChannelUserList({ channelId }).then(res => {
+        this.channels[this.regionChannelId].channel.getChannelUserList({ channelId }).then(res => {
           console.log("getChannelUserList res:", res);
           this.getGroupUserListRes = JSON.stringify(res);
         }).catch(err => {
@@ -665,7 +665,7 @@
         });
       },
       getChannelUserListByAtrribute() {
-        if (!this.channel)
+        if (!this.channels[this.regionChannelId])
           return;
 
         let channelId = this.getChannelUserListByAttributeReq.channelId;
@@ -673,7 +673,7 @@
         let prop = this.getChannelUserListByAttributeReq.prop;
         this.getGroupUserListByAttributeRes = '';
 
-        this.channel.getChannelUserListByAtrribute({ key, prop }).then(res => {
+        this.channels[this.regionChannelId].channel.getChannelUserListByAtrribute({ key, prop }).then(res => {
           console.log("getChannelUserListByAtrribute res:", res);
           this.getGroupUserListByAttributeRes = JSON.stringify(res);
         }).catch(err => {
@@ -682,7 +682,7 @@
         });
       },
       getChannelUserCount() {
-        if (!this.channel)
+        if (!this.channels[this.regionChannelId])
           return;
 
         let channelIdsStr = this.getChannelUserCountReq.channelIds;
@@ -694,7 +694,7 @@
         }
         this.getChannelUserCountRes = '';
 
-        this.channel.getChannelUserCount({ channelIds: channelIds }).then(res => {
+        this.channels[this.regionChannelId].channel.getChannelUserCount({ channelIds: channelIds }).then(res => {
           console.log("getChannelUserCount res:", res);
           this.getChannelUserCountRes = JSON.stringify(res);
         }).catch(err => {
