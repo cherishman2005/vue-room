@@ -12,26 +12,6 @@
           <el-form-item label="appid">
             <el-input v-model="appid" disabled></el-input>
           </el-form-item>
-          <el-form-item label="用户归属地">
-            <el-input v-model="region" disabled></el-input>
-          </el-form-item>
-          <!--
-          <el-form-item label="area">
-            <template>
-              <el-select v-model="area" placeholder="area">
-                <el-option
-                  v-for="item in areas"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          -->
-          <el-form-item class="search">
-            <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px">setUserRegion</el-button>
-          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="initChannel" style="border-radius: 4px">initChannel</el-button>
           </el-form-item>
@@ -43,6 +23,32 @@
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{result}}</p>
+    </div>
+
+    <p class="text-unit">设置用户归属地</p>
+    <el-row type="flex">
+      <el-col :span="24"  style="height:30px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="用户归属地">
+            <template>
+              <el-select v-model="userRegion" placeholder="userRegion">
+                <el-option
+                  v-for="item in areas"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px" :disabled='userRegionFlag'>setUserRegion</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserRegionRes}}</p>
     </div>
 
     <p class="text-unit">创建频道实例</p>
@@ -210,9 +216,6 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="channelId">
-            <el-input v-model="getChannelUserListReq.channelId"></el-input>
-          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="getChannelUserList" style="border-radius: 4px">getChannelUserList</el-button>
           </el-form-item>
@@ -364,7 +367,7 @@
         region: REGION || 'cn',
         area: 'cn',
         areas: getRegions(),
-        setRegionFlag: false,
+        userRegionFlag: false,
         iRegion: 'cn',
         iChannelId: 'test123',
         regionChannelId: null,
@@ -379,6 +382,8 @@
             label: 'no'
           }],
         result: '',
+        userRegion: 'cn',
+        setUserRegionRes: '',
         joinChannelReq: {
           channelId: 'test_channel1',
         },
@@ -472,14 +477,14 @@
         return `${region}:${channelId}`;
       },
       setUserRegion() {
-        if (!this.hummer)
+        if (!this.client)
           return;
 
-        let region = this.region;
-        this.hummer.setUserRegion({ region }).then(res => {
+        this.client.setUserRegion({ region: this.userRegion }).then(res => {
           console.log("setUserRegion res:", res);
+          this.setUserRegionRes = JSON.stringify(res);
           if (res.rescode == 0) {
-            this.setRegionFlag = true;
+            this.userRegionFlag = true;
           }
         }).catch(err => {
           console.error("setUserRegion err:", err);
@@ -550,12 +555,12 @@
       },
       // ------------------ 测试接口 --------------------
       getInstance() {
-        if (!this.client)
+        if (!this.hummer)
           return;
           
         this.result = '';
-        this.client.getInstance().then(res => {
-          console.log("getInstance: ", res);
+        this.hummer.getInstance().then(res => {
+          console.log("getInstance Res: ", res);
           this.result = JSON.stringify(res);
         }).catch(err => {
           console.error("getInstance err:", err);
@@ -671,10 +676,8 @@
         if (!this.channels[this.regionChannelId])
           return;
 
-        let channelId = this.getChannelUserListReq.channelId;
-
         this.getGroupUserListRes = '';
-        this.channels[this.regionChannelId].channel.getChannelUserList({ channelId }).then(res => {
+        this.channels[this.regionChannelId].channel.getChannelUserList().then(res => {
           console.log("getChannelUserList res:", res);
           this.getGroupUserListRes = JSON.stringify(res);
         }).catch(err => {
@@ -815,14 +818,14 @@
 
       /* 消息接收模块 */
       onReceiveMessage() {
-        this.client.on('MessageFromPeer', (data) => {
+        this.client.on('MessageFromUser', (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-          console.log("接收消息MessageFromPeer: " + JSON.stringify(data));
+          console.log("接收消息MessageFromUser: " + JSON.stringify(data));
           this.mq_data.push(data);
 
           this.$message({
             duration: 3000,
-            message: "MessageFromPeer: " + JSON.stringify(data),
+            message: "MessageFromUser: " + JSON.stringify(data),
             type: 'success'
           });
 
