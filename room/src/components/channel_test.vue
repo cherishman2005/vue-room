@@ -469,15 +469,12 @@
           return;
         }
 
-        if (this.client) {
-          console.log("channel is ready");
-          this.result = JSON.stringify({code: 0, msg: "channel is ready"});
-          return;
+        if (!this.client) {
+          this.client = new Hummer.ChannelService(this.hummer, {
+            area: this.area,
+          });
         }
-
-        this.client = new Hummer.ChannelService(this.hummer, {
-           area: this.area,
-        });
+        console.log("client is ready");
 
         this.client.on('Error', (data) => {
           console.log('new channel: data=' + JSON.stringify(data));
@@ -491,36 +488,47 @@
           return;
         }
 
-        let channelId = 'ch123';
-        let region = 'cn';
-        this.regionChannelId = this.getRegionChannelId(region, channelId);
-        if (this.channels[this.regionChannelId]) {
-          console.log('total channels=', this.channels);
-          return;
-        }
+        // 接收P2P消息
+        this.onReceiveMessage();
 
-        this.channel = this.client.createChannel({channelId, region});
-        if (!this.channel) {
-          return;
-        }
-        
-        this.channels[this.regionChannelId] = {
-          channel: this.channel,
-          channelId: channelId,
-          region: region
+        this.createChannel();
+      },
+      createChannel() {
+        let channelList = [
+          //{channelId: 'test999', region: 'ap_southeast'},
+          {channelId: 'test123', region: 'cn'},
+        ];
+
+        for (let ch of channelList) {
+          this.regionChannelId = this.getRegionChannelId(ch.region, ch.channelId);
+          if (this.channels[this.regionChannelId]) {
+            console.log('total channels=', this.channels);
+            return;
+          }
+
+          this.channel = this.client.createChannel({channelId: ch.channelId, region: ch.region});
+          if (!this.channel) {
+            return;
+          }
+          
+          this.channels[this.regionChannelId] = {
+            channel: this.channel,
+            channelId: ch.channelId,
+            region: ch.region
+          }
         }
 
         console.log('all channels=', this.channels);
 
-        // 接收消息
-        this.onReceiveMessage();
-        this.onReceiveChannelMessage();
-        this.onNotifyJoinChannel();
-        this.onNotifyLeaveChannel();
-        this.onNotifyUserAttributesSet();
-        this.onNotifyUserAttributesDelete();
-        this.onNotifyUserCountChange();
-        console.log('InitChannel End');
+        let client = this.channels[this.regionChannelId];
+        //for (const client of this.channels) {
+          this.onReceiveChannelMessage(client);
+          this.onNotifyJoinChannel(client);
+          this.onNotifyLeaveChannel(client);
+          this.onNotifyUserAttributesSet(client);
+          this.onNotifyUserAttributesDelete(client);
+          this.onNotifyUserCountChange(client);
+        //}
       },
       // ------------------ 测试接口 --------------------
       getInstance() {
@@ -805,67 +813,67 @@
 
       },
       /* 组播消息接收模块 */
-      onReceiveChannelMessage() {
-        this.channel.on('ChannelMessage', (data) => {
+      onReceiveChannelMessage(client) {
+        client.channel.on('ChannelMessage', (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-          console.log("接收组播消息ChannelMessage: " + JSON.stringify(data));
+          console.log(`接收组播消息ChannelMessage: [${client.region}:${client.channelId}]:` + JSON.stringify(data));
           this.mq_channel_data.push(data);
 
           this.$message({
             duration: 3000,
-            message: "ChannelMessage: " + JSON.stringify(data),
+            message: `ChannelMessage: [${client.region}:${client.channelId}]:` + JSON.stringify(data),
             type: 'success'
           });
 
           console.log("组播MQ队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
         });
       },
-      onNotifyJoinChannel() {
-        this.channel.on('NotifyJoinChannel', (data) => {
-          console.log("接收消息NotifyJoinChannel: " + JSON.stringify(data));
+      onNotifyJoinChannel(client) {
+        client.channel.on('NotifyJoinChannel', (data) => {
+          console.log(`接收消息NotifyJoinChannel [${client.region}:${client.channelId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: "JoinChannel: " + JSON.stringify(data),
+            message: `JoinChannel [${client.region}:${client.channelId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyLeaveChannel() {
-        this.channel.on('NotifyLeaveChannel', (data) => {
-          console.log("接收消息NotifyLeaveChannel: " + JSON.stringify(data));
+      onNotifyLeaveChannel(client) {
+        client.channel.on('NotifyLeaveChannel', (data) => {
+          console.log(`接收消息NotifyLeaveChannel [${client.region}:${client.channelId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: "LeaveChannel: " + JSON.stringify(data),
+            message: `LeaveChannel [${client.region}:${client.channelId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserAttributesSet() {
-        this.channel.on('NotifyUserAttributesSet', (data) => {
-          console.log("用户属性设置NotifyUserAttributesSet: " + JSON.stringify(data));
+      onNotifyUserAttributesSet(client) {
+        client.channel.on('NotifyUserAttributesSet', (data) => {
+          console.log(`用户属性设置NotifyUserAttributesSet [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: "NotifyUserAttributesSet: " + JSON.stringify(data),
+            message: `NotifyUserAttributesSet [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserAttributesDelete() {
-        this.channel.on('NotifyUserAttributesDelete', (data) => {
-          console.log("用户属性删除NotifyUserAttributesDelete: " + JSON.stringify(data));
+      onNotifyUserAttributesDelete(client) {
+        client.channel.on('NotifyUserAttributesDelete', (data) => {
+          console.log(`用户属性删除NotifyUserAttributesDelete [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: "NotifyUserAttributesDelete: " + JSON.stringify(data),
+            message: `NotifyUserAttributesDelete [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserCountChange() {
-        this.channel.on('NotifyUserCountChange', (data) => {
-          console.log("用户数量变更NotifyUserCountChange: " + JSON.stringify(data));
+      onNotifyUserCountChange(client) {
+        client.channel.on('NotifyUserCountChange', (data) => {
+          console.log(`用户数量变更NotifyUserCountChange [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: "NotifyUserCountChange: " + JSON.stringify(data),
+            message: `NotifyUserCountChange [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
             type: 'success'
           });
         });
