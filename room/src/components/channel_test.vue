@@ -495,7 +495,7 @@
       },
       createChannel() {
         let channelList = [
-          //{channelId: 'test999', region: 'ap_southeast'},
+          {channelId: 'test999', region: 'ap_southeast'},
           {channelId: 'test123', region: 'cn'},
         ];
 
