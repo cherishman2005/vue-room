@@ -457,17 +457,11 @@
                                     this.flag = data.code;
                                   }
                                 });
-      
+
       if (this.flag != 0) {
         this.hummer = null;
         return;
       }
-
-      /*
-      if (this.hummer == null) {
-        return;
-      }
-      */
 
       this.onConnectStatus();
       this.onLoginStatus();
