@@ -450,8 +450,8 @@
                                   uid: this.uid,
                                   token: this.token,
                                   //area: AREA,
-                                  onConnectStatus: this.onConnectStatus,
-                                  onLoginStatus: this.onLoginStatus,
+                                  //onConnectStatus: this.onConnectStatus,
+                                  //onLoginStatus: this.onLoginStatus,
                                   onerror: (data) => {
                                     console.log('new hummer: data=' + JSON.stringify(data));
                                     this.flag = data.code;
@@ -463,7 +463,8 @@
         return;
       }
 
-      //this.setUserRegion();
+      this.onConnectStatus();
+      this.onLoginStatus();
 
       this.hummer.setLogLevel({level: -1});
 
@@ -902,11 +903,15 @@
           });
         });
       },
-      onConnectStatus(data) {
-        console.log("===channel status===:" + JSON.stringify(data));
+      onConnectStatus() {
+        this.hummer.on('ConnectStatus', (data) => {
+          console.log("=== hummer channel status===:" + JSON.stringify(data));
+        });
       },
-      onLoginStatus(data) {
-        console.log("===login status===:" + JSON.stringify(data));
+      onLoginStatus() {
+        this.hummer.on('LoginStatus', (data) => {
+          console.log("=== hummer login status===:" + JSON.stringify(data));
+        });
       }
     }
   }
