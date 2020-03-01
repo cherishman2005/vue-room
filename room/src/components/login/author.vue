@@ -17,6 +17,7 @@
           </template>
         </el-form-item>
 
+        <!--
         <el-form-item label="area">
           <template>
             <el-select v-model="area" placeholder="area">
@@ -42,6 +43,7 @@
             </el-select>
           </template>
         </el-form-item>
+        -->
 
         <el-form-item label="uid">
           <el-input v-model="uid"></el-input>

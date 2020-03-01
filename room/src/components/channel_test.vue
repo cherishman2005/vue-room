@@ -449,7 +449,7 @@
       this.hummer = new Hummer.Hummer({ appid: this.appid,
                                   uid: this.uid,
                                   token: this.token,
-                                  area: AREA,
+                                  //area: AREA,
                                   onConnectStatus: this.onConnectStatus,
                                   onLoginStatus: this.onLoginStatus,
                                   onerror: (data) => {
@@ -502,7 +502,7 @@
         }
         
         this.client = new Hummer.ChannelService(this.hummer, {
-          area: this.area,
+          region: this.area,
         });
 
         this.client.on('Error', (data) => {
@@ -530,7 +530,10 @@
           return;
         }
 
-        this.channel = this.client.createChannel({region: this.iRegion, channelId: this.iChannelId});
+        this.channel = this.client.createChannel({
+          region: this.iRegion,
+          channelId: this.iChannelId
+        });
         if (!this.channel) {
           return;
         }
