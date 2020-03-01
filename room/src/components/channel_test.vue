@@ -509,12 +509,14 @@
           return;
         }
 
-        if (!this.client) {
-          this.client = new Hummer.ChannelService(this.hummer, {
-            area: this.area,
-          });
+        if (this.client) {
+          console.log("client is ready");
+          return;
         }
-        console.log("client is ready");
+        
+        this.client = new Hummer.ChannelService(this.hummer, {
+          area: this.area,
+        });
 
         this.client.on('Error', (data) => {
           console.log('new channel: data=' + JSON.stringify(data));
@@ -530,36 +532,8 @@
 
         // 接收P2P消息
         this.onReceiveMessage();
-
-        //this.createChannel();
       },
       createChannel() {
-        /*
-        let channelList = [
-          {channelId: 'test999', region: 'ap_southeast'},
-          {channelId: 'test123', region: 'cn'},
-        ];
-
-        for (let ch of channelList) {
-          this.regionChannelId = this.getRegionChannelId(ch.region, ch.channelId);
-          if (this.channels[this.regionChannelId]) {
-            console.log('total channels=', this.channels);
-            return;
-          }
-
-          this.channel = this.client.createChannel({channelId: ch.channelId, region: ch.region});
-          if (!this.channel) {
-            return;
-          }
-          
-          this.channels[this.regionChannelId] = {
-            channel: this.channel,
-            channelId: ch.channelId,
-            region: ch.region
-          }
-        }
-        */
-
         this.regionChannelId = this.getRegionChannelId(this.iRegion, this.iChannelId);
         if (this.channels[this.regionChannelId]) {
           console.log('total channels=', this.channels);
@@ -582,14 +556,12 @@
         console.log('all channels=', this.channels);
 
         let client = this.channels[this.regionChannelId];
-        //for (const client of this.channels) {
-          this.onReceiveChannelMessage(client);
-          this.onNotifyJoinChannel(client);
-          this.onNotifyLeaveChannel(client);
-          this.onNotifyUserAttributesSet(client);
-          this.onNotifyUserAttributesDelete(client);
-          this.onNotifyUserCountChange(client);
-        //}
+        this.onReceiveChannelMessage(client);
+        this.onNotifyJoinChannel(client);
+        this.onNotifyLeaveChannel(client);
+        this.onNotifyUserAttributesSet(client);
+        this.onNotifyUserAttributesDelete(client);
+        this.onNotifyUserCountChange(client);
       },
       // ------------------ 测试接口 --------------------
       getInstance() {
