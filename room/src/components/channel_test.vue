@@ -72,6 +72,43 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{result}}</p>
     </div>
 
+    <p class="text-unit">创建频道实例</p>
+    <el-row type="flex">
+      <el-col :span="24"  style="height:30px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="iRegion">
+            <el-input v-model="iRegion"></el-input>
+          </el-form-item>
+          <el-form-item label="iChannelId">
+            <el-input v-model="iChannelId"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="createChannel" style="border-radius: 4px">createChannel</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+
+    <p class="text-unit">频道列表[region:channelId](暂时用于选择频道)</p>
+    <el-row type="flex">
+      <el-col :span="24"  style="height:30px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="[region:channelId]">
+            <template>
+              <el-select v-model="regionChannelId" placeholder="regionChannelId">
+                <el-option
+                  v-for="item in regionChannelIds"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+
     <p class="text-unit">加入Channel</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -346,7 +383,10 @@
         area: 'cn',
         areas: getRegions(),
         setRegionFlag: false,
+        iRegion: 'cn',
+        iChannelId: 'test123',
         regionChannelId: null,
+        regionChannelIds: [],
         mq_data: [],
         mq_channel_data: [],
         reliable: [{
@@ -491,9 +531,10 @@
         // 接收P2P消息
         this.onReceiveMessage();
 
-        this.createChannel();
+        //this.createChannel();
       },
       createChannel() {
+        /*
         let channelList = [
           {channelId: 'test999', region: 'ap_southeast'},
           {channelId: 'test123', region: 'cn'},
@@ -517,6 +558,26 @@
             region: ch.region
           }
         }
+        */
+
+        this.regionChannelId = this.getRegionChannelId(this.iRegion, this.iChannelId);
+        if (this.channels[this.regionChannelId]) {
+          console.log('total channels=', this.channels);
+          return;
+        }
+
+        this.channel = this.client.createChannel({region: this.iRegion, channelId: this.iChannelId});
+        if (!this.channel) {
+          return;
+        }
+        
+        this.channels[this.regionChannelId] = {
+          channel: this.channel,
+          region: this.iRegion,
+          channelId: this.iChannelId
+        }
+
+        this.regionChannelIds.push({value: this.regionChannelId, label: this.regionChannelId});
 
         console.log('all channels=', this.channels);
 
