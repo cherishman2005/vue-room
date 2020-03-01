@@ -452,7 +452,7 @@
                                   //area: AREA,
                                   //onConnectStatus: this.onConnectStatus,
                                   //onLoginStatus: this.onLoginStatus,
-                                  onerror: (data) => {
+                                  onError: (data) => {
                                     console.log('new hummer: data=' + JSON.stringify(data));
                                     this.flag = data.code;
                                   }
@@ -462,6 +462,12 @@
         this.hummer = null;
         return;
       }
+
+      /*
+      if (this.hummer == null) {
+        return;
+      }
+      */
 
       this.onConnectStatus();
       this.onLoginStatus();
