@@ -83,7 +83,7 @@
         <el-form :inline="true"  size="small">
           <el-form-item label="[region:channelId]">
             <template>
-              <el-select v-model="regionChannelId" placeholder="regionChannelId">
+              <el-select v-model="regionChannelId" placeholder="">
                 <el-option
                   v-for="item in regionChannelIds"
                   :key="item.value"
@@ -352,6 +352,10 @@
   const APPID = getStorage('appid');
   const TOKEN = getStorage('token');
 
+  // test parameters
+  const TEST_CHANNEL_ID = 'test123';
+  const TEST_ROLE_KEY = 'channel_role_name';
+
   export default {
     name : 'channel-test',
     data() {
@@ -369,7 +373,7 @@
         areas: getRegions(),
         userRegionFlag: false,
         iRegion: 'cn',
-        iChannelId: 'test123',
+        iChannelId: TEST_CHANNEL_ID,
         regionChannelId: null,
         regionChannelIds: [],
         mq_data: [],
@@ -384,32 +388,26 @@
         result: '',
         userRegion: 'cn',
         setUserRegionRes: '',
-        joinChannelReq: {
-          channelId: 'test_channel1',
-        },
         joinChannelRes: '',
-        leaveChannelReq: {
-          channelId: 'test_channel1',
-        },
         leaveChannelRes: '',
         setUserAttributesReq: {
-          key: 'role',
+          key: TEST_ROLE_KEY,
           prop: 'teacher',
-          channelId: 'test_channel1',
+          channelId: TEST_CHANNEL_ID,
         },
         setUserAttributesRes: '',
         deleteUserAttributesReq: {
-          keys: 'role',
-          channelId: 'test_channel1',
+          keys: TEST_ROLE_KEY,
+          channelId: TEST_CHANNEL_ID,
         },
         deleteUserAttributesRes: '',
         getChannelUserListReq: {
-          channelId: 'test_channel1',
+          channelId: TEST_CHANNEL_ID,
         },
         getGroupUserListRes: '',
         getChannelUserListByAttributeReq: {
-          channelId: 'test_channel1',
-          key: 'role',
+          channelId: TEST_CHANNEL_ID,
+          key: TEST_ROLE_KEY,
           prop: 'teacher',
         },
         getGroupUserListByAttributeRes: '',
@@ -420,7 +418,7 @@
         sendMessageToChannelReq: {
           option: { reliable: 'no' },
           content: 'js_sdk sendMessageToChannel',
-          channelId: 'test_channel1',
+          channelId: TEST_CHANNEL_ID,
         },
         sendMessageToChannelRes: "",
         sendMessageToUserReq: {
@@ -430,7 +428,7 @@
         },
         sendMessageToUserRes: "",
         getChannelUserCountReq: {
-          channelIds: 'test_channel1'
+          channelIds: TEST_CHANNEL_ID
         },
         getChannelUserCountRes: '',
         queryUsersOnlineStatusReq: {
@@ -450,8 +448,6 @@
                                   uid: this.uid,
                                   token: this.token,
                                   //area: AREA,
-                                  //onConnectStatus: this.onConnectStatus,
-                                  //onLoginStatus: this.onLoginStatus,
                                   onError: (data) => {
                                     console.log('new hummer: data=' + JSON.stringify(data));
                                     this.flag = data.code;
@@ -502,10 +498,17 @@
           return;
         }
         
+
+        /*
         this.client = new Hummer.ChannelService(this.hummer, {
           region: this.area,
         });
-
+        */
+        
+        this.client = this.hummer.createInstance({
+          region: this.area,
+        });
+        
         this.client.on('Error', (data) => {
           console.log('new channel: data=' + JSON.stringify(data));
           this.flag = data.code;
@@ -527,7 +530,7 @@
 
         this.regionChannelId = this.getRegionChannelId(this.iRegion, this.iChannelId);
         if (this.channels[this.regionChannelId]) {
-          console.log('total channels=', this.channels);
+          console.log('channel exists, and channels=', this.channels);
           return;
         }
 
@@ -547,7 +550,7 @@
 
         this.regionChannelIds.push({value: this.regionChannelId, label: this.regionChannelId});
 
-        console.log('all channels=', this.channels);
+        console.log('channels=', this.channels);
 
         let client = this.channels[this.regionChannelId];
         this.onReceiveChannelMessage(client);
