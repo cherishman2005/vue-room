@@ -16,7 +16,7 @@
             <el-button type="primary"  @click="initChannel" style="border-radius: 4px">initChannel</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="getInstance" style="border-radius: 4px">getInstance</el-button>
+            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -444,10 +444,9 @@
     },
     created() {
       // 初始化Hummer
-      this.hummer = new Hummer.Hummer({ appid: this.appid,
+      this.hummer = Hummer.createHummer({ appid: this.appid,
                                   uid: this.uid,
                                   token: this.token,
-                                  //area: AREA,
                                   onError: (data) => {
                                     console.log('new hummer: data=' + JSON.stringify(data));
                                     this.flag = data.code;
@@ -473,20 +472,6 @@
       getRegionChannelId(region, channelId) {
         return `${region}:${channelId}`;
       },
-      setUserRegion() {
-        if (!this.client)
-          return;
-
-        this.client.setUserRegion({ region: this.userRegion }).then(res => {
-          console.log("setUserRegion res:", res);
-          this.setUserRegionRes = JSON.stringify(res);
-          if (res.rescode == 0) {
-            this.userRegionFlag = true;
-          }
-        }).catch(err => {
-          console.error("setUserRegion err:", err);
-        });
-      },
       initChannel() {
         if (!this.hummer) {
           console.log("hummer is null");
@@ -498,13 +483,7 @@
           return;
         }
         
-
-        /*
-        this.client = new Hummer.ChannelService(this.hummer, {
-          region: this.area,
-        });
-        */
-        
+        // 初始化channelService
         this.client = this.hummer.createInstance({
           region: this.area,
         });
@@ -523,6 +502,20 @@
 
         // 接收P2P消息
         this.onReceiveMessage();
+      },
+      setUserRegion() {
+        if (!this.client)
+          return;
+
+        this.client.setUserRegion({ region: this.userRegion }).then(res => {
+          console.log("setUserRegion res:", res);
+          this.setUserRegionRes = JSON.stringify(res);
+          if (res.rescode == 0) {
+            this.userRegionFlag = true;
+          }
+        }).catch(err => {
+          console.error("setUserRegion err:", err);
+        });
       },
       createChannel() {
         if (!this.client)
@@ -561,16 +554,16 @@
         this.onNotifyUserCountChange(client);
       },
       // ------------------ 测试接口 --------------------
-      getInstance() {
+      getInstanceInfo() {
         if (!this.hummer)
           return;
           
         this.result = '';
-        this.hummer.getInstance().then(res => {
-          console.log("getInstance Res: ", res);
+        this.hummer.getInstanceInfo().then(res => {
+          console.log("getInstanceInfo Res: ", res);
           this.result = JSON.stringify(res);
         }).catch(err => {
-          console.error("getInstance err:", err);
+          console.error("getInstanceInfo err:", err);
           this.result = JSON.stringify(err);
         });
       },
