@@ -326,6 +326,20 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{loginRes}}</p>
     </div>
 
+    <p class="text-unit">刷新token</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary"  @click="refreshToken" style="border-radius: 4px">refreshToken</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{refreshTokenRes}}</p>
+    </div>
+
     <p class="text-unit">清除MQ队列</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -343,8 +357,8 @@
 <script>
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil';
-  import { getRegions } from '@/global.js';
-  //import Hummer from 'hummer-channel';
+  import { getRegions, getRegionChannelId } from '@/components/room.js';
+  //import Hummer from 'hummer-channel-sdk';
 
   const UID = getStorage('uid');
   const AREA = getStorage('area');
@@ -436,6 +450,7 @@
         },
         queryUsersOnlineStatusRes: '',
         loginRes: '',
+        refreshTokenRes: '',
       }
     },
     computed: {
@@ -457,21 +472,19 @@
         this.hummer = null;
         return;
       }
+      
+      this.hummer.setLogLevel(-1);
 
       this.onConnectStatus();
       this.onLoginStatus();
 
-      this.hummer.setLogLevel({level: -1});
-
+      
     },
     destroyed() {
     },
     mounted() {
     },
     methods: {
-      getRegionChannelId(region, channelId) {
-        return `${region}:${channelId}`;
-      },
       initChannel() {
         if (!this.hummer) {
           console.log("hummer is null");
@@ -483,7 +496,7 @@
           return;
         }
         
-        // 初始化channelService
+        // 初始化ChannelService
         this.client = this.hummer.createInstance({
           region: this.area,
         });
@@ -521,7 +534,7 @@
         if (!this.client)
           return;
 
-        this.regionChannelId = this.getRegionChannelId(this.iRegion, this.iChannelId);
+        this.regionChannelId = getRegionChannelId(this.iRegion, this.iChannelId);
         if (this.channels[this.regionChannelId]) {
           console.log('channel exists, and channels=', this.channels);
           return;
@@ -809,6 +822,20 @@
         }).catch(err => {
           console.error("logout err:", err);
           this.loginRes = JSON.stringify(err);
+        });
+      },
+      // hummer3.1
+      refreshToken() {
+        if (!this.hummer)
+          return;
+        
+        this.refreshTokenRes = '';
+        this.hummer.refreshToken({uid: this.uid, token: this.token}).then(res => {
+          console.log("refreshToken Res: " + JSON.stringify(res));
+          this.refreshTokenRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("refreshToken err:", err);
+          this.refreshTokenRes = JSON.stringify(err);
         });
       },
       clearMqData() {

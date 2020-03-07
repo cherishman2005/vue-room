@@ -17,34 +17,6 @@
           </template>
         </el-form-item>
 
-        <!--
-        <el-form-item label="area">
-          <template>
-            <el-select v-model="area" placeholder="area">
-              <el-option
-                v-for="item in areas"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </template>
-        </el-form-item>
-
-        <el-form-item label="用户归属地">
-          <template>
-            <el-select v-model="region" placeholder="region">
-              <el-option
-                v-for="item in regions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </template>
-        </el-form-item>
-        -->
-
         <el-form-item label="uid">
           <el-input v-model="uid"></el-input>
         </el-form-item>
@@ -58,7 +30,8 @@
 </template>
 
 <script>
-  import { APPID, authURL, redirectURL, areas, getAppids, getRegions } from '@/global.js';
+  import { APPID, authURL, redirectURL } from '@/global.js';
+  import { areas, getAppids, getRegions, getRegionChannelId } from '@/components/room.js';
   import { getBeforeLoginUrl, removeBeforeLoginUrl } from '@/utils/auth'
   import { getStorage, setStorage } from '@/utils/BaseUtil'
 
