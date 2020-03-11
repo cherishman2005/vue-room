@@ -2,33 +2,16 @@
   <div class="dashboard-container">
     <h2 style="text-align:left;">Channel调测系统（调用channel js_sdk，提供调测接口）</h2>
 
-    <!-- 初始化channel -->
-    <el-row type="flex">
-      <el-col :span="24"  style="height:30px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="uid">
-            <el-input v-model="uid" disabled></el-input>
-          </el-form-item>
-          <el-form-item label="appid">
-            <el-input v-model="appid" disabled></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="initChannel" style="border-radius: 4px">initChannel</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{result}}</p>
-    </div>
-
     <p class="text-unit">设置用户归属地</p>
     <el-row type="flex">
       <el-col :span="24"  style="height:30px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="appid">
+            <el-input v-model="appid" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="uid">
+            <el-input v-model="uid" disabled></el-input>
+          </el-form-item>
           <el-form-item label="用户归属地">
             <template>
               <el-select v-model="userRegion" placeholder="userRegion">
@@ -49,6 +32,23 @@
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserRegionRes}}</p>
+    </div>
+
+    <!-- 初始化channel -->
+    <el-row type="flex">
+      <el-col :span="24"  style="height:30px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary"  @click="initChannel" style="border-radius: 4px">initChannel</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{result}}</p>
     </div>
 
     <p class="text-unit">创建频道实例</p>
@@ -485,6 +485,20 @@
     mounted() {
     },
     methods: {
+      setUserRegion() {
+        if (!this.hummer)
+          return;
+
+        this.hummer.setUserRegion({ region: this.userRegion }).then(res => {
+          console.log("setUserRegion res:", res);
+          this.setUserRegionRes = JSON.stringify(res);
+          if (res.rescode == 0) {
+            this.userRegionFlag = true;
+          }
+        }).catch(err => {
+          console.error("setUserRegion err:", err);
+        });
+      },
       initChannel() {
         if (!this.hummer) {
           console.log("hummer is null");
@@ -515,20 +529,6 @@
 
         // 接收P2P消息
         this.onReceiveMessage();
-      },
-      setUserRegion() {
-        if (!this.client)
-          return;
-
-        this.client.setUserRegion({ region: this.userRegion }).then(res => {
-          console.log("setUserRegion res:", res);
-          this.setUserRegionRes = JSON.stringify(res);
-          if (res.rescode == 0) {
-            this.userRegionFlag = true;
-          }
-        }).catch(err => {
-          console.error("setUserRegion err:", err);
-        });
       },
       createChannel() {
         if (!this.client)
@@ -735,7 +735,6 @@
           console.error("getChannelUserCount err:", err);
           this.getChannelUserCountRes = JSON.stringify(err);
         });
-
       },
       sendMessageToUser() {
         if (!this.client)
