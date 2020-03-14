@@ -312,7 +312,7 @@
         KickOffUserReq: {
           admin: UID,
           uid: '0',
-          secs: 3000,
+          secs: '3000',
           reason: "js test KickOffUser",
         },
         KickOffUserRes: '',
