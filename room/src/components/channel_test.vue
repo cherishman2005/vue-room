@@ -367,7 +367,7 @@
   const TOKEN = getStorage('token');
 
   // test parameters
-  const TEST_CHANNEL_ID = 'test123';
+  const TEST_CHANNEL_ID = 'test123456';
   const TEST_ROLE_KEY = 'channel_role_name';
 
   export default {
@@ -430,13 +430,13 @@
         },
         queryOnlineStatusForUserRes: '',
         sendMessageToChannelReq: {
-          option: { reliable: 'no' },
+          option: { reliable: 'yes' },
           content: 'js_sdk sendMessageToChannel',
           channelId: TEST_CHANNEL_ID,
         },
         sendMessageToChannelRes: "",
         sendMessageToUserReq: {
-          option: { reliable: 'no' },
+          option: { reliable: 'yes' },
           content: 'js_sdk sendMessageToUser',
           receiver: '999000',
         },

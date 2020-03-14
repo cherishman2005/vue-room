@@ -15,6 +15,9 @@
           <el-form-item label="roomid">
             <el-input v-model="roomid"></el-input>
           </el-form-item>
+          <el-form-item label="iRegion">
+            <el-input v-model="iRegion"></el-input>
+          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="createChatRoomId" style="border-radius: 4px">createChatRoomId</el-button>
           </el-form-item>
@@ -115,16 +118,16 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="content">
-            <el-input v-model="SendGroupBcReq.content"></el-input>
+            <el-input v-model="sendGroupMessageReq.content"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="sendGroupBc" style="border-radius: 4px">sendGroupBc</el-button>
+            <el-button type="primary"  @click="sendGroupMessage" style="border-radius: 4px">sendGroupMessage</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{SendGroupBcRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendGroupMessageRes}}</p>
     </div>
 
     <p class="text-unit">A给B发送消息</p>
@@ -246,7 +249,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{SetUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">查询用户属性列表</p>
@@ -260,7 +263,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{GetUserAttributesListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getUserAttributesListRes}}</p>
     </div>
 
   </div>
@@ -269,12 +272,15 @@
 <script>
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
+  import { getRegions, getRegionChannelId } from '@/components/room.js';
   //import Hummer from 'hummer-chatroom'
  
   const UID = getStorage('uid');
   const ROOMID = Number(getStorage('roomid'));
   const AREA = getStorage("area");
   const APPID = getStorage("appid");
+  const REGION = getStorage('region');
+  const TOKEN = getStorage('token');
 
   export default {
     name : 'chatroom-test',
@@ -282,10 +288,18 @@
       return {
         flag: -1,
         hummer: null,
-        chatroom: null,
         appid: APPID,
         roomid: ROOMID,
         uid: UID,
+        token: TOKEN,
+        region: REGION || 'cn',
+        iRegion: 'chn',
+        area: 'chn',
+        areas: getRegions(),
+        chatroom: null,
+        chatrooms: [],
+        regionChatroomId: '',
+        regionChatroomIds: [],
         GetInstanceRes: '',
         JoinChatRoomReq: {
           joinProps: "",
@@ -302,10 +316,10 @@
           reason: "js test KickOffUser",
         },
         KickOffUserRes: '',
-        SendGroupBcReq: {
-          content: "js_sdk SendGroupBc",
+        sendGroupMessageReq: {
+          content: "js_sdk sendGroupMessage",
         },
-        SendGroupBcRes: '',
+        sendGroupMessageRes: '',
         sendSingleUserMessageReq: {
           content: "js_sdk sendUnicast",
           receiver: '123',
@@ -333,8 +347,8 @@
           key: 'Name',
           prop: '阿武'
         },
-        SetUserAttributesRes: '',
-        GetUserAttributesListRes: '',
+        setUserAttributesRes: '',
+        getUserAttributesListRes: '',
       }
     },
     computed: {
@@ -343,15 +357,11 @@
     },
     created() {
       let token = getStorage("token");
-
-      // 1. 初始化Hummer
-      this.hummer = new Hummer.Hummer({ appid: APPID, 
+      // 初始化Hummer
+      this.hummer = Hummer.createHummer({ appid: this.appid,
                                   uid: this.uid,
-                                  token: token,
-                                  area: AREA,
-                                  onConnectStatus: this.onConnectStatus,
-                                  onLoginStatus: this.onLoginStatus,
-                                  onerror: (data) => {
+                                  token: this.token,
+                                  onError: (data) => {
                                     console.log('new hummer: data=' + JSON.stringify(data));
                                     this.flag = data.code;
                                   }
@@ -361,8 +371,11 @@
         this.hummer = null;
         return;
       }
+      
+      this.hummer.setLogLevel(-1);
 
-      this.hummer.setLogLevel({level: -1});
+      this.onConnectStatus();
+      this.onLoginStatus();
     },
     destroyed() {
     },
@@ -381,6 +394,7 @@
             this.chatroom = null;
         }
 
+        /*
         this.chatroom = new Hummer.ChatRoom(this.hummer, {  
                                       roomid: this.roomid,
                                       onRecvSingleUserMessage: this.onRecvSingleUserMessage,
@@ -397,12 +411,42 @@
                                         this.flag = data.code;
                                       } 
                                     });
+        */
 
-        if (this.flag != 0) {
-          delete this.chatroom;
-          this.chatroom = null;
+        this.regionChatroomId = getRegionChannelId(this.region, this.roomid);
+        if (this.chatrooms[this.regionChatroomId]) {
+          console.log('channel exists, and channels=', this.channels);
           return;
         }
+
+        this.chatroom = this.hummer.createChatRoom({
+          region: this.iRegion,
+          roomid: this.roomid
+        });
+        if (!this.chatroom) {
+          return;
+        }
+        
+        this.chatrooms[this.regionChatroomId] = {
+          chatroom: this.chatroom,
+          region: this.region,
+          roomid: this.roomid
+        }
+
+        this.regionChatroomIds.push({value: this.regionChatroomId, label: this.regionChatroomId});
+
+        console.log('chatrooms=', this.chatrooms);
+
+        let client = this.chatrooms[this.regionChatroomId];
+        this.onRecvSingleUserMessage(client);
+        this.onDismissChatRoomBc(client);
+        this.onUpdateChatRoomInfoBc(client);
+        this.onKickOffUserBc(client);
+        this.onRecvGroupBc(client);
+        this.onTextChatBc(client);
+        this.onUserCountBc(client);
+        this.onUserOnlineChangeBc(client);
+        this.onNotifyUserAttributesSet(client);
 
         setStorage("roomid", this.roomid);
       },
@@ -422,8 +466,9 @@
             "Bulletin": "公告",
             "Extention": "自定义",
           };
-        
-          let params = { props };
+         
+          let region = this.iRegion;
+          let params = { region, props };
           this.hummer.createChatRoomId(params).then((res) => {
             console.log("createChatRoomId Res: ", res);
             this.CreateChatRoomIdRes = res;
@@ -442,34 +487,36 @@
 
       // ------------------ 测试接口 --------------------
       getInstance() {
-        if (!this.chatroom)
+        if (!this.hummer)
           return;
 
-        this.chatroom.getInstance().then(res => {
-          console.log("getInstance: ", res);
+        this.hummer.getInstanceInfo().then(res => {
+          console.log("getInstanceInfo: ", res);
           this.GetInstanceRes = res;
         }).catch(err => {
           console.log(err);
         });
       },
       joinChatRoom() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
+
+        console.log('regionChatroomId=', this.regionChatroomId, ' chatroom=', this.chatrooms[this.regionChatroomId]);
         
         let joinProps = { "H5_sdk": 'js_sdk' };
         let req = { joinProps }
-        this.chatroom.joinChatRoom(req).then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.joinChatRoom(req).then(res => {
           console.log("joinChatRoom Res: " + JSON.stringify(res));
           this.JoinChatRoomRes = res;
-        }).catch((err) => {
+        }).catch(err => {
           console.log("joinChatRoom: err=", err);
         })
       },
       leaveChatRoom() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
           
-        this.chatroom.leaveChatRoom().then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.leaveChatRoom().then((res) => {
           console.log("leaveChatRoom Res: " + JSON.stringify(res));
           this.LeaveChatRoomRes = res;
         }).catch((err) => {
@@ -477,7 +524,7 @@
         })
       },
       updateChatRoomInfo() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
 
         let props = {
@@ -488,17 +535,16 @@
         };
         
         let req = { props };
-        this.chatroom.updateChatRoomInfo(req).then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.updateChatRoomInfo(req).then((res) => {
           this.UpdateChatRoomInfoRes = res;
           console.log("updateChatRoomInfo Res: " + JSON.stringify(res));
-        }).catch((err) => {
+        }).catch(err => {
           console.log(err)
         })
       },
       dismissChatRoom() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
-
 
         this.$confirm("解散聊天室RoomId吗?", "提示", {
           confirmButtonText: "确定",
@@ -506,16 +552,16 @@
           type: "warning"
         }).then(() => {
 
-          this.chatroom.dismissChatRoom().then((res) => {
+          this.chatrooms[this.regionChatroomId].chatroom.dismissChatRoom().then((res) => {
             console.log("dismissChatRoom Res: ", res);
             this.DismissChatRoomRes = res;
             if (res.rescode == 0) {
-              delete this.chatroom;
-              this.chatroom = null;
+              delete this.chatrooms[this.regionChatroomId];
+              this.chatrooms[this.regionChatroomId] = null;
               this.roomid = 0;
               setStorage("roomid", this.roomid);
             }
-          }).catch((err) => {
+          }).catch(err => {
             console.log(err)
           })
 
@@ -524,7 +570,7 @@
         });
       },
       kickOffUser() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
 
         let uid = this.KickOffUserReq.uid;
@@ -532,43 +578,43 @@
         let reason = this.KickOffUserReq.reason;
 
         let req = { uid, secs, reason }
-        this.chatroom.kickOffUser(req).then((res) => {
-          this.KickOffUserRes = res;
-          console.log("kickOffUser Res: ", res);
+        this.chatrooms[this.regionChatroomId].chatroom.kickOffUser(req).then(res => {
+          this.KickOffUserRes = JSON.stringify(res);
+          console.log("kickOffUser Res: " + JSON.stringify(res));
         }).catch((err) => {
           console.log(err)
         })
       },
-      sendGroupBc() {
-        if (!this.chatroom)
+      sendGroupMessage() {
+        if (!this.chatrooms[this.regionChatroomId])
           return;
           
-        let content = this.SendGroupBcReq.content;
+        let content = this.sendGroupMessageReq.content;
         let req = { content }
-        this.chatroom.sendGroupBc(req).then((res) => {
-          console.log("sendGroupBc Res: ", res);
-          this.SendGroupBcRes = res;
-        }).catch((err) => {
+        this.chatrooms[this.regionChatroomId].chatroom.sendGroupMessage(req).then((res) => {
+          console.log("sendGroupMessage Res: " + JSON.stringify(res));
+          this.sendGroupMessageRes = res;
+        }).catch(err => {
           console.log(err)
         })
       },
       sendSingleUserMessage() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
           
         let content = this.sendSingleUserMessageReq.content;
         let receiver = this.sendSingleUserMessageReq.receiver;
 
         let req = { content, receiver }
-        this.chatroom.sendSingleUserMessage(req).then((res) => {
-          console.log("sendSingleUserMessage Res: ", res);
-          this.sendSingleUserMessageRes = res;
-        }).catch((err) => {
+        this.chatrooms[this.regionChatroomId].chatroom.sendSingleUserMessage(req).then((res) => {
+          console.log("sendSingleUserMessage Res: " +  JSON.stringify(res));
+          this.sendSingleUserMessageRes = JSON.stringify(res);
+        }).catch(err => {
           console.log(err)
         })
       },
       sendTextChat() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
           
         let chat = this.SendTextChatReq.chat;
@@ -576,32 +622,32 @@
         let extProps = { "Name": "名称extProps" };
   
         let req = { chat, chatProps, extProps }
-        this.chatroom.sendTextChat(req).then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.sendTextChat(req).then((res) => {
           console.log("sendTextChat Res: " + JSON.stringify(res));
-          this.SendTextChatRes = res;
-        }).catch((err) => {
+          this.SendTextChatRes = JSON.stringify(res);
+        }).catch(err => {
           console.log(err)
         })
       },
       getChatRoomInfo() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
           
-        this.chatroom.getChatRoomInfo().then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.getChatRoomInfo().then((res) => {
           console.log("getChatRoomInfo Res: " + JSON.stringify(res));
-          this.GetChatRoomInfoRes = res;
-        }).catch((err) => {
+          this.GetChatRoomInfoRes = JSON.stringify(res);
+        }).catch(err => {
           console.log(err)
         })
       },
       getChatRoomManager() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
           
         let roler = this.GetChatRoomManagerReq.roler;
 
         let params = { roler }
-        this.chatroom.getChatRoomManager(params).then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.getChatRoomManager(params).then((res) => {
           console.log("getChatRoomManager Res: " + JSON.stringify(res));
           this.GetChatRoomManagerRes = JSON.stringify(res);
         }).catch((err) => {
@@ -609,33 +655,33 @@
         })
       },
       getUserCount() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
           
-        this.chatroom.getUserCount().then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.getUserCount().then((res) => {
           console.log("getUserCount Res: " + JSON.stringify(res));
           this.GetUserCountRes = JSON.stringify(res);
-        }).catch((err) => {
+        }).catch(err => {
           console.log(err)
         })
       },
       getUserList() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
           
         let num = this.GetUserListReq.num;
         let pos = this.GetUserListReq.pos;
 
         let req = { num, pos }
-        this.chatroom.getUserList(req).then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.getUserList(req).then(res => {
           console.log("getUserList Res: " + JSON.stringify(res));
           this.GetUserListRes = JSON.stringify(res);
-        }).catch((err) => {
+        }).catch(err => {
           console.log(err)
         })
       },
       setUserAttributes() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
 
         let attributes = { 
@@ -649,106 +695,134 @@
         attributes[key] = prop;
         
         let req = { attributes };
-        this.chatroom.setUserAttributes(req).then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.setUserAttributes(req).then((res) => {
           console.log("setUserAttributes Res: ", res);
-          this.SetUserAttributesRes = JSON.stringify(res);
-        }).catch((err) => {
+          this.setUserAttributesRes = JSON.stringify(res);
+        }).catch(err => {
           console.log(err)
         })
       },
       getUserAttributesList() {
-        if (!this.chatroom)
+        if (!this.chatrooms[this.regionChatroomId])
           return;
           
-        this.chatroom.getUserAttributesList().then((res) => {
+        this.chatrooms[this.regionChatroomId].chatroom.getUserAttributesList().then((res) => {
           console.log("getUserAttributesList Res: " + JSON.stringify(res));
-          this.GetUserAttributesListRes = JSON.stringify(res);
+          this.getUserAttributesListRes = JSON.stringify(res);
         }).catch((err) => {
           console.log(err)
         })
       },
 
       /*  消息接收模块 */
-      onRecvSingleUserMessage(data) {
-        console.log("接收消息RecvSingleUserData： " + JSON.stringify(data));
+      onRecvSingleUserMessage(client) {
+        client.chatroom.on('SingleUserMessage', (data) => {
+          console.log("接收消息SingleUserMessage： " + JSON.stringify(data));
 
-        this.$message({
-          duration: 3000,
-          message: "接收消息RecvSingleUserData： " + JSON.stringify(data),
-          type: 'success'
+          this.$message({
+            duration: 3000,
+            message: "接收消息SingleUserMessage： " + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onDismissChatRoomBc(data) {
-        console.log("接收消息DismissChatRoomBc： " + JSON.stringify(data));
-      },
-      onUpdateChatRoomInfoBc(data)  {
-        console.log("接收消息UpdateChatRoomInfoBc： " + JSON.stringify(data));
+      onDismissChatRoomBc(client) {
+        client.chatroom.on('DismissChatRoomBc', (data) => {
+          console.log("接收消息DismissChatRoomBc： " + JSON.stringify(data));
 
-        this.$message({
-          duration: 3000,
-          message: "接收消息UpdateChatRoomInfoBc： " + JSON.stringify(data),
-          type: 'success'
+          this.$message({
+            duration: 3000,
+            message: "接收消息DismissChatRoomBc： " + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onKickOffUserBc(data) {
-        console.log("接收消息KickOffUserBc： " + JSON.stringify(data));
+      onUpdateChatRoomInfoBc(client)  {
+        client.chatroom.on('UpdateChatRoomInfoBc', (data) => {
+          console.log("接收消息UpdateChatRoomInfoBc：" + JSON.stringify(data));
 
-        this.$message({
-          duration: 3000,
-          message: "接收消息KickOffUserBc： " + JSON.stringify(data),
-          type: 'success'
+          this.$message({
+            duration: 3000,
+            message: "接收消息UpdateChatRoomInfoBc：" + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onRecvGroupBc(data) {
-        console.log("接收消息RecvGroupBc： " + JSON.stringify(data));
+      onKickOffUserBc(client) {
+        client.chatroom.on('KickOffUserBc', (data) => {
+          console.log("接收消息KickOffUserBc：" + JSON.stringify(data));
 
-        this.$message({
-          duration: 3000,
-          message: "接收消息RecvGroupBc: " + JSON.stringify(data),
-          type: 'success'
+          this.$message({
+            duration: 3000,
+            message: "接收消息KickOffUserBc：" + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onTextChatBc(data) {
-        console.log("接收消息TextChatBc： " + JSON.stringify(data));
+      onRecvGroupBc(client) {
+        client.chatroom.on('GroupMessage', (data) => {
+          console.log("接收消息GroupMessage：" + JSON.stringify(data));
 
-        this.$message({
-          duration: 3000,
-          message: "接收消息TextChatBc： " + JSON.stringify(data),
-          type: 'success'
+          this.$message({
+            duration: 3000,
+            message: "接收消息GroupMessage：" + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onUserCountBc(data) {
-        console.log("接收消息UserCountBc：" + JSON.stringify(data));
+      onTextChatBc(client) {
+        client.chatroom.on('TextChatBc', (data) => {
+          console.log("接收消息TextChatBc：" + JSON.stringify(data));
 
-        this.$message({
-          duration: 3000,
-          message: "接收消息UserCountBc：" + JSON.stringify(data),
-          type: 'success'
+          this.$message({
+            duration: 3000,
+            message: "接收消息TextChatBc：" + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onNotifyUserAttributesSet(data) {
-        console.log("接收消息UserAttributesSet： " + JSON.stringify(data));
+      onUserCountBc(client) {
+        client.chatroom.on('NotifyUserCount', (data) => {
+          console.log("接收消息NotifyUserCount：" + JSON.stringify(data));
 
-        this.$message({
-          duration: 3000,
-          message: "接收消息UserAttributesSet：" + JSON.stringify(data),
-          type: 'success'
+          this.$message({
+            duration: 3000,
+            message: "接收消息NotifyUserCount：" + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onUserOnlineChangeBc(data) {
-        console.log("接收消息UserOnlineChangeBc：" + JSON.stringify(data));
+      onNotifyUserAttributesSet(client) {
+        client.chatroom.on('NotifyUserAttributesSet', (data) => {
+          console.log("接收消息NotifyUserAttributesSet：" + JSON.stringify(data));
 
-        this.$message({
-          duration: 3000,
-          message: "接收消息UserOnlineChangeBc：" + JSON.stringify(data),
-          type: 'success'
+          this.$message({
+            duration: 3000,
+            message: "接收消息NotifyUserAttributesSet：" + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onConnectStatus(data) {
-        console.log("===connect status===:", data);
+      onUserOnlineChangeBc(client) {
+        client.chatroom.on('NotifyUserOnlineChange', (data) => {
+          console.log("接收消息NotifyUserOnlineChange：" + JSON.stringify(data));
+
+          this.$message({
+            duration: 3000,
+            message: "接收消息NotifyUserOnlineChange：" + JSON.stringify(data),
+            type: 'success'
+          });
+        });
       },
-      onLoginStatus(data) {
-        console.log("===login status===:", data);
+      onConnectStatus() {
+        this.hummer.on('ConnectStatus', (data) => {
+          console.log("=== hummer channel status===:" + JSON.stringify(data));
+        });
+      },
+      onLoginStatus() {
+        this.hummer.on('LoginStatus', (data) => {
+          console.log("=== hummer login status===:" + JSON.stringify(data));
+        });
       }
     }
   }
