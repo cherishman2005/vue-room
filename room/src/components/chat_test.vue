@@ -25,13 +25,13 @@
             <el-button type="primary"  @click="initChatRoom" style="border-radius: 4px">initChatRoom</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="getInstance" style="border-radius: 4px">getInstance</el-button>
+            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{GetInstanceRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getInstanceInfoRes}}</p>
     </div>
     
     <p class="text-unit">加入聊天室</p>
@@ -300,7 +300,7 @@
         chatrooms: [],
         regionChatroomId: '',
         regionChatroomIds: [],
-        GetInstanceRes: '',
+        getInstanceInfoRes: '',
         JoinChatRoomReq: {
           joinProps: "",
         },
@@ -467,13 +467,13 @@
       },
 
       // ------------------ 测试接口 --------------------
-      getInstance() {
+      getInstanceInfo() {
         if (!this.hummer)
           return;
 
         this.hummer.getInstanceInfo().then(res => {
-          console.log("getInstanceInfo: ", res);
-          this.GetInstanceRes = res;
+          console.log("getInstanceInfo: "  + JSON.stringify(res));
+          this.GetInstanceInfoRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err);
         });
