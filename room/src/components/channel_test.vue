@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <h2 style="text-align:left;">Channel调测系统（调用channel js_sdk，提供调测接口）</h2>
+    <h2 style="text-align:left;">Channel调测系统（Channel Service Tutorial）</h2>
 
     <p class="text-unit">设置用户归属地</p>
     <el-row type="flex">
@@ -275,6 +275,7 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToUserRes}}</p>
     </div>
     
+    <!--
     <p class="text-unit">查询单人登录在线状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -291,6 +292,7 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{queryOnlineStatusForUserRes}}</p>
     </div>
+    -->
     
     <p class="text-unit">批量查询登录在线状态</p>
     <el-row type="flex" class="row-bg">

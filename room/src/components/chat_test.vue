@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <h2 style="text-align:left;">聊天室调测系统（调用聊天室js_sdk，提供调测接口）</h2>
+    <h2 style="text-align:left;">聊天室调测系统（ChatRoom Tutorial）</h2>
 
     <!-- 初始化chatroom -->
     <el-row type="flex">
