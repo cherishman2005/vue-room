@@ -322,7 +322,7 @@
         sendGroupMessageRes: '',
         sendSingleUserMessageReq: {
           content: "js_sdk sendUnicast",
-          receiver: '123',
+          receiver: UID,
         },
         sendSingleUserMessageRes: '',
         SendTextChatReq: {
@@ -394,28 +394,9 @@
             this.chatroom = null;
         }
 
-        /*
-        this.chatroom = new Hummer.ChatRoom(this.hummer, {  
-                                      roomid: this.roomid,
-                                      onRecvSingleUserMessage: this.onRecvSingleUserMessage,
-                                      onDismissChatRoomBc: this.onDismissChatRoomBc,
-                                      onUpdateChatRoomInfoBc: this.onUpdateChatRoomInfoBc,
-                                      onKickOffUserBc: this.onKickOffUserBc,
-                                      onRecvGroupBc: this.onRecvGroupBc,
-                                      onTextChatBc: this.onTextChatBc,
-                                      onUserCountBc: this.onUserCountBc,
-                                      onUserOnlineChangeBc: this.onUserOnlineChangeBc,
-                                      onNotifyUserAttributesSet: this.onNotifyUserAttributesSet,
-                                      onerror: (data) => {
-                                        console.log('new chatroom: data=' + JSON.stringify(data));
-                                        this.flag = data.code;
-                                      } 
-                                    });
-        */
-
         this.regionChatroomId = getRegionChannelId(this.region, this.roomid);
         if (this.chatrooms[this.regionChatroomId]) {
-          console.log('channel exists, and channels=', this.channels);
+          console.log('channel exists, and chatrooms=', this.chatrooms);
           return;
         }
 

@@ -426,7 +426,7 @@
         },
         getGroupUserListByAttributeRes: '',
         queryOnlineStatusForUserReq: {
-          uid: '999000',
+          uid: UID,
         },
         queryOnlineStatusForUserRes: '',
         sendMessageToChannelReq: {
@@ -438,7 +438,7 @@
         sendMessageToUserReq: {
           option: { reliable: 'yes' },
           content: 'js_sdk sendMessageToUser',
-          receiver: '999000',
+          receiver: UID,
         },
         sendMessageToUserRes: "",
         getChannelUserCountReq: {
@@ -446,7 +446,7 @@
         },
         getChannelUserCountRes: '',
         queryUsersOnlineStatusReq: {
-          uids: '999000'
+          uids: UID
         },
         queryUsersOnlineStatusRes: '',
         loginRes: '',
@@ -477,8 +477,6 @@
 
       this.onConnectStatus();
       this.onLoginStatus();
-
-      
     },
     destroyed() {
     },
@@ -857,7 +855,6 @@
 
           console.log("MQ队列mq_data: " + JSON.stringify(this.mq_data));
         });
-
       },
       /* 组播消息接收模块 */
       onReceiveChannelMessage(client) {
