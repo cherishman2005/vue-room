@@ -5,7 +5,7 @@
       <el-form :inline="true" size="small">
         <el-form-item label="appid">
           <template>
-            <el-select v-model="appid" placeholder="appid">
+            <el-select v-model="appid" placeholder="appid" filterable @blur="selectBlur">
               <el-option
                 v-for="item in appids"
                 :key="item.value"
@@ -29,21 +29,24 @@
 
     <!-- Form -->
     <el-dialog title="Token" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="" :label-width="formLabelWidth">
-          <el-select v-model="tokenType" placeholder="请token登录模式">
-              <el-option
-                v-for="item in tokenTypes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="token" :label-width="formLabelWidth" v-if="tokenType == 3">
-          <el-input v-model="token" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
+      <el-col :span="24"  style="text-align:left;">
+        <el-form :model="form">
+          <el-form-item label="" :label-width="formLabelWidth">
+            <el-select v-model="tokenType" placeholder="请token登录模式">
+                <el-option
+                  v-for="item in tokenTypes"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="token" :label-width="formLabelWidth" v-if="tokenType == 3">
+            <el-input v-model="token" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+      </el-col>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
@@ -58,6 +61,12 @@
   import { areas, getAppids, getRegions, getRegionChannelId } from '@/components/room.js';
   import { getBeforeLoginUrl, removeBeforeLoginUrl } from '@/utils/auth'
   import { getStorage, setStorage } from '@/utils/BaseUtil'
+
+  const TOKEN_TYPES = {
+    APPID_MODE: 1,
+    TOKEN_MODE: 2,
+    TEMP_TOKEN: 3,
+  }
 
   export default {
     name: 'author',
@@ -74,11 +83,11 @@
           areas: areas,
           dialogFormVisible: false,
           tokenTypes: [
-            {label: 'AppId模式', value: 1},
-            {label: 'Token模式', value: 2},
-            {label: '临时Token模式', value: 3},
+            {label: 'AppId模式', value: TOKEN_TYPES.APPID_MODE},
+            {label: 'Token模式', value: TOKEN_TYPES.TOKEN_MODE},
+            {label: '临时Token模式', value: TOKEN_TYPES.TEMP_TOKEN},
           ],
-          tokenType: 2,
+          tokenType: TOKEN_TYPES.TOKEN_MODE,
           formLabelWidth: '120px',
       }
     },
@@ -96,11 +105,6 @@
       } else {
         this.reportType = 0;
         this.getUserToken(this.uid);
-        /*let token = 'ADp4VYnqABhfObBXLeUAAAFtQoNAaAAAC7gACnthOumbhue-pH26R8M3HCw2oPLBqZQExg9PIVQTqQ';
-        let uid = '6860100817333733';
-        setStorage("uid", uid);
-        setStorage("token", token);
-        */
       }
     },
     beforeDestroy() {
@@ -113,9 +117,9 @@
         switch(this.tokenType) {
           case 1:
               this.token = null;
+              setStorage("appid", this.appid);
               setStorage("uid", this.uid);
               setStorage("token", this.token);
-              setStorage("appid", this.appid);
               console.log('appid=' + this.appid + ', uid=' + this.uid + ', token=' + this.token);
 
               redirect = getBeforeLoginUrl() || '/';
@@ -126,9 +130,9 @@
             this.getUserToken();
             break;
           case 3:
+              setStorage("appid", this.appid);
               setStorage("uid", this.uid);
               setStorage("token", this.token);
-              setStorage("appid", this.appid);
               console.log('appid=' + this.appid + ', uid=' + this.uid + ', token=' + this.token);
 
               redirect = getBeforeLoginUrl() || '/';
@@ -147,12 +151,10 @@
               console.log("res.data: " + JSON.stringify(res.data));
               let body = res.data;
               if (body.uid && body.token) {
+                setStorage("appid", appid);
                 setStorage("uid", body.uid.toString());
                 setStorage("token", body.token);
-                //setStorage("area", this.area);
-                setStorage("appid", appid);
-                //setStorage("region", this.region);
-                
+
                 let redirect = getBeforeLoginUrl() || '/';
                 this.$router.push({ path: redirect });
                 removeBeforeLoginUrl();
@@ -163,6 +165,9 @@
             console.log("error: " + JSON.stringify(error));
           });
       },
+      selectBlur(e) {
+        this.appid = e.target.value;
+      }
     }
   }
 </script>
