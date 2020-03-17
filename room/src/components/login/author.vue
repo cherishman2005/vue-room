@@ -115,21 +115,21 @@
         let redirect;
 
         switch(this.tokenType) {
-          case 1:
+          case TOKEN_TYPES.APPID_MODE:
               this.token = null;
               setStorage("appid", this.appid);
               setStorage("uid", this.uid);
-              setStorage("token", this.token);
+              //setStorage("token", this.token);
               console.log('appid=' + this.appid + ', uid=' + this.uid + ', token=' + this.token);
 
               redirect = getBeforeLoginUrl() || '/';
               this.$router.push({ path: redirect });
               removeBeforeLoginUrl();
             break;
-          case 2:
+          case TOKEN_TYPES.TOKEN_MODE:
             this.getUserToken();
             break;
-          case 3:
+          case TOKEN_TYPES.TEMP_TOKEN:
               setStorage("appid", this.appid);
               setStorage("uid", this.uid);
               setStorage("token", this.token);
