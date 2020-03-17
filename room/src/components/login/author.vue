@@ -1,6 +1,5 @@
 <template>
   <div class="dashboard-container">
-    <!--<iframe src="javascript:void(0);" ref="regIframe"  frameborder="0" class="app-login"  style="width: 100%;height: 302px;" scrolling=auto></iframe>-->
     <h2 style="text-align:left;">输入UID</h2>
     <el-col :span="24"  style="height: 45px;text-align:left;" >
       <el-form :inline="true" size="small">
@@ -16,21 +15,46 @@
             </el-select>
           </template>
         </el-form-item>
-
         <el-form-item label="uid">
           <el-input v-model="uid"></el-input>
         </el-form-item>
         <el-form-item class="search">
-          <el-button type="primary"  @click="getUserToken" style="border-radius: 4px"><span class="el-icon-search margin"></span>进入房间</el-button>
+          <el-button type="text" @click="dialogFormVisible = true">选择token模式</el-button>
+        </el-form-item>
+        <el-form-item class="search">
+          <el-button type="primary"  @click="login" style="border-radius: 4px">登录</el-button>
         </el-form-item>
       </el-form>
     </el-col>
+
+    <!-- Form -->
+    <el-dialog title="Token" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="" :label-width="formLabelWidth">
+          <el-select v-model="tokenType" placeholder="请token登录模式">
+              <el-option
+                v-for="item in tokenTypes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="token" :label-width="formLabelWidth" v-if="tokenType == 3">
+          <el-input v-model="token" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
 
 <script>
-  import { APPID, authURL, redirectURL } from '@/global.js';
+  import { authURL, redirectURL } from '@/global.js';
   import { areas, getAppids, getRegions, getRegionChannelId } from '@/components/room.js';
   import { getBeforeLoginUrl, removeBeforeLoginUrl } from '@/utils/auth'
   import { getStorage, setStorage } from '@/utils/BaseUtil'
@@ -48,6 +72,14 @@
           reportType: 0,
           appids: getAppids(),
           areas: areas,
+          dialogFormVisible: false,
+          tokenTypes: [
+            {label: 'AppId模式', value: 1},
+            {label: 'Token模式', value: 2},
+            {label: '临时Token模式', value: 3},
+          ],
+          tokenType: 2,
+          formLabelWidth: '120px',
       }
     },
     created() {
@@ -75,8 +107,40 @@
 
     },
     methods: {
-      getUserToken(uid) {
-        const appid = this.appid || APPID;
+      login() {
+        let redirect;
+
+        switch(this.tokenType) {
+          case 1:
+              this.token = null;
+              setStorage("uid", this.uid);
+              setStorage("token", this.token);
+              setStorage("appid", this.appid);
+              console.log('appid=' + this.appid + ', uid=' + this.uid + ', token=' + this.token);
+
+              redirect = getBeforeLoginUrl() || '/';
+              this.$router.push({ path: redirect });
+              removeBeforeLoginUrl();
+            break;
+          case 2:
+            this.getUserToken();
+            break;
+          case 3:
+              setStorage("uid", this.uid);
+              setStorage("token", this.token);
+              setStorage("appid", this.appid);
+              console.log('appid=' + this.appid + ', uid=' + this.uid + ', token=' + this.token);
+
+              redirect = getBeforeLoginUrl() || '/';
+              this.$router.push({ path: redirect });
+              removeBeforeLoginUrl();
+            break;
+          default:
+            break;
+        }
+      },
+      getUserToken() {
+        const appid = this.appid;
         this.$axios.get(authURL + '/user/token?uid=' + this.uid+'&appid=' + appid)
           .then(res => {
             if (res.status === 200) {
@@ -85,9 +149,9 @@
               if (body.uid && body.token) {
                 setStorage("uid", body.uid.toString());
                 setStorage("token", body.token);
-                setStorage("area", this.area);
+                //setStorage("area", this.area);
                 setStorage("appid", appid);
-                setStorage("region", this.region);
+                //setStorage("region", this.region);
                 
                 let redirect = getBeforeLoginUrl() || '/';
                 this.$router.push({ path: redirect });
