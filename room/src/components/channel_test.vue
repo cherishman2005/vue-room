@@ -2,6 +2,7 @@
   <div class="dashboard-container">
     <h2 style="text-align:left;">Channel调测系统（Channel Service Tutorial）</h2>
 
+    <!-- 初始化ChannelService -->
     <p class="text-unit">设置用户归属地</p>
     <el-row type="flex">
       <el-col :span="24"  style="height:30px;text-align:left;" >
@@ -27,6 +28,9 @@
           <el-form-item class="search">
             <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px" :disabled='userRegionFlag'>setUserRegion</el-button>
           </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="initChannel" style="border-radius: 4px">initChannel</el-button>
+          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
@@ -34,22 +38,8 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserRegionRes}}</p>
     </div>
 
-    <!-- 初始化channel -->
-    <el-row type="flex">
-      <el-col :span="24"  style="height:30px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary"  @click="initChannel" style="border-radius: 4px">initChannel</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{result}}</p>
-    </div>
+    <!-- 频道消息 -->
+    <el-divider content-position="left">频道消息</el-divider>
 
     <p class="text-unit">创建频道实例</p>
     <el-row type="flex">
@@ -77,7 +67,7 @@
       </el-col>
     </el-row>
 
-    <p class="text-unit">频道列表[region:channelId](暂时用于选择频道)</p>
+    <p class="text-unit">频道列表[region:channelId](用于选择频道)</p>
     <el-row type="flex">
       <el-col :span="24"  style="height:30px;text-align:left;" >
         <el-form :inline="true"  size="small">
@@ -243,6 +233,9 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelUserCountRes}}</p>
     </div>
 
+    <!-- P2P消息 -->
+    <el-divider content-position="left">P2P消息</el-divider>
+
     <p class="text-unit">A给B发送消息</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -275,25 +268,6 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToUserRes}}</p>
     </div>
     
-    <!--
-    <p class="text-unit">查询单人登录在线状态</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="uid">
-            <el-input v-model="queryOnlineStatusForUserReq.uid"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="queryOnlineStatusForUser" style="border-radius: 4px">queryOnlineStatusForUser</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{queryOnlineStatusForUserRes}}</p>
-    </div>
-    -->
-    
     <p class="text-unit">批量查询登录在线状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -310,6 +284,9 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{queryUsersOnlineStatusRes}}</p>
     </div>
+
+    <!-- 登录/登出 -->
+    <el-divider></el-divider>
 
     <p class="text-unit">登录/登出</p>
     <el-row type="flex" class="row-bg">
@@ -340,6 +317,20 @@
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{refreshTokenRes}}</p>
+    </div>
+
+    <p class="text-unit">获取实例信息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{result}}</p>
     </div>
 
     <p class="text-unit">清除MQ队列</p>
@@ -499,6 +490,7 @@
           console.error("setUserRegion err:", err);
         });
       },
+      // 初始化ChannelService
       initChannel() {
         if (!this.hummer) {
           console.log("hummer is null");
