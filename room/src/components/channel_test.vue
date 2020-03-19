@@ -329,7 +329,7 @@
                 cancelButtonText='取消'
                 icon="el-icon-info"
                 iconColor="red"
-                title="更新Token？"
+                title="更新Token?"
                 @onConfirm="refreshToken"
               >
                 <el-button type="primary" slot="reference" style="border-radius: 4px">refreshToken</el-button>

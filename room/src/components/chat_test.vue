@@ -19,7 +19,18 @@
             <el-input v-model="iRegion"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="createChatRoomId" style="border-radius: 4px">createChatRoomId</el-button>
+            <template>
+              <el-popconfirm
+                confirmButtonText='确定'
+                cancelButtonText='取消'
+                icon="el-icon-info"
+                iconColor="red"
+                title="确认创建RoomId?"
+                @onConfirm="createChatRoomId"
+              >
+                <el-button type="primary" slot="reference" style="border-radius: 4px">createChatRoomId</el-button>
+              </el-popconfirm>
+            </template>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="initChatRoom" style="border-radius: 4px">initChatRoom</el-button>
@@ -81,7 +92,18 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="dismissChatRoom" style="border-radius: 4px">dismissChatRoom</el-button>
+            <template>
+              <el-popconfirm
+                confirmButtonText='确定'
+                cancelButtonText='取消'
+                icon="el-icon-info"
+                iconColor="red"
+                title="确认解散聊天室Room?"
+                @onConfirm="dismissChatRoom"
+              >
+                <el-button type="primary" slot="reference" style="border-radius: 4px">dismissChatRoom</el-button>
+              </el-popconfirm>
+            </template>
           </el-form-item>
         </el-form>
       </el-col>
@@ -435,34 +457,24 @@
         if (!this.hummer)
           return;
 
-        this.$confirm("确认创建RoomId吗?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-
-          let props = {
-            "Name": "Hummer聊天室",
-            "Description": "测试",
-            "Bulletin": "公告",
-            "Extention": "自定义",
-          };
-         
-          let region = this.iRegion;
-          let params = { region, props };
-          this.hummer.createChatRoomId(params).then((res) => {
-            console.log("createChatRoomId Res: ", res);
-            this.CreateChatRoomIdRes = res;
-            if (res.rescode == 0) {
-              this.roomid = res.roomid;
-              setStorage("roomid", this.roomid);
-            }
-          }).catch(err => {
-            console.log(err)
-          });
-
-        }).catch(e => {
-          console.log(e);
+        let props = {
+          "Name": "Hummer聊天室",
+          "Description": "测试",
+          "Bulletin": "公告",
+          "Extention": "自定义",
+        };
+        
+        let region = this.iRegion;
+        let params = { region, props };
+        this.hummer.createChatRoomId(params).then((res) => {
+          console.log("createChatRoomId Res: ", res);
+          this.CreateChatRoomIdRes = res;
+          if (res.rescode == 0) {
+            this.roomid = res.roomid;
+            setStorage("roomid", this.roomid);
+          }
+        }).catch(err => {
+          console.log(err)
         });
       },
 
@@ -527,27 +539,17 @@
         if (!this.chatrooms[this.regionChatroomId])
           return;
 
-        this.$confirm("解散聊天室RoomId吗?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-
-          this.chatrooms[this.regionChatroomId].chatroom.dismissChatRoom().then((res) => {
-            console.log("dismissChatRoom Res: ", res);
-            this.DismissChatRoomRes = res;
-            if (res.rescode == 0) {
-              delete this.chatrooms[this.regionChatroomId];
-              this.chatrooms[this.regionChatroomId] = null;
-              this.roomid = 0;
-              setStorage("roomid", this.roomid);
-            }
-          }).catch(err => {
-            console.log(err)
-          })
-
-        }).catch(e => {
-          console.log(e);
+        this.chatrooms[this.regionChatroomId].chatroom.dismissChatRoom().then((res) => {
+          console.log("dismissChatRoom Res: ", res);
+          this.DismissChatRoomRes = res;
+          if (res.rescode == 0) {
+            delete this.chatrooms[this.regionChatroomId];
+            this.chatrooms[this.regionChatroomId] = null;
+            this.roomid = 0;
+            setStorage("roomid", this.roomid);
+          }
+        }).catch(err => {
+          console.log(err)
         });
       },
       kickOffUser() {
