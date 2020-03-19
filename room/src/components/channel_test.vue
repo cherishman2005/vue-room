@@ -8,14 +8,14 @@
       <el-col :span="24"  style="height:30px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="appid">
-            <el-input v-model="appid" disabled></el-input>
+            <el-input v-model="appid" disabled style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item label="uid">
-            <el-input v-model="uid" disabled></el-input>
+            <el-input v-model="uid" disabled style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item label="用户归属地">
             <template>
-              <el-select v-model="userRegion" placeholder="userRegion">
+              <el-select v-model="userRegion" placeholder="userRegion" style="width:150px;">
                 <el-option
                   v-for="item in areas"
                   :key="item.value"
@@ -47,7 +47,7 @@
         <el-form :inline="true"  size="small">
           <el-form-item label="iRegion">
             <template>
-              <el-select v-model="iRegion" placeholder="iRegion">
+              <el-select v-model="iRegion" placeholder="iRegion" style="width:150px;">
                 <el-option
                   v-for="item in areas"
                   :key="item.value"
@@ -121,7 +121,7 @@
         <el-form :inline="true"  size="small">
           <el-form-item label="reliable">
             <template>
-              <el-select v-model="sendMessageToChannelReq.option.reliable" placeholder="reliable">
+              <el-select v-model="sendMessageToChannelReq.option.reliable" placeholder="reliable" style="width: 80px;">
                 <el-option
                   v-for="item in reliable"
                   :key="item.value"
@@ -256,7 +256,7 @@
             <el-input v-model="sendMessageToUserReq.content"></el-input>
           </el-form-item>
           <el-form-item label="receiver">
-            <el-input v-model="sendMessageToUserReq.receiver"></el-input>
+            <el-input v-model="sendMessageToUserReq.receiver" style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="sendMessageToUser" style="border-radius: 4px">sendMessageToUser</el-button>
@@ -309,6 +309,19 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="uid">
+            <el-input v-model="refreshTokenReq.uid" :disabled="true" style="width:150px;"></el-input>
+          </el-form-item>
+          <el-form-item label="token">
+            <el-input
+              type="textarea" 
+              style="width:350px;"
+              :autosize="{minRows: 1, maxRows: 2}" 
+              placeholder="token"
+              v-model="refreshTokenReq.token"
+              clearable>
+            </el-input>
+          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="refreshToken" style="border-radius: 4px">refreshToken</el-button>
           </el-form-item>
@@ -443,6 +456,10 @@
         },
         queryUsersOnlineStatusRes: '',
         loginRes: '',
+        refreshTokenReq: {
+          uid: UID,
+          token: '',
+        },
         refreshTokenRes: '',
       }
     },
@@ -819,11 +836,36 @@
       refreshToken() {
         if (!this.hummer)
           return;
-        
+
+        this.$confirm("确认refreshToken吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+
+          this.refresh();
+
+        }).catch(e => {
+          console.log(e);
+        });
+      },
+      refresh() {
+        let uid = this.refreshTokenReq.uid;
+        let token = this.refreshTokenReq.token;
+
+        let req = {uid, token};
+        console.log('refreshToken: req=', req);
+
         this.refreshTokenRes = '';
-        this.hummer.refreshToken({uid: this.uid, token: this.token}).then(res => {
+        this.hummer.refreshToken(req).then(res => {
           console.log("refreshToken Res: " + JSON.stringify(res));
           this.refreshTokenRes = JSON.stringify(res);
+
+          // 测试刷新token
+          if (res.rescode == 0) {
+              setStorage("uid", uid);
+              setStorage("token", token);
+          }
         }).catch(err => {
           console.error("refreshToken err:", err);
           this.refreshTokenRes = JSON.stringify(err);
