@@ -323,7 +323,18 @@
             </el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="refreshToken" style="border-radius: 4px">refreshToken</el-button>
+            <template>
+              <el-popconfirm
+                confirmButtonText='确定'
+                cancelButtonText='取消'
+                icon="el-icon-info"
+                iconColor="red"
+                title="更新Token？"
+                @onConfirm="refreshToken"
+              >
+                <el-button type="primary" slot="reference" style="border-radius: 4px">refreshToken</el-button>
+              </el-popconfirm>
+            </template>
           </el-form-item>
         </el-form>
       </el-col>
@@ -834,22 +845,6 @@
       },
       // hummer3.1
       refreshToken() {
-        if (!this.hummer)
-          return;
-
-        this.$confirm("确认refreshToken吗?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-
-          this.refresh();
-
-        }).catch(e => {
-          console.log(e);
-        });
-      },
-      refresh() {
         let uid = this.refreshTokenReq.uid;
         let token = this.refreshTokenReq.token;
 
