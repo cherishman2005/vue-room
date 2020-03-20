@@ -30,7 +30,7 @@
     <!-- Token登录模式 -->
     <el-dialog title="Token" :visible.sync="dialogFormVisible" style="text-align:left;">
       <el-col :span="24"  style="text-align:left;">
-        <el-form :inline="true" size="small">
+        <el-form size="small">
           <el-form-item label="" :label-width="formLabelWidth">
             <el-select v-model="tokenType" placeholder="Token登录模式">
                 <el-option
