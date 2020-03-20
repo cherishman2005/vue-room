@@ -19,7 +19,7 @@
           <el-input v-model="uid"></el-input>
         </el-form-item>
         <el-form-item class="search">
-          <el-button type="text" @click="dialogFormVisible = true">选择token模式</el-button>
+          <el-button type="text" @click="dialogFormVisible = true">{{tokenTypeLabel}}</el-button>
         </el-form-item>
         <el-form-item class="search">
           <el-button type="primary"  @click="login" style="border-radius: 4px">登录</el-button>
@@ -27,12 +27,12 @@
       </el-form>
     </el-col>
 
-    <!-- Form -->
-    <el-dialog title="Token" :visible.sync="dialogFormVisible">
+    <!-- Token登录模式 -->
+    <el-dialog title="Token" :visible.sync="dialogFormVisible" style="text-align:left;" width="50%">
       <el-col :span="24"  style="text-align:left;">
         <el-form :model="form">
           <el-form-item label="" :label-width="formLabelWidth">
-            <el-select v-model="tokenType" placeholder="请token登录模式">
+            <el-select v-model="tokenType" placeholder="Token登录模式">
                 <el-option
                   v-for="item in tokenTypes"
                   :key="item.value"
@@ -41,7 +41,7 @@
                 </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="token" :label-width="formLabelWidth" v-if="tokenType == 3">
+          <el-form-item label="token" :label-width="formLabelWidth" v-if="isDisplay()">
             <el-input v-model="token" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -88,8 +88,22 @@
             {label: '临时Token模式', value: TOKEN_TYPES.TEMP_TOKEN},
           ],
           tokenType: TOKEN_TYPES.TOKEN_MODE,
+          tokenTypeLabel: 'Token模式',
           formLabelWidth: '120px',
       }
+    },
+    computed: {
+    },
+    watch: {
+      tokenType: function(val) { 
+        this.tokenTypes.forEach(e => {
+          if (val == e.value) {
+            this.tokenTypeLabel = e.label;
+          }
+        })
+      },
+    },
+    filters:{   
     },
     created() {
     },
@@ -111,6 +125,9 @@
 
     },
     methods: {
+      isDisplay() {
+        return this.tokenType == TOKEN_TYPES.TEMP_TOKEN;
+      },
       login() {
         let redirect;
 
