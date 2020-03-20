@@ -28,7 +28,7 @@
     </el-col>
 
     <!-- Token登录模式 -->
-    <el-dialog title="Token" :visible.sync="dialogFormVisible" style="text-align:left;" width="50%">
+    <el-dialog title="Token" :visible.sync="dialogFormVisible" style="text-align:left;">
       <el-col :span="24"  style="text-align:left;">
         <el-form :model="form">
           <el-form-item label="" :label-width="formLabelWidth">
@@ -68,6 +68,12 @@
     TEMP_TOKEN: 3,
   }
 
+  const tokenTypes = [
+            {label: 'AppId模式', value: TOKEN_TYPES.APPID_MODE},
+            {label: 'Token模式', value: TOKEN_TYPES.TOKEN_MODE},
+            {label: '临时Token模式', value: TOKEN_TYPES.TEMP_TOKEN},
+          ];
+
   export default {
     name: 'author',
     data() {
@@ -82,11 +88,7 @@
           appids: getAppids(),
           areas: areas,
           dialogFormVisible: false,
-          tokenTypes: [
-            {label: 'AppId模式', value: TOKEN_TYPES.APPID_MODE},
-            {label: 'Token模式', value: TOKEN_TYPES.TOKEN_MODE},
-            {label: '临时Token模式', value: TOKEN_TYPES.TEMP_TOKEN},
-          ],
+          tokenTypes: tokenTypes,
           tokenType: TOKEN_TYPES.TOKEN_MODE,
           tokenTypeLabel: 'Token模式',
           formLabelWidth: '120px',
@@ -125,9 +127,6 @@
 
     },
     methods: {
-      isDisplay() {
-        return this.tokenType == TOKEN_TYPES.TEMP_TOKEN;
-      },
       login() {
         let redirect;
 
@@ -184,7 +183,10 @@
       },
       selectBlur(e) {
         this.appid = e.target.value;
-      }
+      },
+      isDisplay() {
+        return this.tokenType == TOKEN_TYPES.TEMP_TOKEN;
+      },
     }
   }
 </script>
