@@ -132,7 +132,7 @@
             </template>
           </el-form-item>
           <el-form-item label="content">
-            <el-input v-model="sendMessageToChannelReq.content"></el-input>
+            <el-input v-model="sendMessageToChannelReq.content" style="width: 200px;"></el-input>
           </el-form-item>
 
           <el-form-item class="search">
@@ -242,7 +242,7 @@
         <el-form :inline="true"  size="small">
           <el-form-item label="reliable">
             <template>
-              <el-select v-model="sendMessageToUserReq.option.reliable" placeholder="reliable">
+              <el-select v-model="sendMessageToUserReq.option.reliable" placeholder="reliable" style="width: 80px;">
                 <el-option
                   v-for="item in reliable"
                   :key="item.value"
@@ -253,7 +253,7 @@
             </template>
           </el-form-item>
           <el-form-item label="content">
-            <el-input v-model="sendMessageToUserReq.content"></el-input>
+            <el-input v-model="sendMessageToUserReq.content" style="width: 200px;"></el-input>
           </el-form-item>
           <el-form-item label="receiver">
             <el-input v-model="sendMessageToUserReq.receiver" style="width:150px;"></el-input>
