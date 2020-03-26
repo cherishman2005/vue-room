@@ -743,10 +743,9 @@
         this.onReceiveChannelMessage(client);
         this.onNotifyJoinChannel(client);
         this.onNotifyLeaveChannel(client);
-        this.onNotifyUserAttributesSet(client);
-        this.onNotifyUserAttributesDelete(client);
-        this.onNotifyUserAttributesAddOrUpdate(client);
         this.onNotifyUserCountChange(client);
+        // 用户属性变更
+        this.onNotifyUserAttributesChange(client);
         // 频道属性变更
         this.onNotifyChannelAttributesChange(client);
       },
@@ -1244,36 +1243,6 @@
           });
         });
       },
-      onNotifyUserAttributesSet(client) {
-        client.channel.on('NotifyUserAttributesSet', (data) => {
-          console.log(`用户属性设置NotifyUserAttributesSet [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
-          this.$message({
-            duration: 3000,
-            message: `NotifyUserAttributesSet [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
-            type: 'success'
-          });
-        });
-      },
-      onNotifyUserAttributesDelete(client) {
-        client.channel.on('NotifyUserAttributesDelete', (data) => {
-          console.log(`用户属性删除NotifyUserAttributesDelete [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
-          this.$message({
-            duration: 3000,
-            message: `NotifyUserAttributesDelete [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
-            type: 'success'
-          });
-        });
-      },
-      onNotifyUserAttributesAddOrUpdate(client) {
-        client.channel.on('NotifyUserAttributesAddOrUpdate', (data) => {
-          console.log(`用户属性删除NotifyUserAttributesAddOrUpdate [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
-          this.$message({
-            duration: 3000,
-            message: `NotifyUserAttributesAddOrUpdate [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
-            type: 'success'
-          });
-        });
-      },
       onNotifyUserCountChange(client) {
         client.channel.on('NotifyUserCountChange', (data) => {
           console.log(`用户数量变更NotifyUserCountChange [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
@@ -1281,6 +1250,23 @@
             duration: 3000,
             message: `NotifyUserCountChange [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
             type: 'success'
+          });
+        });
+      },
+      onNotifyUserAttributesChange(client) {
+        const channelEvents = [
+          "NotifyUserAttributesSet",
+          "NotifyUserAttributesDelete",
+          "NotifyUserAttributesAddOrUpdate"
+        ];
+        channelEvents.forEach(eventName => {
+          client.channel.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
+            this.$message({
+              duration: 3000,
+              message: `${eventName} [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
+              type: 'success'
+            });
           });
         });
       },
