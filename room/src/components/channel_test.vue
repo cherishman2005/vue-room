@@ -182,6 +182,40 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{deleteUserAttributesRes}}</p>
     </div>
 
+    <p class="text-unit">删除用户所有属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary"  @click="clearUserAttributes" style="border-radius: 4px">clearUserAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{clearUserAttributesRes}}</p>
+    </div>
+
+    <p class="text-unit">增加或更新用户某些属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="key">
+            <el-input v-model="addOrUpdateUserAttributesReq.key"></el-input>
+          </el-form-item>
+          <el-form-item label="prop">
+            <el-input v-model="addOrUpdateUserAttributesReq.prop"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="addOrUpdateUserAttributes" style="border-radius: 4px">addOrUpdateUserAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateUserAttributesRes}}</p>
+    </div>
+
     <p class="text-unit">查询某一属性的用户列表</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
@@ -231,6 +265,108 @@
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelUserCountRes}}</p>
+    </div>
+    
+    <p class="text-unit">设置频道属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="key">
+            <el-input v-model="setChannelAttributesReq.key"></el-input>
+          </el-form-item>
+          <el-form-item label="prop">
+            <el-input v-model="setChannelAttributesReq.prop"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="setChannelAttributes" style="border-radius: 4px">setChannelAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setChannelAttributesRes}}</p>
+    </div>
+
+    <p class="text-unit">删除频道某些属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="keys">
+            <el-input v-model="deleteChannelAttributesByKeysReq.keys"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="deleteChannelAttributesByKeys" style="border-radius: 4px">deleteChannelAttributesByKeys</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{deleteChannelAttributesByKeysRes}}</p>
+    </div>
+
+    <p class="text-unit">删除频道所有属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary"  @click="clearChannelAttributes" style="border-radius: 4px">clearChannelAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{clearChannelAttributesRes}}</p>
+    </div>
+
+    <p class="text-unit">增加或更新频道某些属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="key">
+            <el-input v-model="addOrUpdateChannelAttributesReq.key"></el-input>
+          </el-form-item>
+          <el-form-item label="prop">
+            <el-input v-model="addOrUpdateChannelAttributesReq.prop"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="addOrUpdateChannelAttributes" style="border-radius: 4px">addOrUpdateChannelAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateChannelAttributesRes}}</p>
+    </div>
+
+    <p class="text-unit">查询某指定频道指定属性名的属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="keys">
+            <el-input v-model="getChannelAttributesByKeysReq.keys"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="getChannelAttributesByKeys" style="border-radius: 4px">getChannelAttributesByKeys</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelAttributesByKeysRes}}</p>
+    </div>
+
+    <p class="text-unit">查询某指定频道的全部属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary"  @click="getChannelAttributes" style="border-radius: 4px">getChannelAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelAttributesRes}}</p>
     </div>
 
     <!-- P2P消息 -->
@@ -386,6 +522,7 @@
   // test parameters
   const TEST_CHANNEL_ID = 'test123456';
   const TEST_ROLE_KEY = 'channel_role_name';
+  const TEST_CHANNEL_NAME_KEY = 'channel_name';
 
   export default {
     name : 'channel-test',
@@ -424,7 +561,6 @@
         setUserAttributesReq: {
           key: TEST_ROLE_KEY,
           prop: 'teacher',
-          channelId: TEST_CHANNEL_ID,
         },
         setUserAttributesRes: '',
         deleteUserAttributesReq: {
@@ -432,6 +568,12 @@
           channelId: TEST_CHANNEL_ID,
         },
         deleteUserAttributesRes: '',
+        clearUserAttributesRes: '',
+        addOrUpdateUserAttributesReq: {
+          key: TEST_ROLE_KEY,
+          prop: 'student',
+        },
+        addOrUpdateUserAttributesRes: '',
         getChannelUserListReq: {
           channelId: TEST_CHANNEL_ID,
         },
@@ -449,7 +591,6 @@
         sendMessageToChannelReq: {
           option: { reliable: 'yes' },
           content: 'js_sdk sendMessageToChannel',
-          channelId: TEST_CHANNEL_ID,
         },
         sendMessageToChannelRes: "",
         sendMessageToUserReq: {
@@ -462,6 +603,26 @@
           channelIds: TEST_CHANNEL_ID
         },
         getChannelUserCountRes: '',
+        setChannelAttributesReq: {
+          key: TEST_CHANNEL_NAME_KEY,
+          prop: 'nginx大讲堂',
+        },
+        setChannelAttributesRes: '',
+        deleteChannelAttributesByKeysReq: {
+          keys: TEST_CHANNEL_NAME_KEY,
+        },
+        deleteChannelAttributesByKeysRes: '',
+        clearChannelAttributesRes: '',
+        addOrUpdateChannelAttributesReq: {
+          key: TEST_CHANNEL_NAME_KEY,
+          prop: 'nginx大讲堂',
+        },
+        addOrUpdateChannelAttributesRes: '',
+        getChannelAttributesRes: '',
+        getChannelAttributesByKeysReq: {
+          keys: TEST_CHANNEL_NAME_KEY,
+        },
+        getChannelAttributesByKeysRes: '',
         queryUsersOnlineStatusReq: {
           uids: UID
         },
@@ -584,7 +745,10 @@
         this.onNotifyLeaveChannel(client);
         this.onNotifyUserAttributesSet(client);
         this.onNotifyUserAttributesDelete(client);
+        this.onNotifyUserAttributesAddOrUpdate(client);
         this.onNotifyUserCountChange(client);
+        // 频道属性变更
+        this.onNotifyChannelAttributesChange(client);
       },
       // ------------------ 测试接口 --------------------
       getInstanceInfo() {
@@ -705,6 +869,42 @@
           this.deleteUserAttributesRes = JSON.stringify(err);
         });
       },
+      clearUserAttributes() {
+        if (!this.channels[this.regionChannelId])
+          return;
+
+        this.clearUserAttributesRes = '';
+
+        this.channels[this.regionChannelId].channel.clearUserAttributes().then(res => {
+          console.log("clearUserAttributes Res: ", res);
+          this.clearUserAttributesRes = JSON.stringify(res);
+        }).catch((err) => {
+          console.error("clearUserAttributes err:", err);
+          this.clearUserAttributesRes = JSON.stringify(err);
+        });
+      },
+      addOrUpdateUserAttributes() {
+        if (!this.channels[this.regionChannelId])
+          return;
+
+        let attributes = {
+          "Name": "awu",
+        };
+  
+        let key = this.addOrUpdateUserAttributesReq.key;
+        let prop = this.addOrUpdateUserAttributesReq.prop;
+        attributes[key] = prop;
+        
+        let req = { attributes };
+        this.addOrUpdateUserAttributesRes = '';
+        this.channels[this.regionChannelId].channel.addOrUpdateUserAttributes(req).then(res => {
+          console.log("addOrUpdateUserAttributes Res: ", res);
+          this.addOrUpdateUserAttributesRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("addOrUpdateUserAttributes err:", err);
+          this.addOrUpdateUserAttributesRes = JSON.stringify(err);
+        });
+      },
       getChannelUserList() {
         if (!this.channels[this.regionChannelId])
           return;
@@ -756,6 +956,127 @@
           this.getChannelUserCountRes = JSON.stringify(err);
         });
       },
+      // 频道属性
+      setChannelAttributes() {
+        if (!this.channels[this.regionChannelId])
+          return;
+
+        let attributes = {
+          "Name": "awu",
+          "Description": "js_sdk测试",
+          "Bulletin": "bull",
+          "Extention": "ex"
+        };
+  
+        let key = this.setChannelAttributesReq.key;
+        let prop = this.setChannelAttributesReq.prop;
+        attributes[key] = prop;
+        
+        let req = { attributes };
+        this.setChannelAttributesRes = '';
+        this.channels[this.regionChannelId].channel.setChannelAttributes(req).then(res => {
+          console.log("setChannelAttributes Res: ", res);
+          this.setChannelAttributesRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("setChannelAttributes err:", err);
+          this.setChannelAttributesRes = JSON.stringify(err);
+        });
+      },
+      deleteChannelAttributesByKeys() {
+        if (!this.channels[this.regionChannelId])
+          return;
+
+        let keys_str = this.deleteChannelAttributesByKeysReq.keys;
+
+        let keys = [];
+
+        let elements = keys_str.split(",");
+        for (let k of elements) {
+          keys.push(k);
+        }
+
+        let req = { keys };
+        this.deleteChannelAttributesByKeysRes = '';
+
+        this.channels[this.regionChannelId].channel.deleteChannelAttributesByKeys(req).then(res => {
+          console.log("deleteChannelAttributesByKeys res: ", res);
+          this.deleteChannelAttributesByKeysRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("deleteChannelAttributesByKeys err:", err);
+          this.deleteChannelAttributesByKeysRes = JSON.stringify(err);
+        });
+      },
+      clearChannelAttributes() {
+        if (!this.channels[this.regionChannelId])
+          return;
+
+        this.clearChannelAttributesRes = '';
+
+        this.channels[this.regionChannelId].channel.clearChannelAttributes().then(res => {
+          console.log("clearChannelAttributes res: ", res);
+          this.clearChannelAttributesRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("clearChannelAttributes err:", err);
+          this.clearChannelAttributesRes = JSON.stringify(err);
+        });
+      },
+      addOrUpdateChannelAttributes() {
+        if (!this.channels[this.regionChannelId])
+          return;
+
+        let attributes = {
+          "owner": "awu",
+        };
+  
+        let key = this.addOrUpdateChannelAttributesReq.key;
+        let prop = this.addOrUpdateChannelAttributesReq.prop;
+        attributes[key] = prop;
+        
+        let req = { attributes };
+        this.addOrUpdateChannelAttributesRes = '';
+        this.channels[this.regionChannelId].channel.addOrUpdateChannelAttributes(req).then(res => {
+          console.log("addOrUpdateChannelAttributes res: ", res);
+          this.addOrUpdateChannelAttributesRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("addOrUpdateChannelAttributes err:", err);
+          this.addOrUpdateChannelAttributesRes = JSON.stringify(err);
+        });
+      },
+      getChannelAttributes() {
+        if (!this.channels[this.regionChannelId])
+          return;
+
+        this.getChannelAttributesRes = '';
+        this.channels[this.regionChannelId].channel.getChannelAttributes().then(res => {
+          console.log("getChannelAttributes res:", res);
+          this.getChannelAttributesRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("getChannelAttributes err:", err);
+          this.getChannelAttributesRes = JSON.stringify(err);
+        });
+      },
+      getChannelAttributesByKeys() {
+        if (!this.channels[this.regionChannelId])
+          return;
+
+        let keys_str = this.getChannelAttributesByKeysReq.keys;
+        let keys = [];
+        let elements = keys_str.split(",");
+        for (let k of elements) {
+          keys.push(k);
+        }
+        let req = { keys };
+
+        this.getChannelAttributesByKeysRes = '';
+        this.channels[this.regionChannelId].channel.getChannelAttributesByKeys(req).then(res => {
+          console.log("getChannelAttributesByKeys res:", res);
+          this.getChannelAttributesByKeysRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("getChannelAttributesByKeys err:", err);
+          this.getChannelAttributesByKeysRes = JSON.stringify(err);
+        });
+      },
+
       sendMessageToUser() {
         if (!this.client)
           return;
@@ -943,6 +1264,16 @@
           });
         });
       },
+      onNotifyUserAttributesAddOrUpdate(client) {
+        client.channel.on('NotifyUserAttributesAddOrUpdate', (data) => {
+          console.log(`用户属性删除NotifyUserAttributesAddOrUpdate [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: `NotifyUserAttributesAddOrUpdate [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
+            type: 'success'
+          });
+        });
+      },
       onNotifyUserCountChange(client) {
         client.channel.on('NotifyUserCountChange', (data) => {
           console.log(`用户数量变更NotifyUserCountChange [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
@@ -950,6 +1281,23 @@
             duration: 3000,
             message: `NotifyUserCountChange [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
             type: 'success'
+          });
+        });
+      },
+      onNotifyChannelAttributesChange(client) {
+        const channelEvents = [
+          "NotifyChannelAttributesSet",
+          "NotifyChannelAttributesDelete",
+          "NotifyChannelAttributesAddOrUpdate"
+        ];
+        channelEvents.forEach(eventName => {
+          client.channel.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
+            this.$message({
+              duration: 3000,
+              message: `${eventName} [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
+              type: 'success'
+            });
           });
         });
       },
