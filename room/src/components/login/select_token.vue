@@ -1,32 +1,4 @@
 <template>
-  <!--
-  <div>
-    <el-col :span="24"  style="text-align:left;">
-      <el-form size="small">
-        <el-form-item label="" :label-width="formLabelWidth">
-          <el-select v-model="tokenType" placeholder="Token登录模式">
-              <el-option
-                v-for="item in tokenTypes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="token" :label-width="formLabelWidth" v-if="isDisplay()">
-          <el-input v-model="token" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-    </el-col>
-
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-    </div>
-  </div>
-  -->
-
-
   <div>
     <el-col :span="24" style="text-align:left;">
       <el-form size="small" :model="form" ref="selectTokenForm" :label-width="formLabelWidth">
@@ -107,7 +79,6 @@
     },
     watch: {
       'form.tokenType': function(val) {
-        console.log('form.tokenType= '+ this.form.tokenType);
         tokenTypes.forEach(e => {
           if (val == e.value) {
             this.tokenTypeLabel = e.label
