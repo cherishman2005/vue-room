@@ -48,20 +48,9 @@
           <el-form-item class="search">
             <el-button type="primary"  @click="showCreateChannelModel" style="border-radius: 4px">createChannel</el-button>
           </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <el-dialog align="left" title="创建频道" :visible="createChannelModelVisible" @close="closeCreateChannelModel">
-      <create-channel :client="client" @onGetChannel = getChannel></create-channel>
-    </el-dialog>
-
-    <p class="text-unit">频道列表[region:channelId](用于选择频道)</p>
-    <el-row type="flex">
-      <el-col :span="24"  style="height:30px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="[region:channelId]">
+          <el-form-item label="频道列表[region:channelId](用于选择频道)">
             <template>
-              <el-select v-model="regionChannelId" placeholder="">
+              <el-select v-model="regionChannelId" placeholder="" style="width: 200px;">
                 <el-option
                   v-for="item in regionChannelIds"
                   :key="item.value"
@@ -74,6 +63,10 @@
         </el-form>
       </el-col>
     </el-row>
+
+    <el-dialog align="left" title="创建频道实例" :visible="createChannelModelVisible" @close="closeCreateChannelModel">
+      <create-channel :client="client" @onGetChannel = getChannel></create-channel>
+    </el-dialog>
 
     <p class="text-unit">加入Channel</p>
     <el-row type="flex" class="row-bg">

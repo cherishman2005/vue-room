@@ -19,7 +19,7 @@
           <el-input v-model="uid"></el-input>
         </el-form-item>
         <el-form-item class="search">
-          <el-button type="text" @click="dialogFormVisible = true">{{tokenTypeLabel}}</el-button>
+          <el-button type="text" @click="showSelectTokenModel">{{tokenTypeLabel}}</el-button>
         </el-form-item>
         <el-form-item class="search">
           <el-button type="primary"  @click="login" style="border-radius: 4px">登录</el-button>
@@ -28,51 +28,26 @@
     </el-col>
 
     <!-- Token登录模式 -->
-    <el-dialog title="Token" :visible.sync="dialogFormVisible" style="text-align:left;">
-      <el-col :span="24"  style="text-align:left;">
-        <el-form size="small">
-          <el-form-item label="" :label-width="formLabelWidth">
-            <el-select v-model="tokenType" placeholder="Token登录模式">
-                <el-option
-                  v-for="item in tokenTypes"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="token" :label-width="formLabelWidth" v-if="isDisplay()">
-            <el-input v-model="token" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-      </el-col>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-      </div>
+    <el-dialog align="left" title="Token" :visible="selectTokenModelVisible" @close="closeSelectTokenModel">
+      <select-token :client="client" @onConfirm = getToken></select-token>
     </el-dialog>
 
   </div>
 </template>
 
 <script>
+  import { mapState } from 'vuex';
   import { authURL, redirectURL } from '@/global.js';
   import { areas, getAppids, getRegions, getRegionChannelId } from '@/components/room.js';
   import { getBeforeLoginUrl, removeBeforeLoginUrl } from '@/utils/auth'
   import { getStorage, setStorage } from '@/utils/BaseUtil'
+  import SelectToken from './select_token.vue'
 
   const TOKEN_TYPES = {
     APPID_MODE: 1,
     TOKEN_MODE: 2,
     TEMP_TOKEN: 3,
   }
-
-  const tokenTypes = [
-            {label: 'AppId模式', value: TOKEN_TYPES.APPID_MODE},
-            {label: 'Token模式', value: TOKEN_TYPES.TOKEN_MODE},
-            {label: '临时Token模式', value: TOKEN_TYPES.TEMP_TOKEN},
-          ];
 
   export default {
     name: 'author',
@@ -87,23 +62,22 @@
           reportType: 0,
           appids: getAppids(),
           areas: areas,
-          dialogFormVisible: false,
-          tokenTypes: tokenTypes,
           tokenType: TOKEN_TYPES.TOKEN_MODE,
           tokenTypeLabel: 'Token模式',
           formLabelWidth: '120px',
       }
     },
+    components: {
+      SelectToken
+    },
     computed: {
+      ...mapState({
+        selectTokenModelVisible: state => {
+          return state.token.selectTokenModelVisible
+        }
+      })
     },
     watch: {
-      tokenType: function(val) { 
-        this.tokenTypes.forEach(e => {
-          if (val == e.value) {
-            this.tokenTypeLabel = e.label;
-          }
-        })
-      },
     },
     filters:{   
     },
@@ -127,6 +101,18 @@
 
     },
     methods: {
+      showSelectTokenModel() {
+        this.$store.commit('updateSelectTokenModelVisible', true);
+      },
+      closeSelectTokenModel() {
+        this.$store.commit('updateSelectTokenModelVisible', false)
+      },
+      getToken(data) {
+        console.log('getToken: data=', data);
+        this.token = data.token;
+        this.tokenType = data.tokenType;
+        this.tokenTypeLabel = data.tokenTypeLabel;
+      },
       login() {
         let redirect;
 

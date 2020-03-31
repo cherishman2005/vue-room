@@ -4,6 +4,7 @@ import {getters} from "./getters"
 import {mutations} from "./mutations"
 import {actions} from './actions'
 import channel from './modules/channel'
+import token from './modules/token'
 
 Vue.use(Vuex)
 
@@ -15,7 +16,10 @@ const state = {
   score: 0
 }
 
-const modules = { channel };
+const modules = { 
+  channel,
+  token
+};
 
 var store = new Vuex.Store({
   state,

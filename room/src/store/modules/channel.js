@@ -5,7 +5,6 @@ const channelModules = {
   mutations: {
     updateCreateChannelModelVisible(state, visible) {
       state.createChannelModelVisible = visible
-      //console.log('createChannelModelVisible=' + visible)
     },
     reset(state) {
       Object.assign(state, {
