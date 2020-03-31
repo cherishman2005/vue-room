@@ -43,29 +43,17 @@
 
     <p class="text-unit">创建频道实例</p>
     <el-row type="flex">
-      <el-col :span="24"  style="height:30px;text-align:left;" >
+      <el-col :span="24" style="height:30px;text-align:left;">
         <el-form :inline="true"  size="small">
-          <el-form-item label="iRegion">
-            <template>
-              <el-select v-model="iRegion" placeholder="iRegion" style="width:150px;">
-                <el-option
-                  v-for="item in areas"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          <el-form-item label="iChannelId">
-            <el-input v-model="iChannelId"></el-input>
-          </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="createChannel" style="border-radius: 4px">createChannel</el-button>
+            <el-button type="primary"  @click="showCreateChannelModel" style="border-radius: 4px">createChannel</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
+    <el-dialog align="left" title="创建频道" :visible="createChannelModelVisible" @close="closeCreateChannelModel">
+      <create-channel :client="client" @onGetChannel = getChannel></create-channel>
+    </el-dialog>
 
     <p class="text-unit">频道列表[region:channelId](用于选择频道)</p>
     <el-row type="flex">
@@ -241,7 +229,7 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="getChannelUserList" style="border-radius: 4px">getChannelUserList</el-button>
+            <el-button type="primary" @click="getChannelUserList" style="border-radius: 4px">getChannelUserList</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -258,7 +246,7 @@
             <el-input v-model="getChannelUserCountReq.channelIds"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="getChannelUserCount" style="border-radius: 4px">getChannelUserCount</el-button>
+            <el-button type="primary" @click="getChannelUserCount" style="border-radius: 4px">getChannelUserCount</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -511,6 +499,8 @@
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil';
   import { getRegions, getRegionChannelId } from '@/components/room.js';
+  import CreateChannel from './create_channel.vue'
+
   //import Hummer from 'hummer-channel-sdk';
 
   const UID = getStorage('uid');
@@ -531,7 +521,6 @@
         flag: -1,
         hummer: null,
         client: null,
-        channel: null,
         channels: [],
         appid: APPID,
         uid: UID,
@@ -540,8 +529,6 @@
         area: 'cn',
         areas: getRegions(),
         userRegionFlag: false,
-        iRegion: 'cn',
-        iChannelId: TEST_CHANNEL_ID,
         regionChannelId: null,
         regionChannelIds: [],
         mq_data: [],
@@ -635,7 +622,15 @@
         refreshTokenRes: '',
       }
     },
+    components: {
+      CreateChannel
+    },
     computed: {
+      ...mapState({
+        createChannelModelVisible: state => {
+          return state.channel.createChannelModelVisible
+        }
+      })
     },
     watch: {
     },
@@ -665,6 +660,12 @@
     mounted() {
     },
     methods: {
+      showCreateChannelModel() {
+        this.$store.commit('updateCreateChannelModelVisible', true);
+      },
+      closeCreateChannelModel() {
+        this.$store.commit('updateCreateChannelModelVisible', false)
+      },
       setUserRegion() {
         if (!this.hummer)
           return;
@@ -711,57 +712,31 @@
         // 接收P2P消息
         this.onReceiveMessage();
       },
-      createChannel() {
-        if (!this.client)
-          return;
+      getChannel(data) {
+        console.log('getChannel data=', data);
 
-        this.regionChannelId = getRegionChannelId(this.iRegion, this.iChannelId);
+        let region = data.region;
+        let channelId = data.channelId;
+        this.regionChannelId = getRegionChannelId(region, channelId);
         if (this.channels[this.regionChannelId]) {
           console.log('channel exists, and channels=', this.channels);
           return;
         }
 
-        this.channel = this.client.createChannel({
-          region: this.iRegion,
-          channelId: this.iChannelId
-        });
-        if (!this.channel) {
-          return;
-        }
-        
-        this.channels[this.regionChannelId] = {
-          channel: this.channel,
-          region: this.iRegion,
-          channelId: this.iChannelId
-        }
-
+        this.channels[this.regionChannelId] = data;
         this.regionChannelIds.push({value: this.regionChannelId, label: this.regionChannelId});
 
         console.log('channels=', this.channels);
 
-        let client = this.channels[this.regionChannelId];
-        this.onReceiveChannelMessage(client);
-        this.onNotifyJoinChannel(client);
-        this.onNotifyLeaveChannel(client);
-        this.onNotifyUserCountChange(client);
+        let channel = this.channels[this.regionChannelId];
+        this.onReceiveChannelMessage(channel);
+        this.onNotifyJoinChannel(channel);
+        this.onNotifyLeaveChannel(channel);
+        this.onNotifyUserCountChange(channel);
         // 用户属性变更
-        this.onNotifyUserAttributesChange(client);
+        this.onNotifyUserAttributesChange(channel);
         // 频道属性变更
-        this.onNotifyChannelAttributesChange(client);
-      },
-      // ------------------ 测试接口 --------------------
-      getInstanceInfo() {
-        if (!this.hummer)
-          return;
-          
-        this.result = '';
-        this.hummer.getInstanceInfo().then(res => {
-          console.log("getInstanceInfo Res: ", res);
-          this.result = JSON.stringify(res);
-        }).catch(err => {
-          console.error("getInstanceInfo err:", err);
-          this.result = JSON.stringify(err);
-        });
+        this.onNotifyChannelAttributesChange(channel);
       },
       joinChannel() {
         if (!this.channels[this.regionChannelId])
@@ -1186,6 +1161,19 @@
           this.refreshTokenRes = JSON.stringify(err);
         });
       },
+      getInstanceInfo() {
+        if (!this.hummer)
+          return;
+          
+        this.result = '';
+        this.hummer.getInstanceInfo().then(res => {
+          console.log("getInstanceInfo Res: ", res);
+          this.result = JSON.stringify(res);
+        }).catch(err => {
+          console.error("getInstanceInfo err:", err);
+          this.result = JSON.stringify(err);
+        });
+      },
       clearMqData() {
         this.mq_data = [];
         this.mq_channel_data = [];
@@ -1208,80 +1196,80 @@
         });
       },
       /* 组播消息接收模块 */
-      onReceiveChannelMessage(client) {
-        client.channel.on('ChannelMessage', (data) => {
+      onReceiveChannelMessage(channel) {
+        channel.channel.on('ChannelMessage', (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-          console.log(`接收组播消息ChannelMessage: [${client.region}:${client.channelId}]:` + JSON.stringify(data));
+          console.log(`接收组播消息ChannelMessage: [${channel.region}:${channel.channelId}]:` + JSON.stringify(data));
           this.mq_channel_data.push(data);
 
           this.$message({
             duration: 3000,
-            message: `ChannelMessage: [${client.region}:${client.channelId}]:` + JSON.stringify(data),
+            message: `ChannelMessage: [${channel.region}:${channel.channelId}]:` + JSON.stringify(data),
             type: 'success'
           });
 
           console.log("组播MQ队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
         });
       },
-      onNotifyJoinChannel(client) {
-        client.channel.on('NotifyJoinChannel', (data) => {
-          console.log(`接收消息NotifyJoinChannel [${client.region}:${client.channelId}]:` + JSON.stringify(data));
+      onNotifyJoinChannel(channel) {
+        channel.channel.on('NotifyJoinChannel', (data) => {
+          console.log(`接收消息NotifyJoinChannel [${channel.region}:${channel.channelId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `JoinChannel [${client.region}:${client.channelId}]:` + JSON.stringify(data),
+            message: `JoinChannel [${channel.region}:${channel.channelId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyLeaveChannel(client) {
-        client.channel.on('NotifyLeaveChannel', (data) => {
-          console.log(`接收消息NotifyLeaveChannel [${client.region}:${client.channelId}]:` + JSON.stringify(data));
+      onNotifyLeaveChannel(channel) {
+        channel.channel.on('NotifyLeaveChannel', (data) => {
+          console.log(`接收消息NotifyLeaveChannel [${channel.region}:${channel.channelId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `LeaveChannel [${client.region}:${client.channelId}]:` + JSON.stringify(data),
+            message: `LeaveChannel [${channel.region}:${channel.channelId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserCountChange(client) {
-        client.channel.on('NotifyUserCountChange', (data) => {
-          console.log(`用户数量变更NotifyUserCountChange [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
+      onNotifyUserCountChange(channel) {
+        channel.channel.on('NotifyUserCountChange', (data) => {
+          console.log(`用户数量变更NotifyUserCountChange [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `NotifyUserCountChange [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
+            message: `NotifyUserCountChange [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserAttributesChange(client) {
+      onNotifyUserAttributesChange(channel) {
         const channelEvents = [
           "NotifyUserAttributesSet",
           "NotifyUserAttributesDelete",
           "NotifyUserAttributesAddOrUpdate"
         ];
         channelEvents.forEach(eventName => {
-          client.channel.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
+          channel.channel.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data));
             this.$message({
               duration: 3000,
-              message: `${eventName} [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
+              message: `${eventName} [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data),
               type: 'success'
             });
           });
         });
       },
-      onNotifyChannelAttributesChange(client) {
+      onNotifyChannelAttributesChange(channel) {
         const channelEvents = [
           "NotifyChannelAttributesSet",
           "NotifyChannelAttributesDelete",
           "NotifyChannelAttributesAddOrUpdate"
         ];
         channelEvents.forEach(eventName => {
-          client.channel.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${client.region}:${client.channelId}]: ` + JSON.stringify(data));
+          channel.channel.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data));
             this.$message({
               duration: 3000,
-              message: `${eventName} [${client.region}:${client.channelId}]: ` + JSON.stringify(data),
+              message: `${eventName} [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data),
               type: 'success'
             });
           });
@@ -1289,7 +1277,7 @@
       },
       onConnectStatus() {
         this.hummer.on('ConnectStatus', (data) => {
-          console.log("=== hummer channel status===:" + JSON.stringify(data));
+          console.log("=== hummer connect status===:" + JSON.stringify(data));
         });
       },
       onLoginStatus() {

@@ -13,7 +13,7 @@ const im_perf = resolve => require(['@/components/im_perf.vue'], resolve)
 const signal_test = resolve => require(['@/components/signal_test.vue'], resolve)
 const signal = resolve => require(['@/components/signal.vue'], resolve)
 
-const channel_test = resolve => require(['@/components/channel_test.vue'], resolve)
+const channel_test = resolve => require(['@/components/channel/channel_test.vue'], resolve)
 
 Vue.use(Router);
 const routes = [
