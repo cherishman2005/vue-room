@@ -4,6 +4,7 @@ import {getters} from "./getters"
 import {mutations} from "./mutations"
 import {actions} from './actions'
 import channel from './modules/channel'
+import group from './modules/group'
 import token from './modules/token'
 
 Vue.use(Vuex)
@@ -18,6 +19,7 @@ const state = {
 
 const modules = { 
   channel,
+  group,
   token
 };
 

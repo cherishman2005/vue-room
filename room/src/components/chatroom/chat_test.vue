@@ -7,44 +7,28 @@
       <el-col :span="24"  style="height:30px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="appid">
-            <el-input v-model="appid" disabled></el-input>
+            <el-input v-model="appid" disabled style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item label="uid">
-            <el-input v-model="uid" disabled></el-input>
+            <el-input v-model="uid" disabled style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item label="roomid">
-            <el-input v-model="roomid"></el-input>
-          </el-form-item>
-          <el-form-item label="iRegion">
-            <el-input v-model="iRegion"></el-input>
+            <el-input v-model="roomid" style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <template>
-              <el-popconfirm
-                confirmButtonText='确定'
-                cancelButtonText='取消'
-                icon="el-icon-info"
-                iconColor="red"
-                title="确认创建RoomId?"
-                @onConfirm="createChatRoomId"
-              >
-                <el-button type="primary" slot="reference" style="border-radius: 4px">createChatRoomId</el-button>
-              </el-popconfirm>
-            </template>
+            <el-button type="primary"  @click="showCreateGroupModel" style="border-radius: 4px">createChatRoomId</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="initChatRoom" style="border-radius: 4px">initChatRoom</el-button>
           </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
-          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getInstanceInfoRes}}</p>
-    </div>
-    
+
+    <el-dialog align="left" title="创建ChatRoomId" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
+      <create-group :hummer="hummer" @onGetChatRoomId = getChatRoomId></create-group>
+    </el-dialog>
+
     <p class="text-unit">加入聊天室</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:45px;text-align:left;" >
@@ -288,24 +272,37 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getUserAttributesListRes}}</p>
     </div>
 
+    <p class="text-unit">获取实例信息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getInstanceInfoRes}}</p>
+    </div>
+
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
-  import { getRegions, getRegionChannelId } from '@/components/room.js';
-  //import Hummer from 'hummer-chatroom'
+  import { getRegionChannelId } from '@/components/room.js';
+  import CreateGroup from './create_group.vue'
+  //import Hummer from 'hummer-chatroom-sdk'
  
   const UID = getStorage('uid');
   const ROOMID = Number(getStorage('roomid'));
-  const AREA = getStorage("area");
   const APPID = getStorage("appid");
-  const REGION = getStorage('region');
   const TOKEN = getStorage('token');
 
   export default {
-    name : 'chatroom-test',
+    name: 'chatroom-test',
     data() {
       return {
         flag: -1,
@@ -314,10 +311,7 @@
         roomid: ROOMID,
         uid: UID,
         token: TOKEN,
-        region: REGION || 'cn',
-        iRegion: 'chn',
-        area: 'chn',
-        areas: getRegions(),
+        region: 'cn',
         chatroom: null,
         chatrooms: [],
         regionChatroomId: '',
@@ -358,7 +352,7 @@
         GetChatRoomManagerRes: '',
         GetUserCountRes: '',
         GetUserListReq: {
-          num: 10,
+          num: 100,
           pos: 0,
         },
         GetUserListRes: '',
@@ -373,7 +367,15 @@
         getUserAttributesListRes: '',
       }
     },
+    components: {
+      CreateGroup
+    },
     computed: {
+      ...mapState({
+        createGroupModelVisible: state => {
+          return state.group.createGroupModelVisible
+        }
+      })
     },
     watch: {
     },
@@ -404,26 +406,32 @@
     mounted() {
     },
     methods: {
+      showCreateGroupModel() {
+        this.$store.commit('updateCreateGroupModelVisible', true);
+      },
+      closeCreateGroupModel() {
+        this.$store.commit('updateCreateGroupModelVisible', false)
+      },
+      getChatRoomId(data) {
+        console.log('getChatRoomId data=', data);
+
+        this.region = data.region;
+        this.roomid = data.roomid;
+      },
       initChatRoom() {
         if (!this.hummer) {
           console.log("hummer is null");
           return;
         }
 
-        if (this.chatroom) {
-            console.log("renew chatroom again!");
-            delete this.chatroom;
-            this.chatroom = null;
-        }
-
         this.regionChatroomId = getRegionChannelId(this.region, this.roomid);
         if (this.chatrooms[this.regionChatroomId]) {
-          console.log('channel exists, and chatrooms=', this.chatrooms);
+          console.log('chatroom exists, and chatrooms=', this.chatrooms);
           return;
         }
 
         this.chatroom = this.hummer.createChatRoom({
-          region: this.iRegion,
+          region: this.region,
           roomid: this.roomid
         });
         if (!this.chatroom) {
@@ -453,50 +461,13 @@
 
         setStorage("roomid", this.roomid);
       },
-      createChatRoomId() {
-        if (!this.hummer)
-          return;
-
-        let props = {
-          "Name": "Hummer聊天室",
-          "Description": "测试",
-          "Bulletin": "公告",
-          "Extention": "自定义",
-        };
-        
-        let region = this.iRegion;
-        let params = { region, props };
-        this.hummer.createChatRoomId(params).then((res) => {
-          console.log("createChatRoomId Res: ", res);
-          this.CreateChatRoomIdRes = res;
-          if (res.rescode == 0) {
-            this.roomid = res.roomid;
-            setStorage("roomid", this.roomid);
-          }
-        }).catch(err => {
-          console.log(err)
-        });
-      },
-
-      // ------------------ 测试接口 --------------------
-      getInstanceInfo() {
-        if (!this.hummer)
-          return;
-
-        this.hummer.getInstanceInfo().then(res => {
-          console.log("getInstanceInfo: "  + JSON.stringify(res));
-          this.GetInstanceInfoRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err);
-        });
-      },
       joinChatRoom() {
         if (!this.chatrooms[this.regionChatroomId])
           return;
 
         console.log('regionChatroomId=', this.regionChatroomId, ' chatroom=', this.chatrooms[this.regionChatroomId]);
         
-        let joinProps = { "H5_sdk": 'js_sdk' };
+        let joinProps = {"H5_sdk": 'js_sdk'};
         let req = { joinProps }
         this.chatrooms[this.regionChatroomId].chatroom.joinChatRoom(req).then(res => {
           console.log("joinChatRoom Res: " + JSON.stringify(res));
@@ -695,6 +666,18 @@
         }).catch((err) => {
           console.log(err)
         })
+      },
+      getInstanceInfo() {
+        if (!this.hummer)
+          return;
+        
+        this.getInstanceInfoRes = '';
+        this.hummer.getInstanceInfo().then(res => {
+          console.log("getInstanceInfo: " + JSON.stringify(res));
+          this.getInstanceInfoRes = JSON.stringify(res);
+        }).catch(err => {
+          console.log(err);
+        });
       },
 
       /*  消息接收模块 */

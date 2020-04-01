@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-col :span="24" style="text-align:left;">
-      <el-form size="small" :model="form" :rules="rules" ref="createChannelForm" label-width="100px">
+      <el-form size="small" :model="form" ref="createGroupForm" label-width="100px">
         <el-form-item label="region">
           <template>
             <el-select v-model="form.region" placeholder="region" style="width:250px;">
@@ -14,22 +14,18 @@
             </el-select>
           </template>
         </el-form-item>
-        <el-form-item label="channelId">
-          <el-input v-model="form.channelId" style="width:250px;"></el-input>
-        </el-form-item>
       </el-form>
     </el-col>
 
     <div slot="footer" align="right">
-      <el-button size="small" @click="closeCreateChannelModel">取消</el-button>
-      <el-button size="small" type="primary" @click="onSubmit('createChannelForm')">立即创建</el-button>
+      <el-button size="small" @click="closeCreateGroupModel">取消</el-button>
+      <el-button size="small" type="primary" @click="onSubmit('createGroupForm')">立即创建</el-button>
     </div>
   </div>
 </template>
 
 <script>
   import { getRegions, getRegionChannelId } from '@/components/room.js';
-  const TEST_CHANNEL_ID = 'test123456';
 
   import {
     Form,
@@ -42,7 +38,7 @@
   } from 'element-ui'
 
   export default {
-    props: ["client"],
+    props: ['hummer'],
     components: {
       ElForm: Form,
       ElFormItem: FormItem,
@@ -57,13 +53,9 @@
         regions: getRegions(),
         form: {
           region: 'cn',
-          channelId: TEST_CHANNEL_ID,
         },
         options: [],
         loading: false,
-        rules: {
-          iChannelId: [{ required: true, message: '请输入channelId', trigger: 'blur' }]
-        }
       }
     },
     computed: {
@@ -75,35 +67,43 @@
           if (!valid) {
             return false;
           }
-          this.createChannel();
+          this.createChatRoomId();
         })
       },
-      closeCreateChannelModel() {
-        this.$store.commit('updateCreateChannelModelVisible', false);
+      closeCreateGroupModel() {
+        this.$store.commit('updateCreateGroupModelVisible', false);
       },
-      createChannel() {
-        if (!this.client) {
-          console.warn('client is null');
-          this.closeCreateChannelModel();
-          return;
-        }
-        let channel = this.client.createChannel({
-          region: this.form.region,
-          channelId: this.form.channelId
-        });
-        if (!channel) {
+      createChatRoomId() {
+        if (!this.hummer) {
+          console.warn('hummer is null');
           this.closeCreateChannelModel();
           return;
         }
 
-        let data = {
-          channel: channel,
-          region: this.form.region,
-          channelId: this.form.channelId
+        let props = {
+          "Name": "Hummer聊天室",
+          "Description": "测试",
+          "Bulletin": "公告",
+          "Extention": "自定义",
         };
-        this.$emit('onGetChannel', data);
+        
+        let region = this.form.region;
+        let params = {region, props};
+        this.hummer.createChatRoomId(params).then((res) => {
+          console.log("createChatRoomId res: ", res);
+          if (res.rescode === 0) {
+            let data = {
+              region: this.form.region,
+              roomid: res.roomid
+            };
+            this.$emit('onGetChatRoomId', data);
 
-        this.closeCreateChannelModel();
+            this.closeCreateGroupModel();
+          }
+        }).catch(err => {
+          console.log(err)
+          this.closeCreateGroupModel();
+        });
       }
     }
   }

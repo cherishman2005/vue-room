@@ -3,15 +3,15 @@ import Router from 'vue-router'
 
 const author = resolve => require(['@/components/login/author'], resolve)
 const error = resolve => require(['@/page/error.vue'], resolve)
-const chat = resolve => require(['@/components/chat.vue'], resolve)
-const chat_test = resolve => require(['@/components/chat_test.vue'], resolve)
-const chat_perf = resolve => require(['@/components/chat_perf.vue'], resolve)
-const im = resolve => require(['@/components/im.vue'], resolve)
-const im_test = resolve => require(['@/components/im_test.vue'], resolve)
-const im_perf = resolve => require(['@/components/im_perf.vue'], resolve)
+const chat = resolve => require(['@/components/chatroom/chat.vue'], resolve)
+const chat_test = resolve => require(['@/components/chatroom/chat_test.vue'], resolve)
+const chat_perf = resolve => require(['@/components/chatroom/chat_perf.vue'], resolve)
+const im = resolve => require(['@/components/im/im.vue'], resolve)
+const im_test = resolve => require(['@/components/im/im_test.vue'], resolve)
+const im_perf = resolve => require(['@/components/im/im_perf.vue'], resolve)
 
-const signal_test = resolve => require(['@/components/signal_test.vue'], resolve)
-const signal = resolve => require(['@/components/signal.vue'], resolve)
+const signal_test = resolve => require(['@/components/signal/signal_test.vue'], resolve)
+const signal = resolve => require(['@/components/signal/signal.vue'], resolve)
 
 const channel_test = resolve => require(['@/components/channel/channel_test.vue'], resolve)
 
