@@ -64,7 +64,7 @@
       </el-col>
     </el-row>
 
-    <el-dialog align="left" title="创建频道实例" :visible="createChannelModelVisible" @close="closeCreateChannelModel">
+    <el-dialog align="left" title="创建频道实例" :visible="createChannelModelVisible" @close="closeCreateChannelModel" customClass="customWidth">
       <create-channel :client="client" @onGetChannel = getChannel></create-channel>
     </el-dialog>
 
@@ -419,7 +419,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{loginRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px;text-align:left;">{{loginRes}}</p>
     </div>
 
     <p class="text-unit">刷新token</p>
@@ -471,7 +471,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{result}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true">{{result}}</p>
     </div>
 
     <p class="text-unit">清除MQ队列</p>
@@ -706,7 +706,7 @@
         this.onReceiveMessage();
       },
       getChannel(data) {
-        console.log('getChannel data=', data);
+        console.log('getChannel data=' + JSON.stringify(data));
 
         let region = data.region;
         let channelId = data.channelId;
@@ -1283,6 +1283,9 @@
 </script>
 
 <style lang='less'>
+  .customClass {
+    width: 80%;
+  }
   .dashboard {
     &-container {
       margin: 30px;
@@ -1312,5 +1315,10 @@
     //margin: 10px 25px;
     text-align: left;
     //white-space: pre;
+  }
+  .rsp-text {
+    width: 80%;
+    height: 46px;
+    text-align: left;
   }
 </style>
