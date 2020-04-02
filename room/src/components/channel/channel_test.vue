@@ -1283,7 +1283,7 @@
 </script>
 
 <style lang='less'>
-  .customClass {
+  .customWidth {
     width: 80%;
   }
   .dashboard {
