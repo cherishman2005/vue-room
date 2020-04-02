@@ -706,7 +706,7 @@
         this.onReceiveMessage();
       },
       getChannel(data) {
-        console.log('getChannel data=' + JSON.stringify(data));
+        console.log('getChannel data=', data);
 
         let region = data.region;
         let channelId = data.channelId;
