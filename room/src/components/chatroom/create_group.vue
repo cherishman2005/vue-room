@@ -38,7 +38,12 @@
   } from 'element-ui'
 
   export default {
-    props: ['hummer'],
+    props: {
+      hummer: {
+        type: Object,
+        required: true
+      },
+    },
     components: {
       ElForm: Form,
       ElFormItem: FormItem,

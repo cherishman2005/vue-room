@@ -1,4 +1,4 @@
-# room
+# vue-room
 channel, chatroom, im vue-demo
 
 线上demo:

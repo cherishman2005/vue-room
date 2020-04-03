@@ -29,7 +29,7 @@
 
     <!-- Token登录模式 -->
     <el-dialog align="left" title="Token" :visible="selectTokenModelVisible" @close="closeSelectTokenModel">
-      <select-token :client="client" @onConfirm = getToken></select-token>
+      <select-token @onConfirm=getToken></select-token>
     </el-dialog>
 
   </div>

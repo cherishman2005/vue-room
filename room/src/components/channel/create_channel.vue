@@ -42,7 +42,12 @@
   } from 'element-ui'
 
   export default {
-    props: ["client"],
+    props: {
+      client: {
+        type: Object,
+        required: true
+      },
+    },
     components: {
       ElForm: Form,
       ElFormItem: FormItem,
