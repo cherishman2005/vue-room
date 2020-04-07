@@ -6,6 +6,7 @@ import {actions} from './actions'
 import channel from './modules/channel'
 import group from './modules/group'
 import token from './modules/token'
+import refreshToken from './modules/refreshToken'
 
 Vue.use(Vuex)
 
@@ -20,7 +21,8 @@ const state = {
 const modules = { 
   channel,
   group,
-  token
+  token,
+  refreshToken
 };
 
 var store = new Vuex.Store({

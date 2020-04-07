@@ -65,7 +65,7 @@
     </el-row>
 
     <el-dialog align="left" title="创建频道实例" :visible="createChannelModelVisible" @close="closeCreateChannelModel" customClass="customWidth">
-      <create-channel :client="client" @onGetChannel = getChannel></create-channel>
+      <create-channel :client="client" @onGetChannel=getChannel></create-channel>
     </el-dialog>
 
     <p class="text-unit">加入Channel</p>
@@ -423,35 +423,11 @@
     </div>
 
     <p class="text-unit">刷新token</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+    <el-row type="flex">
+      <el-col :span="24" style="height:30px;text-align:left;">
         <el-form :inline="true"  size="small">
-          <el-form-item label="uid">
-            <el-input v-model="refreshTokenReq.uid" :disabled="true" style="width:150px;"></el-input>
-          </el-form-item>
-          <el-form-item label="token">
-            <el-input
-              type="textarea" 
-              style="width:350px;"
-              :autosize="{minRows: 1, maxRows: 2}" 
-              placeholder="token"
-              v-model="refreshTokenReq.token"
-              clearable>
-            </el-input>
-          </el-form-item>
           <el-form-item class="search">
-            <template>
-              <el-popconfirm
-                confirmButtonText='确定'
-                cancelButtonText='取消'
-                icon="el-icon-info"
-                iconColor="red"
-                title="更新Token?"
-                @onConfirm="refreshToken"
-              >
-                <el-button type="primary" slot="reference" style="border-radius: 4px">refreshToken</el-button>
-              </el-popconfirm>
-            </template>
+            <el-button type="primary"  @click="showRefreshTokenModel" style="border-radius: 4px">refreshToken</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -459,6 +435,15 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{refreshTokenRes}}</p>
     </div>
+
+    <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
+      <refresh-token 
+        :hummer="hummer" 
+        :uid="uid" 
+        @onRefreshToken=refreshToken
+      >
+      </refresh-token>
+    </el-dialog>
 
     <p class="text-unit">获取实例信息</p>
     <el-row type="flex" class="row-bg">
@@ -493,6 +478,7 @@
   import { getStorage, setStorage } from '@/utils/BaseUtil';
   import { getRegions, getRegionChannelId } from '@/components/room.js';
   import CreateChannel from './create_channel.vue'
+  import RefreshToken from './refresh_token.vue'
 
   //import Hummer from 'hummer-channel-sdk';
 
@@ -604,21 +590,17 @@
         },
         queryUsersOnlineStatusRes: '',
         loginRes: '',
-        refreshTokenReq: {
-          uid: UID,
-          token: '',
-        },
         refreshTokenRes: '',
       }
     },
     components: {
-      CreateChannel
+      CreateChannel,
+      RefreshToken,
     },
     computed: {
       ...mapState({
-        createChannelModelVisible: state => {
-          return state.channel.createChannelModelVisible
-        }
+        createChannelModelVisible: state => state.channel.createChannelModelVisible,
+        refreshTokenModelVisible: state => state.refreshToken.refreshTokenModelVisible,
       })
     },
     watch: {
@@ -654,6 +636,12 @@
       },
       closeCreateChannelModel() {
         this.$store.commit('updateCreateChannelModelVisible', false)
+      },
+      showRefreshTokenModel() {
+        this.$store.commit('updateRefreshTokenModelVisible', true);
+      },
+      closeRefreshTokenModel() {
+        this.$store.commit('updateRefreshTokenModelVisible', false)
       },
       setUserRegion() {
         if (!this.hummer)
@@ -1111,33 +1099,14 @@
           this.loginRes = JSON.stringify(err);
         });
       },
-      // hummer3.1
-      refreshToken() {
-        let uid = this.refreshTokenReq.uid;
-        let token = this.refreshTokenReq.token;
-
-        let req = {uid, token};
-        console.log('refreshToken: req=', req);
-
-        this.refreshTokenRes = '';
-        this.hummer.refreshToken(req).then(res => {
-          console.log("refreshToken Res: " + JSON.stringify(res));
-          this.refreshTokenRes = JSON.stringify(res);
-
-          // 测试刷新token
-          if (res.rescode == 0) {
-              setStorage("uid", uid);
-              setStorage("token", token);
-          }
-        }).catch(err => {
-          console.error("refreshToken err:", err);
-          this.refreshTokenRes = JSON.stringify(err);
-        });
+      refreshToken(data) {
+        this.refreshTokenRes = JSON.stringify(data);
+        console.log('refreshToken res=', data);
       },
       getInstanceInfo() {
         if (!this.hummer)
           return;
-          
+
         this.result = '';
         this.hummer.getInstanceInfo().then(res => {
           console.log("getInstanceInfo Res: ", res);
