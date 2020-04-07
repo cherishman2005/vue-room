@@ -131,19 +131,19 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
-            <el-input v-model="setUserAttributesReq.key"></el-input>
+            <el-input v-model="setLocalUserAttributesReq.key"></el-input>
           </el-form-item>
           <el-form-item label="prop">
-            <el-input v-model="setUserAttributesReq.prop"></el-input>
+            <el-input v-model="setLocalUserAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
+            <el-button type="primary"  @click="setLocalUserAttributes" style="border-radius: 4px">setLocalUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setLocalUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">删除用户某些属性</p>
@@ -154,7 +154,7 @@
             <el-input v-model="deleteUserAttributesReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="deleteUserAttributesByKeys" style="border-radius: 4px">deleteUserAttributesByKeys</el-button>
+            <el-button type="primary"  @click="deleteLocalUserAttributesByKeys" style="border-radius: 4px">deleteLocalUserAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -168,33 +168,33 @@
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="clearUserAttributes" style="border-radius: 4px">clearUserAttributes</el-button>
+            <el-button type="primary"  @click="clearLocalUserAttributes" style="border-radius: 4px">clearLocalUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{clearUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{clearLocalUserAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">增加或更新用户某些属性</p>
+    <p class="text-unit">添加或更新本地用户的属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
-            <el-input v-model="addOrUpdateUserAttributesReq.key"></el-input>
+            <el-input v-model="addOrUpdateLocalUserAttributesReq.key"></el-input>
           </el-form-item>
           <el-form-item label="prop">
-            <el-input v-model="addOrUpdateUserAttributesReq.prop"></el-input>
+            <el-input v-model="addOrUpdateLocalUserAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="addOrUpdateUserAttributes" style="border-radius: 4px">addOrUpdateUserAttributes</el-button>
+            <el-button type="primary"  @click="addOrUpdateLocalUserAttributes" style="border-radius: 4px">addOrUpdateLocalUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateLocalUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">查询某一属性的用户列表</p>
@@ -538,22 +538,22 @@
         setUserRegionRes: '',
         joinChannelRes: '',
         leaveChannelRes: '',
-        setUserAttributesReq: {
+        setLocalUserAttributesReq: {
           key: TEST_ROLE_KEY,
           prop: 'teacher',
         },
-        setUserAttributesRes: '',
+        setLocalUserAttributesRes: '',
         deleteUserAttributesReq: {
           keys: TEST_ROLE_KEY,
           channelId: TEST_CHANNEL_ID,
         },
         deleteUserAttributesRes: '',
-        clearUserAttributesRes: '',
-        addOrUpdateUserAttributesReq: {
+        clearLocalUserAttributesRes: '',
+        addOrUpdateLocalUserAttributesReq: {
           key: TEST_ROLE_KEY,
           prop: 'student',
         },
-        addOrUpdateUserAttributesRes: '',
+        addOrUpdateLocalUserAttributesRes: '',
         getChannelUserListReq: {
           channelId: TEST_CHANNEL_ID,
         },
@@ -564,10 +564,6 @@
           prop: 'teacher',
         },
         getGroupUserListByAttributeRes: '',
-        queryOnlineStatusForUserReq: {
-          uid: UID,
-        },
-        queryOnlineStatusForUserRes: '',
         sendMessageToChannelReq: {
           option: { reliable: 'yes' },
           content: 'js_sdk sendMessageToChannel',
@@ -787,7 +783,7 @@
           this.sendMessageToChannelRes = JSON.stringify(err);
         });
       },
-      setUserAttributes() {
+      setLocalUserAttributes() {
         if (!this.channels[this.regionChannelId])
           return;
 
@@ -798,21 +794,21 @@
           "Extention": "ex"
         };
   
-        let key = this.setUserAttributesReq.key;
-        let prop = this.setUserAttributesReq.prop;
+        let key = this.setLocalUserAttributesReq.key;
+        let prop = this.setLocalUserAttributesReq.prop;
         attributes[key] = prop;
         
         let req = { attributes };
-        this.setUserAttributesRes = '';
-        this.channels[this.regionChannelId].channel.setUserAttributes(req).then(res => {
-          console.log("setUserAttributes Res: ", res);
-          this.setUserAttributesRes = JSON.stringify(res);
+        this.setLocalUserAttributesRes = '';
+        this.channels[this.regionChannelId].channel.setLocalUserAttributes(req).then(res => {
+          console.log("setLocalUserAttributes Res: ", res);
+          this.setLocalUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("setUserAttributes err:", err);
-          this.setUserAttributesRes = JSON.stringify(err);
+          console.error("setLocalUserAttributes err:", err);
+          this.setLocalUserAttributesRes = JSON.stringify(err);
         });
       },
-      deleteUserAttributesByKeys() {
+      deleteLocalUserAttributesByKeys() {
         if (!this.channels[this.regionChannelId])
           return;
 
@@ -828,29 +824,29 @@
         let req = { keys };
         this.deleteUserAttributesRes = '';
 
-        this.channels[this.regionChannelId].channel.deleteUserAttributesByKeys(req).then(res => {
-          console.log("deleteUserAttributesByKeys Res: ", res);
+        this.channels[this.regionChannelId].channel.deleteLocalUserAttributesByKeys(req).then(res => {
+          console.log("deleteLocalUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
-          console.error("deleteUserAttributesByKeys err:", err);
+          console.error("deleteLocalUserAttributesByKeys err:", err);
           this.deleteUserAttributesRes = JSON.stringify(err);
         });
       },
-      clearUserAttributes() {
+      clearLocalUserAttributes() {
         if (!this.channels[this.regionChannelId])
           return;
 
-        this.clearUserAttributesRes = '';
+        this.clearLocalUserAttributesRes = '';
 
-        this.channels[this.regionChannelId].channel.clearUserAttributes().then(res => {
-          console.log("clearUserAttributes Res: ", res);
-          this.clearUserAttributesRes = JSON.stringify(res);
+        this.channels[this.regionChannelId].channel.clearLocalUserAttributes().then(res => {
+          console.log("clearLocalUserAttributes Res: ", res);
+          this.clearLocalUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
-          console.error("clearUserAttributes err:", err);
-          this.clearUserAttributesRes = JSON.stringify(err);
+          console.error("clearLocalUserAttributes err:", err);
+          this.clearLocalUserAttributesRes = JSON.stringify(err);
         });
       },
-      addOrUpdateUserAttributes() {
+      addOrUpdateLocalUserAttributes() {
         if (!this.channels[this.regionChannelId])
           return;
 
@@ -858,18 +854,18 @@
           "Name": "awu",
         };
   
-        let key = this.addOrUpdateUserAttributesReq.key;
-        let prop = this.addOrUpdateUserAttributesReq.prop;
+        let key = this.addOrUpdateLocalUserAttributesReq.key;
+        let prop = this.addOrUpdateLocalUserAttributesReq.prop;
         attributes[key] = prop;
         
         let req = { attributes };
-        this.addOrUpdateUserAttributesRes = '';
-        this.channels[this.regionChannelId].channel.addOrUpdateUserAttributes(req).then(res => {
-          console.log("addOrUpdateUserAttributes Res: ", res);
-          this.addOrUpdateUserAttributesRes = JSON.stringify(res);
+        this.addOrUpdateLocalUserAttributesRes = '';
+        this.channels[this.regionChannelId].channel.addOrUpdateLocalUserAttributes(req).then(res => {
+          console.log("addOrUpdateLocalUserAttributes Res: ", res);
+          this.addOrUpdateLocalUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("addOrUpdateUserAttributes err:", err);
-          this.addOrUpdateUserAttributesRes = JSON.stringify(err);
+          console.error("addOrUpdateLocalUserAttributes err:", err);
+          this.addOrUpdateLocalUserAttributesRes = JSON.stringify(err);
         });
       },
       getChannelUserList() {
@@ -1067,22 +1063,6 @@
           console.error("sendMessageToUser err:", err);
           this.sendMessageToUserRes = JSON.stringify(err);
         });
-      },
-      queryOnlineStatusForUser() {
-        if (!this.client)
-          return;
-
-        this.queryOnlineStatusForUserRes = '';
-
-        let uid = this.queryOnlineStatusForUserReq.uid;
-        this.client.queryOnlineStatusForUser({uid: uid}).then(res => {
-          console.log("queryOnlineStatusForUser res:", res);
-          this.queryOnlineStatusForUserRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("queryOnlineStatusForUser err:", err);
-          this.queryOnlineStatusForUserRes = JSON.stringify(err);
-        });
-
       },
       queryUsersOnlineStatus() {
         if (!this.client)
