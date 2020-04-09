@@ -1077,6 +1077,10 @@
         this.hummer.logout().then(res => {
           console.log("logout Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
+          if (res.rescode === 0) {
+            this.channels = [];
+            this.regionChannelIds = [];
+          }
         }).catch(err => {
           console.error("logout err:", err);
           this.loginRes = JSON.stringify(err);
