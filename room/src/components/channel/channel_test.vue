@@ -611,6 +611,7 @@
       this.hummer.setLogLevel(-1);
 
       this.onConnectStatusChange();
+      this.onTokenExpired();
     },
     destroyed() {
     },
@@ -1205,6 +1206,16 @@
           this.$message({
             duration: 3000,
             message: `ConnectionStateChange: ` + JSON.stringify(data),
+            type: 'success'
+          });
+        });
+      },
+      onTokenExpired() {
+        this.hummer.on('TokenExpired', (data) => {
+          console.log("=== TokenExpired ===:" + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: `TokenExpired: ` + JSON.stringify(data),
             type: 'success'
           });
         });
