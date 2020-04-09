@@ -5,8 +5,8 @@
     <!-- 登录/登出 -->
     <p class="text-unit">登录/登出</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="appid">
             <el-input v-model="appid" disabled style="width:150px;"></el-input>
           </el-form-item>
@@ -29,7 +29,7 @@
     <!-- 初始化ChannelService -->
     <p class="text-unit">设置用户归属地</p>
     <el-row type="flex">
-      <el-col :span="24"  style="height:30px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="用户归属地">
             <template>
@@ -61,7 +61,7 @@
 
     <p class="text-unit">创建频道实例</p>
     <el-row type="flex">
-      <el-col :span="24" style="height:30px;text-align:left;">
+      <el-col :span="24" style="height:35px;text-align:left;">
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary"  @click="showCreateChannelModel" style="border-radius: 4px">createChannel</el-button>
@@ -88,8 +88,8 @@
 
     <p class="text-unit">加入/退出Channel</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height: 35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item class="search">
             <el-button type="primary" @click="joinChannel" style="border-radius: 4px">joinChannel</el-button>
           </el-form-item>
@@ -105,8 +105,8 @@
 
     <p class="text-unit">A给频道发消息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="reliable">
             <template>
               <el-select v-model="sendMessageToChannelReq.option.reliable" placeholder="reliable" style="width: 80px;">
@@ -124,7 +124,7 @@
           </el-form-item>
 
           <el-form-item class="search">
-            <el-button type="primary"  @click="sendMessageToChannel" style="border-radius: 4px">sendMessageToChannel</el-button>
+            <el-button type="primary" @click="sendMessageToChannel" style="border-radius: 4px">sendMessageToChannel</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -135,7 +135,7 @@
 
     <p class="text-unit">设置用户属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
             <el-input v-model="setLocalUserAttributesReq.key"></el-input>
@@ -155,13 +155,13 @@
 
     <p class="text-unit">删除用户某些属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="keys">
             <el-input v-model="deleteUserAttributesReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="deleteLocalUserAttributesByKeys" style="border-radius: 4px">deleteLocalUserAttributesByKeys</el-button>
+            <el-button type="primary" @click="deleteLocalUserAttributesByKeys" style="border-radius: 4px">deleteLocalUserAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -172,10 +172,10 @@
 
     <p class="text-unit">删除用户所有属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="clearLocalUserAttributes" style="border-radius: 4px">clearLocalUserAttributes</el-button>
+            <el-button type="primary" @click="clearLocalUserAttributes" style="border-radius: 4px">clearLocalUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -186,8 +186,8 @@
 
     <p class="text-unit">添加或更新本地用户的属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="key">
             <el-input v-model="addOrUpdateLocalUserAttributesReq.key"></el-input>
           </el-form-item>
@@ -195,7 +195,7 @@
             <el-input v-model="addOrUpdateLocalUserAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="addOrUpdateLocalUserAttributes" style="border-radius: 4px">addOrUpdateLocalUserAttributes</el-button>
+            <el-button type="primary" @click="addOrUpdateLocalUserAttributes" style="border-radius: 4px">addOrUpdateLocalUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -206,7 +206,7 @@
 
     <p class="text-unit">查询某一属性的用户列表</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
             <el-input v-model="getChannelUserListByAttributeReq.key"></el-input>
@@ -215,7 +215,7 @@
             <el-input v-model="getChannelUserListByAttributeReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="getChannelUserListByAtrribute" style="border-radius: 4px">getChannelUserListByAtrribute</el-button>
+            <el-button type="primary" @click="getChannelUserListByAtrribute" style="border-radius: 4px">getChannelUserListByAtrribute</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -226,7 +226,7 @@
 
     <p class="text-unit">查询频道用户列表</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary" @click="getChannelUserList" style="border-radius: 4px">getChannelUserList</el-button>
@@ -240,7 +240,7 @@
 
     <p class="text-unit">查询单个或多个频道的成员人数</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="channelIds">
             <el-input v-model="getChannelUserCountReq.channelIds"></el-input>
@@ -257,7 +257,7 @@
     
     <p class="text-unit">设置频道属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
             <el-input v-model="setChannelAttributesReq.key"></el-input>
@@ -266,7 +266,7 @@
             <el-input v-model="setChannelAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="setChannelAttributes" style="border-radius: 4px">setChannelAttributes</el-button>
+            <el-button type="primary" @click="setChannelAttributes" style="border-radius: 4px">setChannelAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -277,13 +277,13 @@
 
     <p class="text-unit">删除频道某些属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="keys">
             <el-input v-model="deleteChannelAttributesByKeysReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="deleteChannelAttributesByKeys" style="border-radius: 4px">deleteChannelAttributesByKeys</el-button>
+            <el-button type="primary" @click="deleteChannelAttributesByKeys" style="border-radius: 4px">deleteChannelAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -294,21 +294,21 @@
 
     <p class="text-unit">删除频道所有属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="clearChannelAttributes" style="border-radius: 4px">clearChannelAttributes</el-button>
+            <el-button type="primary" @click="clearChannelAttributes" style="border-radius: 4px">clearChannelAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{clearChannelAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height:46px; text-align:left;" >{{clearChannelAttributesRes}}</p>
     </div>
 
     <p class="text-unit">增加或更新频道某些属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
             <el-input v-model="addOrUpdateChannelAttributesReq.key"></el-input>
@@ -317,7 +317,7 @@
             <el-input v-model="addOrUpdateChannelAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="addOrUpdateChannelAttributes" style="border-radius: 4px">addOrUpdateChannelAttributes</el-button>
+            <el-button type="primary" @click="addOrUpdateChannelAttributes" style="border-radius: 4px">addOrUpdateChannelAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -328,13 +328,13 @@
 
     <p class="text-unit">查询某指定频道指定属性名的属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="keys">
             <el-input v-model="getChannelAttributesByKeysReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="getChannelAttributesByKeys" style="border-radius: 4px">getChannelAttributesByKeys</el-button>
+            <el-button type="primary" @click="getChannelAttributesByKeys" style="border-radius: 4px">getChannelAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -345,10 +345,10 @@
 
     <p class="text-unit">查询某指定频道的全部属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="getChannelAttributes" style="border-radius: 4px">getChannelAttributes</el-button>
+            <el-button type="primary" @click="getChannelAttributes" style="border-radius: 4px">getChannelAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -383,7 +383,7 @@
             <el-input v-model="sendMessageToUserReq.receiver" style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="sendMessageToUser" style="border-radius: 4px">sendMessageToUser</el-button>
+            <el-button type="primary" @click="sendMessageToUser" style="border-radius: 4px">sendMessageToUser</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -394,13 +394,13 @@
     
     <p class="text-unit">批量查询登录在线状态</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="uids">
             <el-input v-model="queryUsersOnlineStatusReq.uids"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="queryUsersOnlineStatus" style="border-radius: 4px">queryUsersOnlineStatus</el-button>
+            <el-button type="primary" @click="queryUsersOnlineStatus" style="border-radius: 4px">queryUsersOnlineStatus</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -414,10 +414,10 @@
 
     <p class="text-unit">刷新token</p>
     <el-row type="flex">
-      <el-col :span="24" style="height:30px;text-align:left;">
+      <el-col :span="24" style="height:35px;text-align:left;">
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="showRefreshTokenModel" style="border-radius: 4px">refreshToken</el-button>
+            <el-button type="primary" @click="showRefreshTokenModel" style="border-radius: 4px">refreshToken</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -437,10 +437,10 @@
 
     <p class="text-unit">获取实例信息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
+            <el-button type="primary" @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -451,10 +451,10 @@
 
     <p class="text-unit">清除MQ队列</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="clearMqData" style="border-radius: 4px">clearMqData</el-button>
+            <el-button type="primary" @click="clearMqData" style="border-radius: 4px">clearMqData</el-button>
           </el-form-item>
         </el-form>
       </el-col>
