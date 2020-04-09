@@ -2,10 +2,10 @@
   <div class="dashboard-container">
     <h2 style="text-align:left;">Channel调测系统（Channel Service Tutorial）</h2>
 
-    <!-- 初始化ChannelService -->
-    <p class="text-unit">设置用户归属地</p>
-    <el-row type="flex">
-      <el-col :span="24"  style="height:30px;text-align:left;" >
+    <!-- 登录/登出 -->
+    <p class="text-unit">登录/登出</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="appid">
             <el-input v-model="appid" disabled style="width:150px;"></el-input>
@@ -13,6 +13,24 @@
           <el-form-item label="uid">
             <el-input v-model="uid" disabled style="width:150px;"></el-input>
           </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="login" style="border-radius: 4px">login</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="logout" style="border-radius: 4px">logout</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px;text-align:left;">{{loginRes}}</p>
+    </div>
+
+    <!-- 初始化ChannelService -->
+    <p class="text-unit">设置用户归属地</p>
+    <el-row type="flex">
+      <el-col :span="24"  style="height:30px;text-align:left;" >
+        <el-form :inline="true"  size="small">
           <el-form-item label="用户归属地">
             <template>
               <el-select v-model="userRegion" placeholder="userRegion" style="width:150px;">
@@ -68,32 +86,21 @@
       <create-channel :client="client" @onGetChannel=getChannel></create-channel>
     </el-dialog>
 
-    <p class="text-unit">加入Channel</p>
+    <p class="text-unit">加入/退出Channel</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="joinChannel" style="border-radius: 4px">joinChannel</el-button>
+            <el-button type="primary" @click="joinChannel" style="border-radius: 4px">joinChannel</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="leaveChannel" style="border-radius: 4px">leaveChannel</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{joinChannelRes}}</p>
-    </div>
-
-    <p class="text-unit">退出Channel</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary"  @click="leaveChannel" style="border-radius: 4px">leaveChannel</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{leaveChannelRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{joinOrLeaveRes}}</p>
     </div>
 
     <p class="text-unit">A给频道发消息</p>
@@ -405,23 +412,6 @@
     <!-- 登录/登出 -->
     <el-divider></el-divider>
 
-    <p class="text-unit">登录/登出</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary"  @click="login" style="border-radius: 4px">login</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="logout" style="border-radius: 4px">logout</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px;text-align:left;">{{loginRes}}</p>
-    </div>
-
     <p class="text-unit">刷新token</p>
     <el-row type="flex">
       <el-col :span="24" style="height:30px;text-align:left;">
@@ -522,8 +512,7 @@
         result: '',
         userRegion: 'cn',
         setUserRegionRes: '',
-        joinChannelRes: '',
-        leaveChannelRes: '',
+        joinOrLeaveRes: '',
         setLocalUserAttributesReq: {
           key: TEST_ROLE_KEY,
           prop: 'teacher',
@@ -608,8 +597,6 @@
     created() {
       // 初始化Hummer
       this.hummer = Hummer.createHummer({ appid: this.appid,
-                                  uid: this.uid,
-                                  token: this.token,
                                   onError: (data) => {
                                     console.log('new hummer: data=' + JSON.stringify(data));
                                     this.flag = data.code;
@@ -623,8 +610,7 @@
       
       this.hummer.setLogLevel(-1);
 
-      this.onConnectStatus();
-      this.onLoginStatus();
+      this.onConnectStatusChange();
     },
     destroyed() {
     },
@@ -723,30 +709,26 @@
         let params = { extra };
         console.log("joinChannel Req: " + JSON.stringify(params));
         
-        this.joinChannelRes = '';
+        this.joinOrLeaveRes = '';
         this.channels[this.regionChannelId].channel.joinChannel(params).then(res => {
           console.log("自己进入频道joinChannel res:", res);
-          this.joinChannelRes = JSON.stringify(res);
+          this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
           console.error("joinChannel err:", err);
-          this.joinChannelRes = JSON.stringify(err);
+          this.joinOrLeaveRes = JSON.stringify(err);
         });
       },
       leaveChannel() {
         if (!this.channels[this.regionChannelId])
           return;
 
-        let extra = {"Name": "阿武"};
-        let params = { extra };
-        console.log("leaveChannel Req: " + JSON.stringify(params));
-
-        this.leaveChannelRes = '';
-        this.channels[this.regionChannelId].channel.leaveChannel(params).then(res => {
+        this.joinOrLeaveRes = '';
+        this.channels[this.regionChannelId].channel.leaveChannel().then(res => {
           console.log("自己离开频道leaveChannel res:", res);
-          this.leaveChannelRes = JSON.stringify(res);
+          this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
           console.error("leaveChannel err:", err);
-          this.leaveChannelRes = JSON.stringify(err);
+          this.joinOrLeaveRes = JSON.stringify(err);
         });
       },
       sendMessageToChannel() {
@@ -1217,14 +1199,14 @@
           });
         });
       },
-      onConnectStatus() {
-        this.hummer.on('ConnectStatus', (data) => {
-          console.log("=== hummer connect status===:" + JSON.stringify(data));
-        });
-      },
-      onLoginStatus() {
-        this.hummer.on('LoginStatus', (data) => {
-          console.log("=== hummer login status===:" + JSON.stringify(data));
+      onConnectStatusChange() {
+        this.hummer.on('ConnectionStateChange', (data) => {
+          console.log("=== ConnectionStateChange ===:" + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: `ConnectionStateChange: ` + JSON.stringify(data),
+            type: 'success'
+          });
         });
       }
     }
