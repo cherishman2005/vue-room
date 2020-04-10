@@ -1215,11 +1215,11 @@
         });
       },
       onTokenExpired() {
-        this.hummer.on('TokenExpired', (data) => {
-          console.log("=== TokenExpired ===:" + JSON.stringify(data));
+        this.hummer.on('TokenExpired', () => {
+          console.log("=== TokenExpired ===");
           this.$message({
             duration: 3000,
-            message: `TokenExpired: ` + JSON.stringify(data),
+            message: `TokenExpired`,
             type: 'success'
           });
         });
