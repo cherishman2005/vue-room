@@ -19,12 +19,24 @@
           <el-form-item class="search">
             <el-button type="primary"  @click="logout" style="border-radius: 4px">logout</el-button>
           </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="showRefreshTokenModel" style="border-radius: 4px">refreshToken</el-button>
+          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px;text-align:left;">{{loginRes}}</p>
     </div>
+
+    <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
+      <refresh-token 
+        :hummer="hummer" 
+        :uid="uid" 
+        @onRefreshToken=refreshToken
+      >
+      </refresh-token>
+    </el-dialog>
 
     <!-- 初始化ChannelService -->
     <p class="text-unit">设置用户归属地</p>
@@ -409,31 +421,8 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{queryUsersOnlineStatusRes}}</p>
     </div>
 
-    <!-- 登录/登出 -->
+    <!-- 辅助工具 -->
     <el-divider></el-divider>
-
-    <p class="text-unit">刷新token</p>
-    <el-row type="flex">
-      <el-col :span="24" style="height:35px;text-align:left;">
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="showRefreshTokenModel" style="border-radius: 4px">refreshToken</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{refreshTokenRes}}</p>
-    </div>
-
-    <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
-      <refresh-token 
-        :hummer="hummer" 
-        :uid="uid" 
-        @onRefreshToken=refreshToken
-      >
-      </refresh-token>
-    </el-dialog>
 
     <p class="text-unit">获取实例信息</p>
     <el-row type="flex" class="row-bg">
@@ -442,23 +431,15 @@
           <el-form-item class="search">
             <el-button type="primary" @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
           </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="clearMqData" style="border-radius: 4px">清除MQ队列</el-button>
+          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true">{{result}}</p>
     </div>
-
-    <p class="text-unit">清除MQ队列</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="clearMqData" style="border-radius: 4px">clearMqData</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
 
   </div>
 </template>
@@ -467,9 +448,8 @@
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil';
   import { getRegions, getRegionChannelId } from '@/components/room.js';
-  import CreateChannel from './create_channel.vue'
-  import RefreshToken from './refresh_token.vue'
-
+  import CreateChannel from './create_channel.vue';
+  import RefreshToken from './refresh_token.vue';
   //import Hummer from 'hummer-channel-sdk';
 
   const UID = getStorage('uid');
@@ -579,7 +559,6 @@
         },
         queryUsersOnlineStatusRes: '',
         loginRes: '',
-        refreshTokenRes: '',
       }
     },
     components: {
@@ -1087,7 +1066,7 @@
         });
       },
       refreshToken(data) {
-        this.refreshTokenRes = JSON.stringify(data);
+        this.loginRes = JSON.stringify(data);
         console.log('refreshToken res=', data);
       },
       getInstanceInfo() {
