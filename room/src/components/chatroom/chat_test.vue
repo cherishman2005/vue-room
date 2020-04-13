@@ -382,24 +382,12 @@
     created() {
       let token = getStorage("token");
       // 初始化Hummer
-      this.hummer = Hummer.createHummer({ appid: this.appid,
-                                  uid: this.uid,
-                                  token: this.token,
-                                  onError: (data) => {
-                                    console.log('new hummer: data=' + JSON.stringify(data));
-                                    this.flag = data.code;
-                                  }
-                                });
+      this.hummer = Hummer.createHummer({appid: this.appid});
 
-      if (this.flag != 0) {
-        this.hummer = null;
-        return;
-      }
-      
       this.hummer.setLogLevel(-1);
 
-      this.onConnectStatus();
-      this.onLoginStatus();
+      this.onConnectStatusChange();
+      this.onTokenExpired();
     },
     destroyed() {
     },
@@ -780,14 +768,24 @@
           });
         });
       },
-      onConnectStatus() {
-        this.hummer.on('ConnectStatus', (data) => {
-          console.log("=== hummer channel status===:" + JSON.stringify(data));
+      onConnectStatusChange() {
+        this.hummer.on('ConnectionStateChange', (data) => {
+          console.log("=== ConnectionStateChange ===:" + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: `ConnectionStateChange: ` + JSON.stringify(data),
+            type: 'success'
+          });
         });
       },
-      onLoginStatus() {
-        this.hummer.on('LoginStatus', (data) => {
-          console.log("=== hummer login status===:" + JSON.stringify(data));
+      onTokenExpired() {
+        this.hummer.on('TokenExpired', () => {
+          console.log("=== TokenExpired ===");
+          this.$message({
+            duration: 3000,
+            message: `TokenExpired`,
+            type: 'success'
+          });
         });
       }
     }

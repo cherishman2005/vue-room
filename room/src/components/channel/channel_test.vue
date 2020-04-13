@@ -467,7 +467,6 @@
     name : 'channel-test',
     data() {
       return {
-        flag: -1,
         hummer: null,
         client: null,
         channels: [],
@@ -575,18 +574,8 @@
     },
     created() {
       // 初始化Hummer
-      this.hummer = Hummer.createHummer({ appid: this.appid,
-                                  onError: (data) => {
-                                    console.log('new hummer: data=' + JSON.stringify(data));
-                                    this.flag = data.code;
-                                  }
-                                });
+      this.hummer = Hummer.createHummer({appid: this.appid});
 
-      if (this.flag != 0) {
-        this.hummer = null;
-        return;
-      }
-      
       this.hummer.setLogLevel(-1);
 
       this.onConnectStatusChange();
@@ -636,21 +625,7 @@
         }
         
         // 初始化ChannelService
-        this.client = this.hummer.createInstance({
-          region: this.area,
-        });
-        
-        this.client.on('Error', (data) => {
-          console.log('new channel: data=' + JSON.stringify(data));
-          this.flag = data.code;
-          this.result = JSON.stringify(data);
-        });
-
-        if (this.flag != 0) {
-          delete this.client;
-          this.client = null;
-          return;
-        }
+        this.client = this.hummer.createInstance();
 
         // 接收P2P消息
         this.onReceiveMessage();
