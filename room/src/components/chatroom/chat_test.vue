@@ -2,6 +2,42 @@
   <div class="dashboard-container">
     <h2 style="text-align:left;">聊天室调测系统（ChatRoom Tutorial）</h2>
 
+    <!-- 登录/登出 -->
+    <p class="text-unit">登录/登出</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item label="appid">
+            <el-input v-model="appid" disabled style="width:150px;"></el-input>
+          </el-form-item>
+          <el-form-item label="uid">
+            <el-input v-model="uid" disabled style="width:150px;"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="login" style="border-radius: 4px">login</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="logout" style="border-radius: 4px">logout</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="showRefreshTokenModel" style="border-radius: 4px">refreshToken</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px;text-align:left;">{{loginRes}}</p>
+    </div>
+
+    <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
+      <refresh-token 
+        :hummer="hummer" 
+        :uid="uid" 
+        @onRefreshToken=refreshToken
+      >
+      </refresh-token>
+    </el-dialog>
+
     <!-- 初始化chatroom -->
     <el-row type="flex">
       <el-col :span="24"  style="height:30px;text-align:left;" >
@@ -293,6 +329,7 @@
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
   import { getRegionChannelId } from '@/components/room.js';
+  import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateGroup from './create_group.vue'
   //import Hummer from 'hummer-chatroom-sdk'
  
@@ -305,7 +342,6 @@
     name: 'chatroom-test',
     data() {
       return {
-        flag: -1,
         hummer: null,
         appid: APPID,
         roomid: ROOMID,
@@ -316,6 +352,7 @@
         chatrooms: [],
         regionChatroomId: '',
         regionChatroomIds: [],
+        loginRes: '',
         getInstanceInfoRes: '',
         JoinChatRoomReq: {
           joinProps: "",
@@ -368,13 +405,13 @@
       }
     },
     components: {
-      CreateGroup
+      CreateGroup,
+      RefreshToken
     },
     computed: {
       ...mapState({
-        createGroupModelVisible: state => {
-          return state.group.createGroupModelVisible
-        }
+        refreshTokenModelVisible: state => state.refreshToken.refreshTokenModelVisible,
+        createGroupModelVisible: state => state.group.createGroupModelVisible
       })
     },
     watch: {
@@ -394,6 +431,12 @@
     mounted() {
     },
     methods: {
+      showRefreshTokenModel() {
+        this.$store.commit('updateRefreshTokenModelVisible', true);
+      },
+      closeRefreshTokenModel() {
+        this.$store.commit('updateRefreshTokenModelVisible', false)
+      },
       showCreateGroupModel() {
         this.$store.commit('updateCreateGroupModelVisible', true);
       },
@@ -405,6 +448,40 @@
 
         this.region = data.region;
         this.roomid = data.roomid;
+      },
+      login() {
+        if (!this.hummer)
+          return;
+        
+        this.loginRes = '';
+        this.hummer.login({uid: this.uid, token: this.token}).then(res => {
+          console.log("login Res: " + JSON.stringify(res));
+          this.loginRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("login err:", err);
+          this.loginRes = JSON.stringify(err);
+        });
+      },
+      logout() {
+        if (!this.hummer)
+          return;
+        
+        this.loginRes = '';
+        this.hummer.logout().then(res => {
+          console.log("logout Res: " + JSON.stringify(res));
+          this.loginRes = JSON.stringify(res);
+          if (res.rescode === 0) {
+            this.channels = [];
+            this.regionChannelIds = [];
+          }
+        }).catch(err => {
+          console.error("logout err:", err);
+          this.loginRes = JSON.stringify(err);
+        });
+      },
+      refreshToken(data) {
+        this.loginRes = JSON.stringify(data);
+        console.log('refreshToken res=', data);
       },
       initChatRoom() {
         if (!this.hummer) {

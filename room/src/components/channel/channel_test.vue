@@ -448,8 +448,8 @@
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil';
   import { getRegions, getRegionChannelId } from '@/components/room.js';
+  import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateChannel from './create_channel.vue';
-  import RefreshToken from './refresh_token.vue';
   //import Hummer from 'hummer-channel-sdk';
 
   const UID = getStorage('uid');
@@ -586,17 +586,17 @@
     mounted() {
     },
     methods: {
-      showCreateChannelModel() {
-        this.$store.commit('updateCreateChannelModelVisible', true);
-      },
-      closeCreateChannelModel() {
-        this.$store.commit('updateCreateChannelModelVisible', false)
-      },
       showRefreshTokenModel() {
         this.$store.commit('updateRefreshTokenModelVisible', true);
       },
       closeRefreshTokenModel() {
         this.$store.commit('updateRefreshTokenModelVisible', false)
+      },
+      showCreateChannelModel() {
+        this.$store.commit('updateCreateChannelModelVisible', true);
+      },
+      closeCreateChannelModel() {
+        this.$store.commit('updateCreateChannelModelVisible', false)
       },
       setUserRegion() {
         if (!this.hummer)
