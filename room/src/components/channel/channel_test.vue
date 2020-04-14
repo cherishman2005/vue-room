@@ -216,24 +216,41 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateLocalUserAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">查询某一属性的用户列表</p>
+    <p class="text-unit">查询某指定用户指定属性名的属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="key">
-            <el-input v-model="getChannelUserListByAttributeReq.key"></el-input>
+          <el-form-item label="uid">
+            <el-input v-model="getUserAttributesByKeysReq.uid"></el-input>
           </el-form-item>
-          <el-form-item label="prop">
-            <el-input v-model="getChannelUserListByAttributeReq.prop"></el-input>
+          <el-form-item label="keys">
+            <el-input v-model="getUserAttributesByKeysReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="getChannelUserListByAtrribute" style="border-radius: 4px">getChannelUserListByAtrribute</el-button>
+            <el-button type="primary" @click="getUserAttributesByKeys" style="border-radius: 4px">getUserAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getGroupUserListByAttributeRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getUserAttributesByKeysRes}}</p>
+    </div>
+
+    <p class="text-unit">查询某指定用户的全部属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="uid">
+            <el-input v-model="getUserAttributesReq.uid"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="getUserAttributes" style="border-radius: 4px">getUserAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">查询频道用户列表</p>
@@ -247,7 +264,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getGroupUserListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelUserListRes}}</p>
     </div>
 
     <p class="text-unit">查询单个或多个频道的成员人数</p>
@@ -511,13 +528,16 @@
         getChannelUserListReq: {
           channelId: TEST_CHANNEL_ID,
         },
-        getGroupUserListRes: '',
-        getChannelUserListByAttributeReq: {
-          channelId: TEST_CHANNEL_ID,
-          key: TEST_ROLE_KEY,
-          prop: 'teacher',
+        getChannelUserListRes: '',
+        getUserAttributesReq: {
+          uid: UID,
         },
-        getGroupUserListByAttributeRes: '',
+        getUserAttributesRes: '',
+        getUserAttributesByKeysReq: {
+          uid: UID,
+          keys: TEST_ROLE_KEY,
+        },
+        getUserAttributesByKeysRes: '',
         sendMessageToChannelReq: {
           option: { reliable: 'yes' },
           content: 'js_sdk sendMessageToChannel',
@@ -797,30 +817,51 @@
         if (!this.channels[this.regionChannelId])
           return;
 
-        this.getGroupUserListRes = '';
+        this.getChannelUserListRes = '';
         this.channels[this.regionChannelId].channel.getChannelUserList().then(res => {
           console.log("getChannelUserList res:", res);
-          this.getGroupUserListRes = JSON.stringify(res);
+          this.getChannelUserListRes = JSON.stringify(res);
         }).catch(err => {
           console.error("getChannelUserList err:", err);
-          this.getGroupUserListRes = JSON.stringify(err);
+          this.getChannelUserListRes = JSON.stringify(err);
         });
       },
-      getChannelUserListByAtrribute() {
+      getUserAttributes() {
         if (!this.channels[this.regionChannelId])
           return;
 
-        let channelId = this.getChannelUserListByAttributeReq.channelId;
-        let key = this.getChannelUserListByAttributeReq.key;
-        let prop = this.getChannelUserListByAttributeReq.prop;
-        this.getGroupUserListByAttributeRes = '';
+        let uid = this.getUserAttributesReq.uid;
+        let req = { uid };
 
-        this.channels[this.regionChannelId].channel.getChannelUserListByAtrribute({ key, prop }).then(res => {
-          console.log("getChannelUserListByAtrribute res:", res);
-          this.getGroupUserListByAttributeRes = JSON.stringify(res);
+        this.getUserAttributesRes = '';
+        this.channels[this.regionChannelId].channel.getUserAttributes(req).then(res => {
+          console.log("getUserAttributes res:", res);
+          this.getUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("getChannelUserListByAtrribute err:", err);
-          this.getGroupUserListByAttributeRes = JSON.stringify(err);
+          console.error("getUserAttributes err:", err);
+          this.getUserAttributesRes = JSON.stringify(err);
+        });
+      },
+      getUserAttributesByKeys() {
+        if (!this.channels[this.regionChannelId])
+          return;
+
+        let keys_str = this.getUserAttributesByKeysReq.keys;
+        let keys = [];
+        let elements = keys_str.split(",");
+        for (let k of elements) {
+          keys.push(k);
+        }
+        let uid = this.getUserAttributesByKeysReq.uid;
+        let req = { uid, keys };
+
+        this.getUserAttributesByKeysRes = '';
+        this.channels[this.regionChannelId].channel.getUserAttributesByKeys(req).then(res => {
+          console.log("getUserAttributesByKeys res:", res);
+          this.getUserAttributesByKeysRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("getUserAttributesByKeys err:", err);
+          this.getUserAttributesByKeysRes = JSON.stringify(err);
         });
       },
       getChannelUserCount() {
