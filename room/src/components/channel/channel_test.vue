@@ -119,18 +119,6 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
-          <el-form-item label="reliable">
-            <template>
-              <el-select v-model="sendMessageToChannelReq.option.reliable" placeholder="reliable" style="width: 80px;">
-                <el-option
-                  v-for="item in reliable"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
           <el-form-item label="content">
             <el-input v-model="sendMessageToChannelReq.content" style="width: 200px;"></el-input>
           </el-form-item>
@@ -393,18 +381,6 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="reliable">
-            <template>
-              <el-select v-model="sendMessageToUserReq.option.reliable" placeholder="reliable" style="width: 80px;">
-                <el-option
-                  v-for="item in reliable"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
           <el-form-item label="content">
             <el-input v-model="sendMessageToUserReq.content" style="width: 200px;"></el-input>
           </el-form-item>
@@ -539,12 +515,10 @@
         },
         getUserAttributesByKeysRes: '',
         sendMessageToChannelReq: {
-          option: { reliable: 'yes' },
           content: 'js_sdk sendMessageToChannel',
         },
         sendMessageToChannelRes: "",
         sendMessageToUserReq: {
-          option: { reliable: 'yes' },
           content: 'js_sdk sendMessageToUser',
           receiver: UID,
         },
@@ -710,14 +684,12 @@
         if (!this.channels[this.regionChannelId])
           return;
 
-        let reliable = this.sendMessageToChannelReq.option.reliable;
         let content = this.sendMessageToChannelReq.content;
         
         this.sendMessageToChannelRes = '';
         this.channels[this.regionChannelId].channel.sendMessageToChannel({
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
-          option: { reliable: reliable }
         }).then(res => {
           console.log("sendMessageToChannel Res: " + JSON.stringify(res));
           this.sendMessageToChannelRes = JSON.stringify(res);
@@ -1010,7 +982,6 @@
         if (!this.client)
           return;
 
-        let reliable = this.sendMessageToUserReq.option.reliable;
         let content = this.sendMessageToUserReq.content;
         let receiver = this.sendMessageToUserReq.receiver;
         
@@ -1019,7 +990,6 @@
           receiver: receiver, 
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content),
-          option: { reliable: reliable }
         }).then(res => {
           console.log("sendMessageToUser Res: " + JSON.stringify(res));
           this.sendMessageToUserRes = JSON.stringify(res);
