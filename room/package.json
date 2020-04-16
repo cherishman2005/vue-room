@@ -34,10 +34,10 @@
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
     "vux": "^2.9.2",
-    "hummer-channel-sdk": "^2.0.0",
+    "hummer-channel-sdk": "^2.1.2",
     "hummer-signal": "^1.0.3",
     "hummer-im": "^1.0.4",
-    "hummer-chatroom": "^1.0.5"
+    "hummer-chatroom": "^1.1.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
