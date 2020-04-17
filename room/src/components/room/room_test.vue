@@ -276,6 +276,9 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="roomId">
+            <el-input v-model="setRoomAttributesReq.roomId"></el-input>
+          </el-form-item>          
           <el-form-item label="key">
             <el-input v-model="setRoomAttributesReq.key"></el-input>
           </el-form-item>
@@ -296,6 +299,9 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
+          <el-form-item label="roomId">
+            <el-input v-model="deleteRoomAttributesByKeysReq.roomId"></el-input>
+          </el-form-item>    
           <el-form-item label="keys">
             <el-input v-model="deleteRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
@@ -313,6 +319,9 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="roomId">
+            <el-input v-model="clearRoomAttributes.roomId"></el-input>
+          </el-form-item> 
           <el-form-item class="search">
             <el-button type="primary" @click="clearRoomAttributes" style="border-radius: 4px">clearRoomAttributes</el-button>
           </el-form-item>
@@ -327,6 +336,9 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="roomId">
+            <el-input v-model="addOrUpdateRoomAttributesReq.roomId"></el-input>
+          </el-form-item> 
           <el-form-item label="key">
             <el-input v-model="addOrUpdateRoomAttributesReq.key"></el-input>
           </el-form-item>
@@ -347,6 +359,9 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="roomId">
+            <el-input v-model="getRoomAttributesByKeysReq.roomId"></el-input>
+          </el-form-item> 
           <el-form-item label="keys">
             <el-input v-model="getRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
@@ -364,6 +379,9 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="roomId">
+            <el-input v-model="getRoomAttributesReq.roomId"></el-input>
+          </el-form-item> 
           <el-form-item class="search">
             <el-button type="primary" @click="getRoomAttributes" style="border-radius: 4px">getRoomAttributes</el-button>
           </el-form-item>
@@ -528,22 +546,32 @@
         },
         getRoomUserCountRes: '',
         setRoomAttributesReq: {
+          roomId: TEST_ROOM_ID,
           key: TEST_ROOM_NAME_KEY,
           prop: 'nginx大讲堂',
         },
         setRoomAttributesRes: '',
         deleteRoomAttributesByKeysReq: {
+          roomId: TEST_ROOM_ID,
           keys: TEST_ROOM_NAME_KEY,
         },
         deleteRoomAttributesByKeysRes: '',
+        clearRoomAttributesReq: {
+          roomId: TEST_ROOM_ID,
+        },
         clearRoomAttributesRes: '',
         addOrUpdateRoomAttributesReq: {
+          roomId: TEST_ROOM_ID,
           key: TEST_ROOM_NAME_KEY,
           prop: 'nginx大讲堂',
         },
         addOrUpdateRoomAttributesRes: '',
+        getRoomAttributesReq: {
+          roomId: TEST_ROOM_ID,
+        },
         getRoomAttributesRes: '',
         getRoomAttributesByKeysReq: {
+          roomId: TEST_ROOM_ID,
           keys: TEST_ROOM_NAME_KEY,
         },
         getRoomAttributesByKeysRes: '',
@@ -869,11 +897,12 @@
           "Extention": "ex"
         };
   
+        let roomId = this.setRoomAttributesReq.roomId;
         let key = this.setRoomAttributesReq.key;
         let prop = this.setRoomAttributesReq.prop;
         attributes[key] = prop;
         
-        let req = { attributes };
+        let req = { roomId, attributes };
         this.setRoomAttributesRes = '';
         this.rooms[this.regionRoomId].room.setRoomAttributes(req).then(res => {
           console.log("setRoomAttributes Res: ", res);
@@ -886,6 +915,8 @@
       deleteRoomAttributesByKeys() {
         if (!this.rooms[this.regionRoomId])
           return;
+          
+        let roomId = this.deleteRoomAttributesByKeysReq.roomId;
 
         let keys_str = this.deleteRoomAttributesByKeysReq.keys;
 
@@ -896,7 +927,7 @@
           keys.push(k);
         }
 
-        let req = { keys };
+        let req = { roomId, keys };
         this.deleteRoomAttributesByKeysRes = '';
 
         this.rooms[this.regionRoomId].room.deleteRoomAttributesByKeys(req).then(res => {
@@ -911,9 +942,10 @@
         if (!this.rooms[this.regionRoomId])
           return;
 
+        let roomId = this.clearRoomAttributesReq.roomId;
+        
         this.clearRoomAttributesRes = '';
-
-        this.rooms[this.regionRoomId].room.clearRoomAttributes().then(res => {
+        this.rooms[this.regionRoomId].room.clearRoomAttributes({ roomId }).then(res => {
           console.log("clearRoomAttributes res: ", res);
           this.clearRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -929,11 +961,12 @@
           "owner": "awu",
         };
   
+        let roomId = this.addOrUpdateRoomAttributesReq.roomId;
         let key = this.addOrUpdateRoomAttributesReq.key;
         let prop = this.addOrUpdateRoomAttributesReq.prop;
         attributes[key] = prop;
         
-        let req = { attributes };
+        let req = { roomId, attributes };
         this.addOrUpdateRoomAttributesRes = '';
         this.rooms[this.regionRoomId].room.addOrUpdateRoomAttributes(req).then(res => {
           console.log("addOrUpdateRoomAttributes res: ", res);
@@ -947,8 +980,10 @@
         if (!this.rooms[this.regionRoomId])
           return;
 
+        let roomId = this.getRoomAttributesReq.roomId;
+
         this.getRoomAttributesRes = '';
-        this.rooms[this.regionRoomId].room.getRoomAttributes().then(res => {
+        this.rooms[this.regionRoomId].room.getRoomAttributes({roomId}).then(res => {
           console.log("getRoomAttributes res:", res);
           this.getRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -960,13 +995,15 @@
         if (!this.rooms[this.regionRoomId])
           return;
 
+        let roomId = this.getRoomAttributesByKeysReq.roomId;
+
         let keys_str = this.getRoomAttributesByKeysReq.keys;
         let keys = [];
         let elements = keys_str.split(",");
         for (let k of elements) {
           keys.push(k);
         }
-        let req = { keys };
+        let req = { roomId, keys };
 
         this.getRoomAttributesByKeysRes = '';
         this.rooms[this.regionRoomId].room.getRoomAttributesByKeys(req).then(res => {
