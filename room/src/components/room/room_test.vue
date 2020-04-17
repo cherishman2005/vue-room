@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <h2 style="text-align:left;">Room调测系统（Room Service Tutorial）</h2>
+    <h2 style="text-align:left;">Channel调测系统（Channel Service Tutorial）</h2>
 
     <!-- 登录/登出 -->
     <p class="text-unit">登录/登出</p>
@@ -1139,6 +1139,7 @@
         const roomEvents = [
           "NotifyUserAttributesSet",
           "NotifyUserAttributesDelete",
+          "NotifyUserAttributesClear",
           "NotifyUserAttributesAddOrUpdate"
         ];
         roomEvents.forEach(eventName => {
@@ -1156,6 +1157,7 @@
         const roomEvents = [
           "NotifyRoomAttributesSet",
           "NotifyRoomAttributesDelete",
+          "NotifyRoomAttributesClear",
           "NotifyRoomAttributesAddOrUpdate"
         ];
         roomEvents.forEach(eventName => {
