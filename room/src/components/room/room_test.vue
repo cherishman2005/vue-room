@@ -320,7 +320,7 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="roomId">
-            <el-input v-model="clearRoomAttributes.roomId"></el-input>
+            <el-input v-model="clearRoomAttributesReq.roomId"></el-input>
           </el-form-item> 
           <el-form-item class="search">
             <el-button type="primary" @click="clearRoomAttributes" style="border-radius: 4px">clearRoomAttributes</el-button>
