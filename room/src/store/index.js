@@ -3,7 +3,7 @@ import Vuex from "vuex"
 import {getters} from "./getters"
 import {mutations} from "./mutations"
 import {actions} from './actions'
-import channel from './modules/channel'
+import room from './modules/room'
 import group from './modules/group'
 import token from './modules/token'
 import refreshToken from './modules/refreshToken'
@@ -19,7 +19,7 @@ const state = {
 }
 
 const modules = { 
-  channel,
+  room,
   group,
   token,
   refreshToken

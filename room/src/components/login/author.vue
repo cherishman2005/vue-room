@@ -38,7 +38,7 @@
 <script>
   import { mapState } from 'vuex';
   import { authURL, redirectURL } from '@/global.js';
-  import { areas, getAppids, getRegions, getRegionChannelId } from '@/components/room.js';
+  import { areas, getAppids, getRegions, getRegionChannelId } from '@/components/room_config.js';
   import { getBeforeLoginUrl, removeBeforeLoginUrl } from '@/utils/auth'
   import { getStorage, setStorage } from '@/utils/BaseUtil'
   import SelectToken from './select_token.vue'

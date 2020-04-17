@@ -328,7 +328,7 @@
 <script>
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
-  import { getRegionChannelId } from '@/components/room.js';
+  import { getRegionChannelId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateGroup from './create_group.vue'
   //import Hummer from 'hummer-chatroom-sdk'
@@ -489,7 +489,7 @@
           return;
         }
 
-        this.regionChatroomId = getRegionChannelId(this.region, this.roomid);
+        this.regionChatroomId = getRegionRoomId(this.region, this.roomid);
         if (this.chatrooms[this.regionChatroomId]) {
           console.log('chatroom exists, and chatrooms=', this.chatrooms);
           return;

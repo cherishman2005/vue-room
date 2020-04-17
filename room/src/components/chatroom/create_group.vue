@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import { getRegions, getRegionChannelId } from '@/components/room.js';
+  import { getRegions, getRegionChannelId } from '@/components/room_config.js';
 
   import {
     Form,

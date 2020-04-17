@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <h2 style="text-align:left;">Channel调测系统（Channel Service Tutorial）</h2>
+    <h2 style="text-align:left;">Room调测系统（Room Service Tutorial）</h2>
 
     <!-- 登录/登出 -->
     <p class="text-unit">登录/登出</p>
@@ -38,7 +38,7 @@
       </refresh-token>
     </el-dialog>
 
-    <!-- 初始化ChannelService -->
+    <!-- 初始化roomservice -->
     <p class="text-unit">设置用户归属地</p>
     <el-row type="flex">
       <el-col :span="24"  style="height:35px;text-align:left;" >
@@ -59,7 +59,7 @@
             <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px" :disabled='userRegionFlag'>setUserRegion</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="initChannel" style="border-radius: 4px">initChannel</el-button>
+            <el-button type="primary"  @click="initRoom" style="border-radius: 4px">initRoom</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -76,13 +76,13 @@
       <el-col :span="24" style="height:35px;text-align:left;">
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="showCreateChannelModel" style="border-radius: 4px">createChannel</el-button>
+            <el-button type="primary"  @click="showCreateRoomModel" style="border-radius: 4px">createRoom</el-button>
           </el-form-item>
-          <el-form-item label="频道列表[region:channelId](用于选择频道)">
+          <el-form-item label="频道列表[region:roomId](用于选择频道)">
             <template>
-              <el-select v-model="regionChannelId" placeholder="" style="width: 200px;">
+              <el-select v-model="regionRoomId" placeholder="" style="width: 200px;">
                 <el-option
-                  v-for="item in regionChannelIds"
+                  v-for="item in regionRoomIds"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -94,19 +94,19 @@
       </el-col>
     </el-row>
 
-    <el-dialog align="left" title="创建频道实例" :visible="createChannelModelVisible" @close="closeCreateChannelModel" customClass="customWidth">
-      <create-channel :client="client" @onGetChannel=getChannel></create-channel>
+    <el-dialog align="left" title="创建频道实例" :visible="createRoomModelVisible" @close="closeCreateRoomModel" customClass="customWidth">
+      <create-room :client="client" @onGetRoom=getRoom></create-room>
     </el-dialog>
 
-    <p class="text-unit">加入/退出Channel</p>
+    <p class="text-unit">加入/退出Room</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height: 35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="joinChannel" style="border-radius: 4px">joinChannel</el-button>
+            <el-button type="primary" @click="join" style="border-radius: 4px">join</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="leaveChannel" style="border-radius: 4px">leaveChannel</el-button>
+            <el-button type="primary" @click="leave" style="border-radius: 4px">leave</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -120,17 +120,17 @@
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item label="content">
-            <el-input v-model="sendMessageToChannelReq.content" style="width: 200px;"></el-input>
+            <el-input v-model="sendMessageToRoomReq.content" style="width: 200px;"></el-input>
           </el-form-item>
 
           <el-form-item class="search">
-            <el-button type="primary" @click="sendMessageToChannel" style="border-radius: 4px">sendMessageToChannel</el-button>
+            <el-button type="primary" @click="sendMessageToRoom" style="border-radius: 4px">sendMessageToRoom</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToChannelRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToRoomRes}}</p>
     </div>
 
     <p class="text-unit">设置用户属性</p>
@@ -246,30 +246,30 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="getChannelUserList" style="border-radius: 4px">getChannelUserList</el-button>
+            <el-button type="primary" @click="getRoomUserList" style="border-radius: 4px">getRoomUserList</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelUserListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomUserListRes}}</p>
     </div>
 
     <p class="text-unit">查询单个或多个频道的成员人数</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="channelIds">
-            <el-input v-model="getChannelUserCountReq.channelIds"></el-input>
+          <el-form-item label="roomIds">
+            <el-input v-model="getRoomUserCountReq.roomIds"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="getChannelUserCount" style="border-radius: 4px">getChannelUserCount</el-button>
+            <el-button type="primary" @click="getRoomUserCount" style="border-radius: 4px">getRoomUserCount</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelUserCountRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomUserCountRes}}</p>
     </div>
     
     <p class="text-unit">设置频道属性</p>
@@ -277,19 +277,19 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
-            <el-input v-model="setChannelAttributesReq.key"></el-input>
+            <el-input v-model="setRoomAttributesReq.key"></el-input>
           </el-form-item>
           <el-form-item label="prop">
-            <el-input v-model="setChannelAttributesReq.prop"></el-input>
+            <el-input v-model="setRoomAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="setChannelAttributes" style="border-radius: 4px">setChannelAttributes</el-button>
+            <el-button type="primary" @click="setRoomAttributes" style="border-radius: 4px">setRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setChannelAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">删除频道某些属性</p>
@@ -297,16 +297,16 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item label="keys">
-            <el-input v-model="deleteChannelAttributesByKeysReq.keys"></el-input>
+            <el-input v-model="deleteRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="deleteChannelAttributesByKeys" style="border-radius: 4px">deleteChannelAttributesByKeys</el-button>
+            <el-button type="primary" @click="deleteRoomAttributesByKeys" style="border-radius: 4px">deleteRoomAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{deleteChannelAttributesByKeysRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{deleteRoomAttributesByKeysRes}}</p>
     </div>
 
     <p class="text-unit">删除频道所有属性</p>
@@ -314,13 +314,13 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="clearChannelAttributes" style="border-radius: 4px">clearChannelAttributes</el-button>
+            <el-button type="primary" @click="clearRoomAttributes" style="border-radius: 4px">clearRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height:46px; text-align:left;" >{{clearChannelAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height:46px; text-align:left;" >{{clearRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">增加或更新频道某些属性</p>
@@ -328,19 +328,19 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
-            <el-input v-model="addOrUpdateChannelAttributesReq.key"></el-input>
+            <el-input v-model="addOrUpdateRoomAttributesReq.key"></el-input>
           </el-form-item>
           <el-form-item label="prop">
-            <el-input v-model="addOrUpdateChannelAttributesReq.prop"></el-input>
+            <el-input v-model="addOrUpdateRoomAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="addOrUpdateChannelAttributes" style="border-radius: 4px">addOrUpdateChannelAttributes</el-button>
+            <el-button type="primary" @click="addOrUpdateRoomAttributes" style="border-radius: 4px">addOrUpdateRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateChannelAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">查询某指定频道指定属性名的属性</p>
@@ -348,16 +348,16 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="keys">
-            <el-input v-model="getChannelAttributesByKeysReq.keys"></el-input>
+            <el-input v-model="getRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="getChannelAttributesByKeys" style="border-radius: 4px">getChannelAttributesByKeys</el-button>
+            <el-button type="primary" @click="getRoomAttributesByKeys" style="border-radius: 4px">getRoomAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelAttributesByKeysRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomAttributesByKeysRes}}</p>
     </div>
 
     <p class="text-unit">查询某指定频道的全部属性</p>
@@ -365,13 +365,13 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="getChannelAttributes" style="border-radius: 4px">getChannelAttributes</el-button>
+            <el-button type="primary" @click="getRoomAttributes" style="border-radius: 4px">getRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getChannelAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomAttributesRes}}</p>
     </div>
 
     <!-- P2P消息 -->
@@ -440,9 +440,9 @@
 <script>
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil';
-  import { getRegions, getRegionChannelId } from '@/components/room.js';
+  import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
-  import CreateChannel from './create_channel.vue';
+  import CreateRoom from './create_room.vue';
   //import Hummer from 'hummer-channel-sdk';
 
   const UID = getStorage('uid');
@@ -452,17 +452,17 @@
   const TOKEN = getStorage('token');
 
   // test parameters
-  const TEST_CHANNEL_ID = 'test123456';
-  const TEST_ROLE_KEY = 'channel_role_name';
-  const TEST_CHANNEL_NAME_KEY = 'channel_name';
+  const TEST_ROOM_ID = 'test123456';
+  const TEST_ROLE_KEY = 'room_role_name';
+  const TEST_ROOM_NAME_KEY = 'room_name';
 
   export default {
-    name : 'channel-test',
+    name : 'room-test',
     data() {
       return {
         hummer: null,
         client: null,
-        channels: [],
+        rooms: [],
         appid: APPID,
         uid: UID,
         token: TOKEN,
@@ -470,10 +470,10 @@
         area: 'cn',
         areas: getRegions(),
         userRegionFlag: false,
-        regionChannelId: null,
-        regionChannelIds: [],
+        regionRoomId: null,
+        regionRoomIds: [],
         mq_data: [],
-        mq_channel_data: [],
+        mq_room_data: [],
         reliable: [{
             value: 'yes',
             label: 'yes'
@@ -492,7 +492,7 @@
         setLocalUserAttributesRes: '',
         deleteUserAttributesReq: {
           keys: TEST_ROLE_KEY,
-          channelId: TEST_CHANNEL_ID,
+          roomId: TEST_ROOM_ID,
         },
         deleteUserAttributesRes: '',
         clearLocalUserAttributesRes: '',
@@ -501,10 +501,10 @@
           prop: 'student',
         },
         addOrUpdateLocalUserAttributesRes: '',
-        getChannelUserListReq: {
-          channelId: TEST_CHANNEL_ID,
+        getRoomUserListReq: {
+          roomId: TEST_ROOM_ID,
         },
-        getChannelUserListRes: '',
+        getRoomUserListRes: '',
         getUserAttributesReq: {
           uid: UID,
         },
@@ -514,39 +514,39 @@
           keys: TEST_ROLE_KEY,
         },
         getUserAttributesByKeysRes: '',
-        sendMessageToChannelReq: {
-          content: 'js_sdk sendMessageToChannel',
+        sendMessageToRoomReq: {
+          content: 'js_sdk sendMessageToRoom',
         },
-        sendMessageToChannelRes: "",
+        sendMessageToRoomRes: "",
         sendMessageToUserReq: {
           content: 'js_sdk sendMessageToUser',
           receiver: UID,
         },
         sendMessageToUserRes: "",
-        getChannelUserCountReq: {
-          channelIds: TEST_CHANNEL_ID
+        getRoomUserCountReq: {
+          roomIds: TEST_ROOM_ID
         },
-        getChannelUserCountRes: '',
-        setChannelAttributesReq: {
-          key: TEST_CHANNEL_NAME_KEY,
+        getRoomUserCountRes: '',
+        setRoomAttributesReq: {
+          key: TEST_ROOM_NAME_KEY,
           prop: 'nginx大讲堂',
         },
-        setChannelAttributesRes: '',
-        deleteChannelAttributesByKeysReq: {
-          keys: TEST_CHANNEL_NAME_KEY,
+        setRoomAttributesRes: '',
+        deleteRoomAttributesByKeysReq: {
+          keys: TEST_ROOM_NAME_KEY,
         },
-        deleteChannelAttributesByKeysRes: '',
-        clearChannelAttributesRes: '',
-        addOrUpdateChannelAttributesReq: {
-          key: TEST_CHANNEL_NAME_KEY,
+        deleteRoomAttributesByKeysRes: '',
+        clearRoomAttributesRes: '',
+        addOrUpdateRoomAttributesReq: {
+          key: TEST_ROOM_NAME_KEY,
           prop: 'nginx大讲堂',
         },
-        addOrUpdateChannelAttributesRes: '',
-        getChannelAttributesRes: '',
-        getChannelAttributesByKeysReq: {
-          keys: TEST_CHANNEL_NAME_KEY,
+        addOrUpdateRoomAttributesRes: '',
+        getRoomAttributesRes: '',
+        getRoomAttributesByKeysReq: {
+          keys: TEST_ROOM_NAME_KEY,
         },
-        getChannelAttributesByKeysRes: '',
+        getRoomAttributesByKeysRes: '',
         queryUsersOnlineStatusReq: {
           uids: UID
         },
@@ -555,12 +555,12 @@
       }
     },
     components: {
-      CreateChannel,
+      CreateRoom,
       RefreshToken,
     },
     computed: {
       ...mapState({
-        createChannelModelVisible: state => state.channel.createChannelModelVisible,
+        createRoomModelVisible: state => state.room.createRoomModelVisible,
         refreshTokenModelVisible: state => state.refreshToken.refreshTokenModelVisible,
       })
     },
@@ -586,11 +586,11 @@
       closeRefreshTokenModel() {
         this.$store.commit('updateRefreshTokenModelVisible', false)
       },
-      showCreateChannelModel() {
-        this.$store.commit('updateCreateChannelModelVisible', true);
+      showCreateRoomModel() {
+        this.$store.commit('updateCreateRoomModelVisible', true);
       },
-      closeCreateChannelModel() {
-        this.$store.commit('updateCreateChannelModelVisible', false)
+      closeCreateRoomModel() {
+        this.$store.commit('updateCreateRoomModelVisible', false)
       },
       setUserRegion() {
         if (!this.hummer)
@@ -606,8 +606,8 @@
           console.error("setUserRegion err:", err);
         });
       },
-      // 初始化ChannelService
-      initChannel() {
+      // 初始化RoomService
+      initRoom() {
         if (!this.hummer) {
           console.log("hummer is null");
           return;
@@ -618,90 +618,90 @@
           return;
         }
         
-        // 初始化ChannelService
+        // 初始化RoomService
         this.client = this.hummer.createInstance();
 
         // 接收P2P消息
         this.onReceiveMessage();
       },
-      getChannel(data) {
-        console.log('getChannel data=', data);
+      getRoom(data) {
+        console.log('getRoom data=', data);
 
         let region = data.region;
-        let channelId = data.channelId;
-        this.regionChannelId = getRegionChannelId(region, channelId);
-        if (this.channels[this.regionChannelId]) {
-          console.log('channel exists, and channels=', this.channels);
+        let roomId = data.roomId;
+        this.regionRoomId = getRegionRoomId(region, roomId);
+        if (this.rooms[this.regionRoomId]) {
+          console.log('room exists, and rooms=', this.rooms);
           return;
         }
 
-        this.channels[this.regionChannelId] = data;
-        this.regionChannelIds.push({value: this.regionChannelId, label: this.regionChannelId});
+        this.rooms[this.regionRoomId] = data;
+        this.regionRoomIds.push({value: this.regionRoomId, label: this.regionRoomId});
 
-        console.log('channels=', this.channels);
+        console.log('rooms=', this.rooms);
 
-        let channel = this.channels[this.regionChannelId];
-        this.onReceiveChannelMessage(channel);
-        this.onNotifyJoinChannel(channel);
-        this.onNotifyLeaveChannel(channel);
-        this.onNotifyUserCountChange(channel);
+        let room = this.rooms[this.regionRoomId];
+        this.onReceiveRoomMessage(room);
+        this.onNotifyJoinRoom(room);
+        this.onNotifyLeaveRoom(room);
+        this.onNotifyUserCountChange(room);
         // 用户属性变更
-        this.onNotifyUserAttributesChange(channel);
+        this.onNotifyUserAttributesChange(room);
         // 频道属性变更
-        this.onNotifyChannelAttributesChange(channel);
+        this.onNotifyRoomAttributesChange(room);
       },
-      joinChannel() {
-        if (!this.channels[this.regionChannelId])
+      join() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
         let extra = {"Name": "阿武"};
         let params = { extra };
-        console.log("joinChannel Req: " + JSON.stringify(params));
+        console.log("join Req: " + JSON.stringify(params));
         
         this.joinOrLeaveRes = '';
-        this.channels[this.regionChannelId].channel.joinChannel(params).then(res => {
-          console.log("自己进入频道joinChannel res:", res);
+        this.rooms[this.regionRoomId].room.join(params).then(res => {
+          console.log("自己进入频道join res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("joinChannel err:", err);
+          console.error("join err:", err);
           this.joinOrLeaveRes = JSON.stringify(err);
         });
       },
-      leaveChannel() {
-        if (!this.channels[this.regionChannelId])
+      leave() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
         this.joinOrLeaveRes = '';
-        this.channels[this.regionChannelId].channel.leaveChannel().then(res => {
-          console.log("自己离开频道leaveChannel res:", res);
+        this.rooms[this.regionRoomId].room.leave().then(res => {
+          console.log("自己离开频道leave res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("leaveChannel err:", err);
+          console.error("leave err:", err);
           this.joinOrLeaveRes = JSON.stringify(err);
         });
       },
-      sendMessageToChannel() {
-        if (!this.channels[this.regionChannelId])
+      sendMessageToRoom() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
-        let content = this.sendMessageToChannelReq.content;
+        let content = this.sendMessageToRoomReq.content;
         
-        this.sendMessageToChannelRes = '';
-        this.channels[this.regionChannelId].channel.sendMessageToChannel({
+        this.sendMessageToRoomRes = '';
+        this.rooms[this.regionRoomId].room.sendMessageToRoom({
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
         }).then(res => {
-          console.log("sendMessageToChannel Res: " + JSON.stringify(res));
-          this.sendMessageToChannelRes = JSON.stringify(res);
+          console.log("sendMessageToRoom Res: " + JSON.stringify(res));
+          this.sendMessageToRoomRes = JSON.stringify(res);
 
-          console.log("消息队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
+          console.log("消息队列mq_room_data: " + JSON.stringify(this.mq_room_data));
         }).catch(err => {
-          console.error("sendMessageToChannel err:", err);
-          this.sendMessageToChannelRes = JSON.stringify(err);
+          console.error("sendMessageToRoom err:", err);
+          this.sendMessageToRoomRes = JSON.stringify(err);
         });
       },
       setLocalUserAttributes() {
-        if (!this.channels[this.regionChannelId])
+        if (!this.rooms[this.regionRoomId])
           return;
 
         let attributes = {
@@ -717,7 +717,7 @@
         
         let req = { attributes };
         this.setLocalUserAttributesRes = '';
-        this.channels[this.regionChannelId].channel.setLocalUserAttributes(req).then(res => {
+        this.rooms[this.regionRoomId].room.setLocalUserAttributes(req).then(res => {
           console.log("setLocalUserAttributes Res: ", res);
           this.setLocalUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -726,7 +726,7 @@
         });
       },
       deleteLocalUserAttributesByKeys() {
-        if (!this.channels[this.regionChannelId])
+        if (!this.rooms[this.regionRoomId])
           return;
 
         let keys_str = this.deleteUserAttributesReq.keys;
@@ -741,7 +741,7 @@
         let req = { keys };
         this.deleteUserAttributesRes = '';
 
-        this.channels[this.regionChannelId].channel.deleteLocalUserAttributesByKeys(req).then(res => {
+        this.rooms[this.regionRoomId].room.deleteLocalUserAttributesByKeys(req).then(res => {
           console.log("deleteLocalUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -750,12 +750,12 @@
         });
       },
       clearLocalUserAttributes() {
-        if (!this.channels[this.regionChannelId])
+        if (!this.rooms[this.regionRoomId])
           return;
 
         this.clearLocalUserAttributesRes = '';
 
-        this.channels[this.regionChannelId].channel.clearLocalUserAttributes().then(res => {
+        this.rooms[this.regionRoomId].room.clearLocalUserAttributes().then(res => {
           console.log("clearLocalUserAttributes Res: ", res);
           this.clearLocalUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -764,7 +764,7 @@
         });
       },
       addOrUpdateLocalUserAttributes() {
-        if (!this.channels[this.regionChannelId])
+        if (!this.rooms[this.regionRoomId])
           return;
 
         let attributes = {
@@ -777,7 +777,7 @@
         
         let req = { attributes };
         this.addOrUpdateLocalUserAttributesRes = '';
-        this.channels[this.regionChannelId].channel.addOrUpdateLocalUserAttributes(req).then(res => {
+        this.rooms[this.regionRoomId].room.addOrUpdateLocalUserAttributes(req).then(res => {
           console.log("addOrUpdateLocalUserAttributes Res: ", res);
           this.addOrUpdateLocalUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -785,28 +785,28 @@
           this.addOrUpdateLocalUserAttributesRes = JSON.stringify(err);
         });
       },
-      getChannelUserList() {
-        if (!this.channels[this.regionChannelId])
+      getRoomUserList() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
-        this.getChannelUserListRes = '';
-        this.channels[this.regionChannelId].channel.getChannelUserList().then(res => {
-          console.log("getChannelUserList res:", res);
-          this.getChannelUserListRes = JSON.stringify(res);
+        this.getRoomUserListRes = '';
+        this.rooms[this.regionRoomId].room.getRoomUserList().then(res => {
+          console.log("getRoomUserList res:", res);
+          this.getRoomUserListRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("getChannelUserList err:", err);
-          this.getChannelUserListRes = JSON.stringify(err);
+          console.error("getRoomUserList err:", err);
+          this.getRoomUserListRes = JSON.stringify(err);
         });
       },
       getUserAttributes() {
-        if (!this.channels[this.regionChannelId])
+        if (!this.rooms[this.regionRoomId])
           return;
 
         let uid = this.getUserAttributesReq.uid;
         let req = { uid };
 
         this.getUserAttributesRes = '';
-        this.channels[this.regionChannelId].channel.getUserAttributes(req).then(res => {
+        this.rooms[this.regionRoomId].room.getUserAttributes(req).then(res => {
           console.log("getUserAttributes res:", res);
           this.getUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -815,7 +815,7 @@
         });
       },
       getUserAttributesByKeys() {
-        if (!this.channels[this.regionChannelId])
+        if (!this.rooms[this.regionRoomId])
           return;
 
         let keys_str = this.getUserAttributesByKeysReq.keys;
@@ -828,7 +828,7 @@
         let req = { uid, keys };
 
         this.getUserAttributesByKeysRes = '';
-        this.channels[this.regionChannelId].channel.getUserAttributesByKeys(req).then(res => {
+        this.rooms[this.regionRoomId].room.getUserAttributesByKeys(req).then(res => {
           console.log("getUserAttributesByKeys res:", res);
           this.getUserAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
@@ -836,30 +836,30 @@
           this.getUserAttributesByKeysRes = JSON.stringify(err);
         });
       },
-      getChannelUserCount() {
-        if (!this.channels[this.regionChannelId])
+      getRoomUserCount() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
-        let channelIdsStr = this.getChannelUserCountReq.channelIds;
-        let channelIds = [];
+        let roomIdsStr = this.getRoomUserCountReq.roomIds;
+        let roomIds = [];
 
-        let elements = channelIdsStr.split(",");
+        let elements = roomIdsStr.split(",");
         for (let k of elements) {
-          channelIds.push(k);
+          roomIds.push(k);
         }
-        this.getChannelUserCountRes = '';
+        this.getRoomUserCountRes = '';
 
-        this.channels[this.regionChannelId].channel.getChannelUserCount({ channelIds: channelIds }).then(res => {
-          console.log("getChannelUserCount res:", res);
-          this.getChannelUserCountRes = JSON.stringify(res);
+        this.rooms[this.regionRoomId].room.getRoomUserCount({ roomIds: roomIds }).then(res => {
+          console.log("getRoomUserCount res:", res);
+          this.getRoomUserCountRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("getChannelUserCount err:", err);
-          this.getChannelUserCountRes = JSON.stringify(err);
+          console.error("getRoomUserCount err:", err);
+          this.getRoomUserCountRes = JSON.stringify(err);
         });
       },
       // 频道属性
-      setChannelAttributes() {
-        if (!this.channels[this.regionChannelId])
+      setRoomAttributes() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
         let attributes = {
@@ -869,25 +869,25 @@
           "Extention": "ex"
         };
   
-        let key = this.setChannelAttributesReq.key;
-        let prop = this.setChannelAttributesReq.prop;
+        let key = this.setRoomAttributesReq.key;
+        let prop = this.setRoomAttributesReq.prop;
         attributes[key] = prop;
         
         let req = { attributes };
-        this.setChannelAttributesRes = '';
-        this.channels[this.regionChannelId].channel.setChannelAttributes(req).then(res => {
-          console.log("setChannelAttributes Res: ", res);
-          this.setChannelAttributesRes = JSON.stringify(res);
+        this.setRoomAttributesRes = '';
+        this.rooms[this.regionRoomId].room.setRoomAttributes(req).then(res => {
+          console.log("setRoomAttributes Res: ", res);
+          this.setRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("setChannelAttributes err:", err);
-          this.setChannelAttributesRes = JSON.stringify(err);
+          console.error("setRoomAttributes err:", err);
+          this.setRoomAttributesRes = JSON.stringify(err);
         });
       },
-      deleteChannelAttributesByKeys() {
-        if (!this.channels[this.regionChannelId])
+      deleteRoomAttributesByKeys() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
-        let keys_str = this.deleteChannelAttributesByKeysReq.keys;
+        let keys_str = this.deleteRoomAttributesByKeysReq.keys;
 
         let keys = [];
 
@@ -897,70 +897,70 @@
         }
 
         let req = { keys };
-        this.deleteChannelAttributesByKeysRes = '';
+        this.deleteRoomAttributesByKeysRes = '';
 
-        this.channels[this.regionChannelId].channel.deleteChannelAttributesByKeys(req).then(res => {
-          console.log("deleteChannelAttributesByKeys res: ", res);
-          this.deleteChannelAttributesByKeysRes = JSON.stringify(res);
+        this.rooms[this.regionRoomId].room.deleteRoomAttributesByKeys(req).then(res => {
+          console.log("deleteRoomAttributesByKeys res: ", res);
+          this.deleteRoomAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("deleteChannelAttributesByKeys err:", err);
-          this.deleteChannelAttributesByKeysRes = JSON.stringify(err);
+          console.error("deleteRoomAttributesByKeys err:", err);
+          this.deleteRoomAttributesByKeysRes = JSON.stringify(err);
         });
       },
-      clearChannelAttributes() {
-        if (!this.channels[this.regionChannelId])
+      clearRoomAttributes() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
-        this.clearChannelAttributesRes = '';
+        this.clearRoomAttributesRes = '';
 
-        this.channels[this.regionChannelId].channel.clearChannelAttributes().then(res => {
-          console.log("clearChannelAttributes res: ", res);
-          this.clearChannelAttributesRes = JSON.stringify(res);
+        this.rooms[this.regionRoomId].room.clearRoomAttributes().then(res => {
+          console.log("clearRoomAttributes res: ", res);
+          this.clearRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("clearChannelAttributes err:", err);
-          this.clearChannelAttributesRes = JSON.stringify(err);
+          console.error("clearRoomAttributes err:", err);
+          this.clearRoomAttributesRes = JSON.stringify(err);
         });
       },
-      addOrUpdateChannelAttributes() {
-        if (!this.channels[this.regionChannelId])
+      addOrUpdateRoomAttributes() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
         let attributes = {
           "owner": "awu",
         };
   
-        let key = this.addOrUpdateChannelAttributesReq.key;
-        let prop = this.addOrUpdateChannelAttributesReq.prop;
+        let key = this.addOrUpdateRoomAttributesReq.key;
+        let prop = this.addOrUpdateRoomAttributesReq.prop;
         attributes[key] = prop;
         
         let req = { attributes };
-        this.addOrUpdateChannelAttributesRes = '';
-        this.channels[this.regionChannelId].channel.addOrUpdateChannelAttributes(req).then(res => {
-          console.log("addOrUpdateChannelAttributes res: ", res);
-          this.addOrUpdateChannelAttributesRes = JSON.stringify(res);
+        this.addOrUpdateRoomAttributesRes = '';
+        this.rooms[this.regionRoomId].room.addOrUpdateRoomAttributes(req).then(res => {
+          console.log("addOrUpdateRoomAttributes res: ", res);
+          this.addOrUpdateRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("addOrUpdateChannelAttributes err:", err);
-          this.addOrUpdateChannelAttributesRes = JSON.stringify(err);
+          console.error("addOrUpdateRoomAttributes err:", err);
+          this.addOrUpdateRoomAttributesRes = JSON.stringify(err);
         });
       },
-      getChannelAttributes() {
-        if (!this.channels[this.regionChannelId])
+      getRoomAttributes() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
-        this.getChannelAttributesRes = '';
-        this.channels[this.regionChannelId].channel.getChannelAttributes().then(res => {
-          console.log("getChannelAttributes res:", res);
-          this.getChannelAttributesRes = JSON.stringify(res);
+        this.getRoomAttributesRes = '';
+        this.rooms[this.regionRoomId].room.getRoomAttributes().then(res => {
+          console.log("getRoomAttributes res:", res);
+          this.getRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("getChannelAttributes err:", err);
-          this.getChannelAttributesRes = JSON.stringify(err);
+          console.error("getRoomAttributes err:", err);
+          this.getRoomAttributesRes = JSON.stringify(err);
         });
       },
-      getChannelAttributesByKeys() {
-        if (!this.channels[this.regionChannelId])
+      getRoomAttributesByKeys() {
+        if (!this.rooms[this.regionRoomId])
           return;
 
-        let keys_str = this.getChannelAttributesByKeysReq.keys;
+        let keys_str = this.getRoomAttributesByKeysReq.keys;
         let keys = [];
         let elements = keys_str.split(",");
         for (let k of elements) {
@@ -968,13 +968,13 @@
         }
         let req = { keys };
 
-        this.getChannelAttributesByKeysRes = '';
-        this.channels[this.regionChannelId].channel.getChannelAttributesByKeys(req).then(res => {
-          console.log("getChannelAttributesByKeys res:", res);
-          this.getChannelAttributesByKeysRes = JSON.stringify(res);
+        this.getRoomAttributesByKeysRes = '';
+        this.rooms[this.regionRoomId].room.getRoomAttributesByKeys(req).then(res => {
+          console.log("getRoomAttributesByKeys res:", res);
+          this.getRoomAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("getChannelAttributesByKeys err:", err);
-          this.getChannelAttributesByKeysRes = JSON.stringify(err);
+          console.error("getRoomAttributesByKeys err:", err);
+          this.getRoomAttributesByKeysRes = JSON.stringify(err);
         });
       },
 
@@ -1043,8 +1043,8 @@
           console.log("logout Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
           if (res.rescode === 0) {
-            this.channels = [];
-            this.regionChannelIds = [];
+            this.rooms = [];
+            this.regionRoomIds = [];
           }
         }).catch(err => {
           console.error("logout err:", err);
@@ -1070,7 +1070,7 @@
       },
       clearMqData() {
         this.mq_data = [];
-        this.mq_channel_data = [];
+        this.mq_room_data = [];
       },
 
       /* 消息接收模块 */
@@ -1090,80 +1090,80 @@
         });
       },
       /* 组播消息接收模块 */
-      onReceiveChannelMessage(channel) {
-        channel.channel.on('ChannelMessage', (data) => {
+      onReceiveRoomMessage(room) {
+        room.room.on('RoomMessage', (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-          console.log(`接收组播消息ChannelMessage: [${channel.region}:${channel.channelId}]:` + JSON.stringify(data));
-          this.mq_channel_data.push(data);
+          console.log(`接收组播消息RoomMessage: [${room.region}:${room.roomId}]:` + JSON.stringify(data));
+          this.mq_room_data.push(data);
 
           this.$message({
             duration: 3000,
-            message: `ChannelMessage: [${channel.region}:${channel.channelId}]:` + JSON.stringify(data),
+            message: `RoomMessage: [${room.region}:${room.roomId}]:` + JSON.stringify(data),
             type: 'success'
           });
 
-          console.log("组播MQ队列mq_channel_data: " + JSON.stringify(this.mq_channel_data));
+          console.log("组播MQ队列mq_room_data: " + JSON.stringify(this.mq_room_data));
         });
       },
-      onNotifyJoinChannel(channel) {
-        channel.channel.on('NotifyJoinChannel', (data) => {
-          console.log(`接收消息NotifyJoinChannel [${channel.region}:${channel.channelId}]:` + JSON.stringify(data));
+      onNotifyJoinRoom(room) {
+        room.room.on('NotifyJoinRoom', (data) => {
+          console.log(`接收消息NotifyJoinRoom [${room.region}:${room.roomId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `JoinChannel [${channel.region}:${channel.channelId}]:` + JSON.stringify(data),
+            message: `NotifyJoinRoom [${room.region}:${room.roomId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyLeaveChannel(channel) {
-        channel.channel.on('NotifyLeaveChannel', (data) => {
-          console.log(`接收消息NotifyLeaveChannel [${channel.region}:${channel.channelId}]:` + JSON.stringify(data));
+      onNotifyLeaveRoom(room) {
+        room.room.on('NotifyLeaveRoom', (data) => {
+          console.log(`接收消息NotifyLeaveRoom [${room.region}:${room.roomId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `LeaveChannel [${channel.region}:${channel.channelId}]:` + JSON.stringify(data),
+            message: `NotifyLeaveRoom [${room.region}:${room.roomId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserCountChange(channel) {
-        channel.channel.on('NotifyUserCountChange', (data) => {
-          console.log(`用户数量变更NotifyUserCountChange [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data));
+      onNotifyUserCountChange(room) {
+        room.room.on('NotifyUserCountChange', (data) => {
+          console.log(`用户数量变更NotifyUserCountChange [${room.region}:${room.roomId}]: ` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `NotifyUserCountChange [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data),
+            message: `NotifyUserCountChange [${room.region}:${room.roomId}]: ` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserAttributesChange(channel) {
-        const channelEvents = [
+      onNotifyUserAttributesChange(room) {
+        const roomEvents = [
           "NotifyUserAttributesSet",
           "NotifyUserAttributesDelete",
           "NotifyUserAttributesAddOrUpdate"
         ];
-        channelEvents.forEach(eventName => {
-          channel.channel.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data));
+        roomEvents.forEach(eventName => {
+          room.room.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${room.region}:${room.roomId}]: ` + JSON.stringify(data));
             this.$message({
               duration: 3000,
-              message: `${eventName} [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data),
+              message: `${eventName} [${room.region}:${room.roomId}]: ` + JSON.stringify(data),
               type: 'success'
             });
           });
         });
       },
-      onNotifyChannelAttributesChange(channel) {
-        const channelEvents = [
-          "NotifyChannelAttributesSet",
-          "NotifyChannelAttributesDelete",
-          "NotifyChannelAttributesAddOrUpdate"
+      onNotifyRoomAttributesChange(room) {
+        const roomEvents = [
+          "NotifyRoomAttributesSet",
+          "NotifyRoomAttributesDelete",
+          "NotifyRoomAttributesAddOrUpdate"
         ];
-        channelEvents.forEach(eventName => {
-          channel.channel.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data));
+        roomEvents.forEach(eventName => {
+          room.room.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${room.region}:${room.roomId}]: ` + JSON.stringify(data));
             this.$message({
               duration: 3000,
-              message: `${eventName} [${channel.region}:${channel.channelId}]: ` + JSON.stringify(data),
+              message: `${eventName} [${room.region}:${room.roomId}]: ` + JSON.stringify(data),
               type: 'success'
             });
           });

@@ -8,8 +8,8 @@ export const getRegions = () => {
   return regions;
 }
 
-export const getRegionChannelId = (region, channelId) => {
-  return `${region}:${channelId}`;
+export const getRegionRoomId = (region, roomId) => {
+  return `${region}:${roomId}`;
 }
 
 export function getAppids() {
