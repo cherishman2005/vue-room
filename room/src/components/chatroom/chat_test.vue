@@ -328,7 +328,7 @@
 <script>
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
-  import { getRegionChannelId } from '@/components/room_config.js';
+  import { getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateGroup from './create_group.vue'
   //import Hummer from 'hummer-chatroom-sdk'
