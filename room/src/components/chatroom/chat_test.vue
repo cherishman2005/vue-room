@@ -40,7 +40,7 @@
 
     <!-- 初始化chatroom -->
     <el-row type="flex">
-      <el-col :span="24"  style="height:30px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="appid">
             <el-input v-model="appid" disabled style="width:150px;"></el-input>
@@ -62,27 +62,16 @@
     </el-row>
 
     <el-dialog align="left" title="创建ChatRoomId" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
-      <create-group :hummer="hummer" @onGetChatRoomId = getChatRoomId></create-group>
+      <create-group :hummer="hummer" @onGetChatRoomId=getChatRoomId></create-group>
     </el-dialog>
 
-    <p class="text-unit">加入聊天室</p>
+    <p class="text-unit">加入/退出聊天室</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="joinChatRoom" style="border-radius: 4px">joinChatRoom</el-button>
+            <el-button type="primary" @click="joinChatRoom" style="border-radius: 4px">joinChatRoom</el-button>
           </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{JoinChatRoomRes}}</p>
-    </div>
-
-    <p class="text-unit">离开聊天室</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary"  @click="leaveChatRoom" style="border-radius: 4px">leaveChatRoom</el-button>
           </el-form-item>
@@ -90,12 +79,12 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{LeaveChatRoomRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{joinOrLeaveRes}}</p>
     </div>
-    
+
     <p class="text-unit">更新聊天室信息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary"  @click="updateChatRoomInfo" style="border-radius: 4px">updateChatRoomInfo</el-button>
@@ -104,12 +93,12 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{UpdateChatRoomInfoRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{updateChatRoomInfoRes}}</p>
     </div>
 
     <p class="text-unit">解散聊天室</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <template>
@@ -129,12 +118,12 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{DismissChatRoomRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{dismissChatRoomRes}}</p>
     </div>
 
     <p class="text-unit">剔除用户</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="uid">
             <el-input v-model="KickOffUserReq.uid"></el-input>
@@ -157,8 +146,8 @@
 
     <p class="text-unit">客户端给群组推送消息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="content">
             <el-input v-model="sendGroupMessageReq.content"></el-input>
           </el-form-item>
@@ -174,7 +163,7 @@
 
     <p class="text-unit">A给B发送消息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="content">
             <el-input v-model="sendSingleUserMessageReq.content"></el-input>
@@ -183,7 +172,7 @@
             <el-input v-model="sendSingleUserMessageReq.receiver"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="sendSingleUserMessage" style="border-radius: 4px">sendSingleUserMessage</el-button>
+            <el-button type="primary" @click="sendSingleUserMessage" style="border-radius: 4px">sendSingleUserMessage</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -194,7 +183,7 @@
 
     <p class="text-unit">客户端发送公屏</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="chat">
             <el-input v-model="SendTextChatReq.chat"></el-input>
@@ -211,7 +200,7 @@
 
     <p class="text-unit">获取聊天室信息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary"  @click="getChatRoomInfo" style="border-radius: 4px">getChatRoomInfo</el-button>
@@ -225,7 +214,7 @@
 
     <p class="text-unit">获取聊天室所有管理员</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="roler">
             <el-input v-model="GetChatRoomManagerReq.roler" disabled></el-input>
@@ -242,7 +231,7 @@
 
     <p class="text-unit">获取聊天室用户数</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary"  @click="getUserCount" style="border-radius: 4px">getUserCount</el-button>
@@ -256,7 +245,7 @@
 
     <p class="text-unit">获取聊天室用户列表</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
          <el-form-item label="num">
             <el-input v-model="GetUserListReq.num"></el-input>
@@ -265,7 +254,7 @@
             <el-input v-model="GetUserListReq.pos"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="getUserList" style="border-radius: 4px">GetUserList</el-button>
+            <el-button type="primary" @click="getUserList" style="border-radius: 4px">GetUserList</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -276,7 +265,7 @@
 
     <p class="text-unit">设置用户属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
             <el-input v-model="SetUserAttributesReq.key"></el-input>
@@ -296,7 +285,7 @@
 
     <p class="text-unit">查询用户属性列表</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary"  @click="getUserAttributesList" style="border-radius: 4px">getUserAttributesList</el-button>
@@ -310,10 +299,10 @@
 
     <p class="text-unit">获取实例信息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height: 45px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
+            <el-button type="primary" @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -357,11 +346,9 @@
         JoinChatRoomReq: {
           joinProps: "",
         },
-        JoinChatRoomRes: '',
-        LeaveChatRoomRes: '',
-        CreateChatRoomIdRes: '',
-        UpdateChatRoomInfoRes: '',
-        DismissChatRoomRes: '',
+        joinOrLeaveRes: '',
+        updateChatRoomInfoRes: '',
+        dismissChatRoomRes: '',
         KickOffUserReq: {
           admin: UID,
           uid: '0',
@@ -534,22 +521,25 @@
         
         let joinProps = {"H5_sdk": 'js_sdk'};
         let req = { joinProps }
+
+        this.joinOrLeaveRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.joinChatRoom(req).then(res => {
           console.log("joinChatRoom Res: " + JSON.stringify(res));
-          this.JoinChatRoomRes = res;
+          this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
-          console.log("joinChatRoom: err=", err);
+          console.error("joinChatRoom", err);
         })
       },
       leaveChatRoom() {
         if (!this.chatrooms[this.regionChatroomId])
           return;
-          
+        
+        this.joinOrLeaveRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.leaveChatRoom().then((res) => {
           console.log("leaveChatRoom Res: " + JSON.stringify(res));
-          this.LeaveChatRoomRes = res;
+          this.joinOrLeaveRes = JSON.stringify(res);
         }).catch((err) => {
-          console.log("leaveChatRoom: err=", err);
+          console.error("leaveChatRoom", err);
         })
       },
       updateChatRoomInfo() {
@@ -560,12 +550,12 @@
           "Name": "阿武",
           "Description": "js_sdk测试",
           "Bulletin": "bull",
-          "Extention": "ex",
+          "AppExtra": "ex",
         };
         
         let req = { props };
         this.chatrooms[this.regionChatroomId].chatroom.updateChatRoomInfo(req).then((res) => {
-          this.UpdateChatRoomInfoRes = res;
+          this.updateChatRoomInfoRes = res;
           console.log("updateChatRoomInfo Res: " + JSON.stringify(res));
         }).catch(err => {
           console.log(err)
@@ -577,7 +567,7 @@
 
         this.chatrooms[this.regionChatroomId].chatroom.dismissChatRoom().then((res) => {
           console.log("dismissChatRoom Res: ", res);
-          this.DismissChatRoomRes = res;
+          this.dismissChatRoomRes = res;
           if (res.rescode == 0) {
             delete this.chatrooms[this.regionChatroomId];
             this.chatrooms[this.regionChatroomId] = null;
