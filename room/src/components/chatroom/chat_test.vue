@@ -14,10 +14,10 @@
             <el-input v-model="uid" disabled style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="login" style="border-radius: 4px">login</el-button>
+            <el-button type="primary" @click="login" style="border-radius: 4px">login</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="logout" style="border-radius: 4px">logout</el-button>
+            <el-button type="primary" @click="logout" style="border-radius: 4px">logout</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="showRefreshTokenModel" style="border-radius: 4px">refreshToken</el-button>
@@ -41,7 +41,7 @@
     <!-- 初始化chatroom -->
     <el-row type="flex">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+        <el-form :inline="true" size="small">
           <el-form-item label="appid">
             <el-input v-model="appid" disabled style="width:150px;"></el-input>
           </el-form-item>
@@ -52,10 +52,10 @@
             <el-input v-model="roomid" style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="showCreateGroupModel" style="border-radius: 4px">createChatRoomId</el-button>
+            <el-button type="primary" @click="showCreateGroupModel" style="border-radius: 4px">createChatRoomId</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="initChatRoom" style="border-radius: 4px">initChatRoom</el-button>
+            <el-button type="primary" @click="initChatRoom" style="border-radius: 4px">initChatRoom</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -73,7 +73,7 @@
             <el-button type="primary" @click="joinChatRoom" style="border-radius: 4px">joinChatRoom</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="leaveChatRoom" style="border-radius: 4px">leaveChatRoom</el-button>
+            <el-button type="primary" @click="leaveChatRoom" style="border-radius: 4px">leaveChatRoom</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -87,19 +87,19 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="updateChatRoomInfo" style="border-radius: 4px">updateChatRoomInfo</el-button>
+            <el-button type="primary" @click="updateChatRoomAttributes" style="border-radius: 4px">updateChatRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{updateChatRoomInfoRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{updateChatRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">解散聊天室</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item class="search">
             <template>
               <el-popconfirm
@@ -126,22 +126,22 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="uid">
-            <el-input v-model="KickOffUserReq.uid"></el-input>
+            <el-input v-model="kickOffUserReq.uid"></el-input>
           </el-form-item>
           <el-form-item label="secs">
-            <el-input v-model="KickOffUserReq.secs"></el-input>
+            <el-input v-model="kickOffUserReq.secs"></el-input>
           </el-form-item>
           <el-form-item label="reason">
-            <el-input v-model="KickOffUserReq.reason"></el-input>
+            <el-input v-model="kickOffUserReq.reason"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="kickOffUser" style="border-radius: 4px">kickOffUser</el-button>
+            <el-button type="primary" @click="kickOffUser" style="border-radius: 4px">kickOffUser</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{KickOffUserRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{kickOffUserRes}}</p>
     </div>
 
     <p class="text-unit">客户端给群组推送消息</p>
@@ -152,7 +152,7 @@
             <el-input v-model="sendGroupMessageReq.content"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="sendGroupMessage" style="border-radius: 4px">sendGroupMessage</el-button>
+            <el-button type="primary" @click="sendGroupMessage" style="border-radius: 4px">sendGroupMessage</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -186,16 +186,16 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="chat">
-            <el-input v-model="SendTextChatReq.chat"></el-input>
+            <el-input v-model="sendTextChatReq.chat"></el-input>
           </el-form-item>
          <el-form-item class="search">
-            <el-button type="primary"  @click="sendTextChat" style="border-radius: 4px">sendTextChat</el-button>
+            <el-button type="primary" @click="sendTextChat" style="border-radius: 4px">sendTextChat</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{SendTextChatRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendTextChatRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室信息</p>
@@ -203,13 +203,13 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="getChatRoomInfo" style="border-radius: 4px">getChatRoomInfo</el-button>
+            <el-button type="primary" @click="getChatRoomAttributes" style="border-radius: 4px">getChatRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{GetChatRoomInfoRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getChatRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室所有管理员</p>
@@ -217,16 +217,16 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="roler">
-            <el-input v-model="GetChatRoomManagerReq.roler" disabled></el-input>
+            <el-input v-model="getChatRoomManagerReq.roler" disabled></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="getChatRoomManager" style="border-radius: 4px">getChatRoomManager</el-button>
+            <el-button type="primary" @click="getChatRoomManager" style="border-radius: 4px">getChatRoomManager</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{GetChatRoomManagerRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getChatRoomManagerRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室用户数</p>
@@ -234,13 +234,13 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="getUserCount" style="border-radius: 4px">getUserCount</el-button>
+            <el-button type="primary" @click="getUserCount" style="border-radius: 4px">getUserCount</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{GetUserCountRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getUserCountRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室用户列表</p>
@@ -248,10 +248,10 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
          <el-form-item label="num">
-            <el-input v-model="GetUserListReq.num"></el-input>
+            <el-input v-model="getUserListReq.num"></el-input>
           </el-form-item>
           <el-form-item label="pos">
-            <el-input v-model="GetUserListReq.pos"></el-input>
+            <el-input v-model="getUserListReq.pos"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="getUserList" style="border-radius: 4px">GetUserList</el-button>
@@ -260,7 +260,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{GetUserListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getUserListRes}}</p>
     </div>
 
     <p class="text-unit">设置用户属性</p>
@@ -268,13 +268,13 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
-            <el-input v-model="SetUserAttributesReq.key"></el-input>
+            <el-input v-model="setUserAttributesReq.key"></el-input>
           </el-form-item>
           <el-form-item label="prop">
-            <el-input v-model="SetUserAttributesReq.prop"></el-input>
+            <el-input v-model="setUserAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
+            <el-button type="primary" @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -288,7 +288,7 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="getUserAttributesList" style="border-radius: 4px">getUserAttributesList</el-button>
+            <el-button type="primary" @click="getUserAttributesList" style="border-radius: 4px">getUserAttributesList</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -347,15 +347,15 @@
           joinProps: "",
         },
         joinOrLeaveRes: '',
-        updateChatRoomInfoRes: '',
+        updateChatRoomAttributesRes: '',
         dismissChatRoomRes: '',
-        KickOffUserReq: {
+        kickOffUserReq: {
           admin: UID,
           uid: '0',
           secs: '3000',
           reason: "js test KickOffUser",
         },
-        KickOffUserRes: '',
+        kickOffUserRes: '',
         sendGroupMessageReq: {
           content: "js_sdk sendGroupMessage",
         },
@@ -365,25 +365,25 @@
           receiver: UID,
         },
         sendSingleUserMessageRes: '',
-        SendTextChatReq: {
+        sendTextChatReq: {
           chat: "js_sdk sendTextChat",
         },
-        SendTextChatRes: '',
-        GetChatRoomInfoRes: '',
-        GetChatRoomManagerReq: {
+        sendTextChatRes: '',
+        getChatRoomAttributesRes: '',
+        getChatRoomManagerReq: {
           roler: "owner"
         },
-        GetChatRoomManagerRes: '',
-        GetUserCountRes: '',
-        GetUserListReq: {
+        getChatRoomManagerRes: '',
+        getUserCountRes: '',
+        getUserListReq: {
           num: 100,
           pos: 0,
         },
-        GetUserListRes: '',
+        getUserListRes: '',
         display: {
           RcvSingleUserData: "",
         },
-        SetUserAttributesReq: {
+        setUserAttributesReq: {
           key: 'Name',
           prop: '阿武'
         },
@@ -502,13 +502,13 @@
 
         let client = this.chatrooms[this.regionChatroomId];
         this.onRecvSingleUserMessage(client);
-        this.onDismissChatRoomBc(client);
-        this.onUpdateChatRoomInfoBc(client);
-        this.onKickOffUserBc(client);
-        this.onRecvGroupBc(client);
-        this.onTextChatBc(client);
-        this.onUserCountBc(client);
-        this.onUserOnlineChangeBc(client);
+        this.onDismissChatRoom(client);
+        this.onUpdateChatRoomAttributes(client);
+        this.onKickOffUser(client);
+        this.onRecvGroupMessage(client);
+        this.onTextChat(client);
+        this.onUserCount(client);
+        this.onUserOnlineChange(client);
         this.onNotifyUserAttributesSet(client);
 
         setStorage("roomid", this.roomid);
@@ -542,7 +542,7 @@
           console.error("leaveChatRoom", err);
         })
       },
-      updateChatRoomInfo() {
+      updateChatRoomAttributes() {
         if (!this.chatrooms[this.regionChatroomId])
           return;
 
@@ -554,9 +554,11 @@
         };
         
         let req = { props };
-        this.chatrooms[this.regionChatroomId].chatroom.updateChatRoomInfo(req).then((res) => {
-          this.updateChatRoomInfoRes = res;
-          console.log("updateChatRoomInfo Res: " + JSON.stringify(res));
+
+        this.updateChatRoomAttributesRes = '';
+        this.chatrooms[this.regionChatroomId].chatroom.updateChatRoomAttributes(req).then((res) => {
+          this.updateChatRoomAttributesRes = JSON.stringify(res);
+          console.log("updateChatRoomAttributes Res: " + JSON.stringify(res));
         }).catch(err => {
           console.log(err)
         })
@@ -565,9 +567,10 @@
         if (!this.chatrooms[this.regionChatroomId])
           return;
 
+        this.dismissChatRoomRes = ''; 
         this.chatrooms[this.regionChatroomId].chatroom.dismissChatRoom().then((res) => {
           console.log("dismissChatRoom Res: ", res);
-          this.dismissChatRoomRes = res;
+          this.dismissChatRoomRes = JSON.stringify(res);
           if (res.rescode == 0) {
             delete this.chatrooms[this.regionChatroomId];
             this.chatrooms[this.regionChatroomId] = null;
@@ -582,14 +585,15 @@
         if (!this.chatrooms[this.regionChatroomId])
           return;
 
-        let uid = this.KickOffUserReq.uid;
-        let secs = this.KickOffUserReq.secs;
-        let reason = this.KickOffUserReq.reason;
+        let uid = this.kickOffUserReq.uid;
+        let secs = this.kickOffUserReq.secs;
+        let reason = this.kickOffUserReq.reason;
 
-        let req = { uid, secs, reason }
+        let req = { uid, secs, reason };
+        this.kickOffUserRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.kickOffUser(req).then(res => {
-          this.KickOffUserRes = JSON.stringify(res);
-          console.log("kickOffUser Res: " + JSON.stringify(res));
+          this.kickOffUserRes = JSON.stringify(res);
+          console.log("kickOffUser res: " + JSON.stringify(res));
         }).catch((err) => {
           console.log(err)
         })
@@ -599,10 +603,11 @@
           return;
           
         let content = this.sendGroupMessageReq.content;
-        let req = { content }
+        let req = { content };
+        this.sendGroupMessageRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.sendGroupMessage(req).then((res) => {
-          console.log("sendGroupMessage Res: " + JSON.stringify(res));
-          this.sendGroupMessageRes = res;
+          console.log("sendGroupMessage res: " + JSON.stringify(res));
+          this.sendGroupMessageRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
         })
@@ -614,9 +619,10 @@
         let content = this.sendSingleUserMessageReq.content;
         let receiver = this.sendSingleUserMessageReq.receiver;
 
-        let req = { content, receiver }
+        let req = { content, receiver };
+        this.sendSingleUserMessageRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.sendSingleUserMessage(req).then((res) => {
-          console.log("sendSingleUserMessage Res: " +  JSON.stringify(res));
+          console.log("sendSingleUserMessage res: " +  JSON.stringify(res));
           this.sendSingleUserMessageRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
@@ -626,25 +632,28 @@
         if (!this.chatrooms[this.regionChatroomId])
           return;
           
-        let chat = this.SendTextChatReq.chat;
+        let chat = this.sendTextChatReq.chat;
         let chatProps = { "Name": "名称chatProps" };
         let extProps = { "Name": "名称extProps" };
   
         let req = { chat, chatProps, extProps }
+
+        this.sendTextChatRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.sendTextChat(req).then((res) => {
-          console.log("sendTextChat Res: " + JSON.stringify(res));
-          this.SendTextChatRes = JSON.stringify(res);
+          console.log("sendTextChat res: " + JSON.stringify(res));
+          this.sendTextChatRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
         })
       },
-      getChatRoomInfo() {
+      getChatRoomAttributes() {
         if (!this.chatrooms[this.regionChatroomId])
           return;
-          
-        this.chatrooms[this.regionChatroomId].chatroom.getChatRoomInfo().then((res) => {
-          console.log("getChatRoomInfo Res: " + JSON.stringify(res));
-          this.GetChatRoomInfoRes = JSON.stringify(res);
+        
+        this.getChatRoomAttributesRes = '';
+        this.chatrooms[this.regionChatroomId].chatroom.getChatRoomAttributes().then((res) => {
+          console.log("getChatRoomAttributes res: " + JSON.stringify(res));
+          this.getChatRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
         })
@@ -653,12 +662,13 @@
         if (!this.chatrooms[this.regionChatroomId])
           return;
           
-        let roler = this.GetChatRoomManagerReq.roler;
-
+        let roler = this.getChatRoomManagerReq.roler;
         let params = { roler }
+
+        this.getChatRoomManagerRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.getChatRoomManager(params).then((res) => {
           console.log("getChatRoomManager Res: " + JSON.stringify(res));
-          this.GetChatRoomManagerRes = JSON.stringify(res);
+          this.getChatRoomManagerRes = JSON.stringify(res);
         }).catch((err) => {
           console.log(err)
         })
@@ -666,10 +676,11 @@
       getUserCount() {
         if (!this.chatrooms[this.regionChatroomId])
           return;
-          
+        
+        this.getUserCountRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.getUserCount().then((res) => {
           console.log("getUserCount Res: " + JSON.stringify(res));
-          this.GetUserCountRes = JSON.stringify(res);
+          this.getUserCountRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
         })
@@ -678,13 +689,15 @@
         if (!this.chatrooms[this.regionChatroomId])
           return;
           
-        let num = this.GetUserListReq.num;
-        let pos = this.GetUserListReq.pos;
+        let num = this.getUserListReq.num;
+        let pos = this.getUserListReq.pos;
 
         let req = { num, pos }
+
+        this.getUserListRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.getUserList(req).then(res => {
           console.log("getUserList Res: " + JSON.stringify(res));
-          this.GetUserListRes = JSON.stringify(res);
+          this.getUserListRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
         })
@@ -699,8 +712,8 @@
           "Bulletin": "bull", 
           "Extention": "ex" 
         };
-        let key = this.SetUserAttributesReq.key;
-        let prop = this.SetUserAttributesReq.prop;
+        let key = this.setUserAttributesReq.key;
+        let prop = this.setUserAttributesReq.prop;
         attributes[key] = prop;
         
         let req = { attributes };
@@ -747,9 +760,9 @@
           });
         });
       },
-      onDismissChatRoomBc(client) {
-        client.chatroom.on('DismissChatRoomBc', (data) => {
-          console.log("接收消息DismissChatRoomBc： " + JSON.stringify(data));
+      onDismissChatRoom(client) {
+        client.chatroom.on('DismissChatRoom', (data) => {
+          console.log("接收消息DismissChatRoom： " + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -758,29 +771,29 @@
           });
         });
       },
-      onUpdateChatRoomInfoBc(client)  {
-        client.chatroom.on('UpdateChatRoomInfoBc', (data) => {
-          console.log("接收消息UpdateChatRoomInfoBc：" + JSON.stringify(data));
+      onUpdateChatRoomAttributes(client)  {
+        client.chatroom.on('UpdateChatRoomAttributes', (data) => {
+          console.log("接收消息UpdateChatRoomAttributes：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息UpdateChatRoomInfoBc：" + JSON.stringify(data),
+            message: "接收消息UpdateChatRoomAttributes：" + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onKickOffUserBc(client) {
-        client.chatroom.on('KickOffUserBc', (data) => {
-          console.log("接收消息KickOffUserBc：" + JSON.stringify(data));
+      onKickOffUser(client) {
+        client.chatroom.on('KickOffUser', (data) => {
+          console.log("接收消息KickOffUser：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息KickOffUserBc：" + JSON.stringify(data),
+            message: "接收消息KickOffUser：" + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onRecvGroupBc(client) {
+      onRecvGroupMessage(client) {
         client.chatroom.on('GroupMessage', (data) => {
           console.log("接收消息GroupMessage：" + JSON.stringify(data));
 
@@ -791,9 +804,9 @@
           });
         });
       },
-      onTextChatBc(client) {
-        client.chatroom.on('TextChatBc', (data) => {
-          console.log("接收消息TextChatBc：" + JSON.stringify(data));
+      onTextChat(client) {
+        client.chatroom.on('TextChat', (data) => {
+          console.log("接收消息TextChat：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -802,7 +815,7 @@
           });
         });
       },
-      onUserCountBc(client) {
+      onUserCount(client) {
         client.chatroom.on('NotifyUserCount', (data) => {
           console.log("接收消息NotifyUserCount：" + JSON.stringify(data));
 
@@ -824,7 +837,7 @@
           });
         });
       },
-      onUserOnlineChangeBc(client) {
+      onUserOnlineChange(client) {
         client.chatroom.on('NotifyUserOnlineChange', (data) => {
           console.log("接收消息NotifyUserOnlineChange：" + JSON.stringify(data));
 
