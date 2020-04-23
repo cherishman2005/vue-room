@@ -35,9 +35,7 @@
     "vuex": "^3.0.1",
     "vux": "^2.9.2",
     "hummer-channel-sdk": "^2.1.2",
-    "hummer-signal": "^1.0.3",
-    "hummer-im": "^1.0.4",
-    "hummer-chatroom": "^1.1.1"
+    "hummer-chatroom-sdk": "^2.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
