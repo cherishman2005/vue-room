@@ -546,14 +546,14 @@
         if (!this.chatrooms[this.regionChatroomId])
           return;
 
-        let props = {
-          "Name": "阿武",
-          "Description": "js_sdk测试",
+        let attributes = {
+          "Name": "nginx大讲堂",
+          "Description": "全栈技术",
           "Bulletin": "bull",
           "AppExtra": "ex",
         };
         
-        let req = { props };
+        let req = { attributes };
 
         this.updateChatRoomAttributesRes = '';
         this.chatrooms[this.regionChatroomId].chatroom.updateChatRoomAttributes(req).then((res) => {
