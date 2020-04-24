@@ -59,7 +59,7 @@
             <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px" :disabled='userRegionFlag'>setUserRegion</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="initRoom" style="border-radius: 4px">initRoom</el-button>
+            <el-button type="primary"  @click="initClient" style="border-radius: 4px">initClient</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -120,17 +120,17 @@
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item label="content">
-            <el-input v-model="sendMessageToRoomReq.content" style="width: 200px;"></el-input>
+            <el-input v-model="sendMessageReq.content" style="width: 200px;"></el-input>
           </el-form-item>
 
           <el-form-item class="search">
-            <el-button type="primary" @click="sendMessageToRoom" style="border-radius: 4px">sendMessageToRoom</el-button>
+            <el-button type="primary" @click="sendMessage" style="border-radius: 4px">sendMessage</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToRoomRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageRes}}</p>
     </div>
 
     <p class="text-unit">设置用户属性</p>
@@ -138,19 +138,19 @@
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="key">
-            <el-input v-model="setLocalUserAttributesReq.key"></el-input>
+            <el-input v-model="setUserAttributesReq.key"></el-input>
           </el-form-item>
           <el-form-item label="prop">
-            <el-input v-model="setLocalUserAttributesReq.prop"></el-input>
+            <el-input v-model="setUserAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="setLocalUserAttributes" style="border-radius: 4px">setLocalUserAttributes</el-button>
+            <el-button type="primary"  @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setLocalUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">删除用户某些属性</p>
@@ -161,7 +161,7 @@
             <el-input v-model="deleteUserAttributesReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="deleteLocalUserAttributesByKeys" style="border-radius: 4px">deleteLocalUserAttributesByKeys</el-button>
+            <el-button type="primary" @click="deleteUserAttributesByKeys" style="border-radius: 4px">deleteUserAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -175,13 +175,13 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="clearLocalUserAttributes" style="border-radius: 4px">clearLocalUserAttributes</el-button>
+            <el-button type="primary" @click="clearUserAttributes" style="border-radius: 4px">clearUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{clearLocalUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{clearUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">添加或更新本地用户的属性</p>
@@ -189,19 +189,19 @@
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item label="key">
-            <el-input v-model="addOrUpdateLocalUserAttributesReq.key"></el-input>
+            <el-input v-model="addOrUpdateUserAttributesReq.key"></el-input>
           </el-form-item>
           <el-form-item label="prop">
-            <el-input v-model="addOrUpdateLocalUserAttributesReq.prop"></el-input>
+            <el-input v-model="addOrUpdateUserAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="addOrUpdateLocalUserAttributes" style="border-radius: 4px">addOrUpdateLocalUserAttributes</el-button>
+            <el-button type="primary" @click="addOrUpdateUserAttributes" style="border-radius: 4px">addOrUpdateUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateLocalUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">查询某指定用户指定属性名的属性</p>
@@ -246,13 +246,13 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="getRoomUserList" style="border-radius: 4px">getRoomUserList</el-button>
+            <el-button type="primary" @click="getMembers" style="border-radius: 4px">getMembers</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomUserListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getMembersRes}}</p>
     </div>
 
     <p class="text-unit">查询单个或多个频道的成员人数</p>
@@ -278,12 +278,7 @@
     <p class="text-unit">设置频道属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <!--
-          <el-form-item label="roomId">
-            <el-input v-model="setRoomAttributesReq.roomId"></el-input>
-          </el-form-item>
-          -->          
+        <el-form :inline="true"  size="small">     
           <el-form-item label="key">
             <el-input v-model="setRoomAttributesReq.key"></el-input>
           </el-form-item>
@@ -493,26 +488,26 @@
         userRegion: 'cn',
         setUserRegionRes: '',
         joinOrLeaveRes: '',
-        setLocalUserAttributesReq: {
+        setUserAttributesReq: {
           key: TEST_ROLE_KEY,
           prop: 'teacher',
         },
-        setLocalUserAttributesRes: '',
+        setUserAttributesRes: '',
         deleteUserAttributesReq: {
           keys: TEST_ROLE_KEY,
           roomId: TEST_ROOM_ID,
         },
         deleteUserAttributesRes: '',
-        clearLocalUserAttributesRes: '',
-        addOrUpdateLocalUserAttributesReq: {
+        clearUserAttributesRes: '',
+        addOrUpdateUserAttributesReq: {
           key: TEST_ROLE_KEY,
           prop: 'student',
         },
-        addOrUpdateLocalUserAttributesRes: '',
-        getRoomUserListReq: {
+        addOrUpdateUserAttributesRes: '',
+        getMembersReq: {
           roomId: TEST_ROOM_ID,
         },
-        getRoomUserListRes: '',
+        getMembersRes: '',
         getUserAttributesReq: {
           uid: UID,
         },
@@ -522,10 +517,10 @@
           keys: TEST_ROLE_KEY,
         },
         getUserAttributesByKeysRes: '',
-        sendMessageToRoomReq: {
-          content: 'js_sdk sendMessageToRoom',
+        sendMessageReq: {
+          content: 'js_sdk sendMessage',
         },
-        sendMessageToRoomRes: "",
+        sendMessageRes: "",
         sendMessageToUserReq: {
           content: 'js_sdk sendMessageToUser',
           receiver: UID,
@@ -616,7 +611,7 @@
         });
       },
       // 初始化RoomService
-      initRoom() {
+      initClient() {
         if (!this.hummer) {
           console.log("hummer is null");
           return;
@@ -628,7 +623,7 @@
         }
         
         // 初始化RoomService
-        this.client = this.hummer.createInstance();
+        this.client = this.hummer.createClient();
 
         // 接收P2P消息
         this.onReceiveMessage();
@@ -689,27 +684,27 @@
           this.joinOrLeaveRes = JSON.stringify(err);
         });
       },
-      sendMessageToRoom() {
+      sendMessage() {
         if (!this.rooms[this.regionRoomId])
           return;
 
-        let content = this.sendMessageToRoomReq.content;
+        let content = this.sendMessageReq.content;
         
-        this.sendMessageToRoomRes = '';
-        this.rooms[this.regionRoomId].room.sendMessageToRoom({
+        this.sendMessageRes = '';
+        this.rooms[this.regionRoomId].room.sendMessage({
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
         }).then(res => {
-          console.log("sendMessageToRoom Res: " + JSON.stringify(res));
-          this.sendMessageToRoomRes = JSON.stringify(res);
+          console.log("sendMessage Res: " + JSON.stringify(res));
+          this.sendMessageRes = JSON.stringify(res);
 
           console.log("消息队列mq_room_data: " + JSON.stringify(this.mq_room_data));
         }).catch(err => {
-          console.error("sendMessageToRoom err:", err);
-          this.sendMessageToRoomRes = JSON.stringify(err);
+          console.error("sendMessage err:", err);
+          this.sendMessageRes = JSON.stringify(err);
         });
       },
-      setLocalUserAttributes() {
+      setUserAttributes() {
         if (!this.rooms[this.regionRoomId])
           return;
 
@@ -720,21 +715,21 @@
           "Extention": "ex"
         };
   
-        let key = this.setLocalUserAttributesReq.key;
-        let prop = this.setLocalUserAttributesReq.prop;
+        let key = this.setUserAttributesReq.key;
+        let prop = this.setUserAttributesReq.prop;
         attributes[key] = prop;
         
         let req = { attributes };
-        this.setLocalUserAttributesRes = '';
-        this.rooms[this.regionRoomId].room.setLocalUserAttributes(req).then(res => {
-          console.log("setLocalUserAttributes Res: ", res);
-          this.setLocalUserAttributesRes = JSON.stringify(res);
+        this.setUserAttributesRes = '';
+        this.rooms[this.regionRoomId].room.setUserAttributes(req).then(res => {
+          console.log("setUserAttributes Res: ", res);
+          this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("setLocalUserAttributes err:", err);
-          this.setLocalUserAttributesRes = JSON.stringify(err);
+          console.error("setUserAttributes err:", err);
+          this.setUserAttributesRes = JSON.stringify(err);
         });
       },
-      deleteLocalUserAttributesByKeys() {
+      deleteUserAttributesByKeys() {
         if (!this.rooms[this.regionRoomId])
           return;
 
@@ -750,29 +745,29 @@
         let req = { keys };
         this.deleteUserAttributesRes = '';
 
-        this.rooms[this.regionRoomId].room.deleteLocalUserAttributesByKeys(req).then(res => {
-          console.log("deleteLocalUserAttributesByKeys Res: ", res);
+        this.rooms[this.regionRoomId].room.deleteUserAttributesByKeys(req).then(res => {
+          console.log("deleteUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
-          console.error("deleteLocalUserAttributesByKeys err:", err);
+          console.error("deleteUserAttributesByKeys err:", err);
           this.deleteUserAttributesRes = JSON.stringify(err);
         });
       },
-      clearLocalUserAttributes() {
+      clearUserAttributes() {
         if (!this.rooms[this.regionRoomId])
           return;
 
-        this.clearLocalUserAttributesRes = '';
+        this.clearUserAttributesRes = '';
 
-        this.rooms[this.regionRoomId].room.clearLocalUserAttributes().then(res => {
-          console.log("clearLocalUserAttributes Res: ", res);
-          this.clearLocalUserAttributesRes = JSON.stringify(res);
+        this.rooms[this.regionRoomId].room.clearUserAttributes().then(res => {
+          console.log("clearUserAttributes Res: ", res);
+          this.clearUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
-          console.error("clearLocalUserAttributes err:", err);
-          this.clearLocalUserAttributesRes = JSON.stringify(err);
+          console.error("clearUserAttributes err:", err);
+          this.clearUserAttributesRes = JSON.stringify(err);
         });
       },
-      addOrUpdateLocalUserAttributes() {
+      addOrUpdateUserAttributes() {
         if (!this.rooms[this.regionRoomId])
           return;
 
@@ -780,31 +775,31 @@
           "Name": "awu",
         };
   
-        let key = this.addOrUpdateLocalUserAttributesReq.key;
-        let prop = this.addOrUpdateLocalUserAttributesReq.prop;
+        let key = this.addOrUpdateUserAttributesReq.key;
+        let prop = this.addOrUpdateUserAttributesReq.prop;
         attributes[key] = prop;
         
         let req = { attributes };
-        this.addOrUpdateLocalUserAttributesRes = '';
-        this.rooms[this.regionRoomId].room.addOrUpdateLocalUserAttributes(req).then(res => {
-          console.log("addOrUpdateLocalUserAttributes Res: ", res);
-          this.addOrUpdateLocalUserAttributesRes = JSON.stringify(res);
+        this.addOrUpdateUserAttributesRes = '';
+        this.rooms[this.regionRoomId].room.addOrUpdateUserAttributes(req).then(res => {
+          console.log("addOrUpdateUserAttributes Res: ", res);
+          this.addOrUpdateUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("addOrUpdateLocalUserAttributes err:", err);
-          this.addOrUpdateLocalUserAttributesRes = JSON.stringify(err);
+          console.error("addOrUpdateUserAttributes err:", err);
+          this.addOrUpdateUserAttributesRes = JSON.stringify(err);
         });
       },
-      getRoomUserList() {
+      getMembers() {
         if (!this.rooms[this.regionRoomId])
           return;
 
-        this.getRoomUserListRes = '';
-        this.rooms[this.regionRoomId].room.getRoomUserList().then(res => {
-          console.log("getRoomUserList res:", res);
-          this.getRoomUserListRes = JSON.stringify(res);
+        this.getMembersRes = '';
+        this.rooms[this.regionRoomId].room.getMembers().then(res => {
+          console.log("getMembers res:", res);
+          this.getMembersRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("getRoomUserList err:", err);
-          this.getRoomUserListRes = JSON.stringify(err);
+          console.error("getMembers err:", err);
+          this.getMembersRes = JSON.stringify(err);
         });
       },
       getUserAttributes() {
@@ -880,19 +875,16 @@
           "Extention": "ex"
         };
   
-        let region = this.rooms[this.regionRoomId].region;
-        let roomId = this.rooms[this.regionRoomId].roomId;
-
         let key = this.setRoomAttributesReq.key;
         let prop = this.setRoomAttributesReq.prop;
         attributes[key] = prop;
         
-        let req = { region, roomId, attributes };
+        let req = { attributes };
         console.log('setRoomAttributes: req=', req);
 
         this.setRoomAttributesRes = '';
-        this.client.setRoomAttributes(req).then(res => {
-          console.log("setRoomAttributes Res: ", res);
+        this.rooms[this.regionRoomId].room.setRoomAttributes(req).then(res => {
+          console.log("setRoomAttributes res: ", res);
           this.setRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
           console.error("setRoomAttributes err:", err);
@@ -903,9 +895,6 @@
         if (!this.rooms[this.regionRoomId])
           return;
           
-        let region = this.rooms[this.regionRoomId].region;
-        let roomId = this.rooms[this.regionRoomId].roomId;
-
         let keys_str = this.deleteRoomAttributesByKeysReq.keys;
 
         let keys = [];
@@ -915,12 +904,12 @@
           keys.push(k);
         }
 
-        let req = { region, roomId, keys };
+        let req = { keys };
         console.log('deleteRoomAttributesByKeys: req=', req);
 
         this.deleteRoomAttributesByKeysRes = '';
 
-        this.client.deleteRoomAttributesByKeys(req).then(res => {
+        this.rooms[this.regionRoomId].room.deleteRoomAttributesByKeys(req).then(res => {
           console.log("deleteRoomAttributesByKeys res: ", res);
           this.deleteRoomAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
@@ -932,14 +921,8 @@
         if (!this.rooms[this.regionRoomId])
           return;
 
-        let region = this.rooms[this.regionRoomId].region;
-        let roomId = this.rooms[this.regionRoomId].roomId;
-
-        let req = { region, roomId };
-        console.log('clearRoomAttributes: req=', req);
-        
         this.clearRoomAttributesRes = '';
-        this.client.clearRoomAttributes({ roomId }).then(res => {
+        this.rooms[this.regionRoomId].room.clearRoomAttributes().then(res => {
           console.log("clearRoomAttributes res: ", res);
           this.clearRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -955,18 +938,15 @@
           "owner": "awu",
         };
   
-        let region = this.rooms[this.regionRoomId].region;
-        let roomId = this.rooms[this.regionRoomId].roomId;
-
         let key = this.addOrUpdateRoomAttributesReq.key;
         let prop = this.addOrUpdateRoomAttributesReq.prop;
         attributes[key] = prop;
         
-        let req = { region, roomId, attributes };
+        let req = { attributes };
         console.log('addOrUpdateRoomAttributes: req=', req);
 
         this.addOrUpdateRoomAttributesRes = '';
-        this.client.addOrUpdateRoomAttributes(req).then(res => {
+        this.rooms[this.regionRoomId].room.addOrUpdateRoomAttributes(req).then(res => {
           console.log("addOrUpdateRoomAttributes res: ", res);
           this.addOrUpdateRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -978,14 +958,8 @@
         if (!this.rooms[this.regionRoomId])
           return;
 
-        let region = this.rooms[this.regionRoomId].region;
-        let roomId = this.rooms[this.regionRoomId].roomId;
-        
-        let req = { region, roomId };
-        console.log('getRoomAttributes: req=', req);
-
         this.getRoomAttributesRes = '';
-        this.client.getRoomAttributes(req).then(res => {
+        this.rooms[this.regionRoomId].room.getRoomAttributes().then(res => {
           console.log("getRoomAttributes res:", res);
           this.getRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -997,9 +971,6 @@
         if (!this.rooms[this.regionRoomId])
           return;
         
-        let region = this.rooms[this.regionRoomId].region;
-        let roomId = this.rooms[this.regionRoomId].roomId;
-
         let keys_str = this.getRoomAttributesByKeysReq.keys;
         let keys = [];
         let elements = keys_str.split(",");
@@ -1007,11 +978,11 @@
           keys.push(k);
         }
 
-        let req = { region, roomId, keys };
+        let req = { keys };
         console.log('getRoomAttributesByKeys: req=', req);
 
         this.getRoomAttributesByKeysRes = '';
-        this.client.getRoomAttributesByKeys(req).then(res => {
+        this.rooms[this.regionRoomId].room.getRoomAttributesByKeys(req).then(res => {
           console.log("getRoomAttributesByKeys res:", res);
           this.getRoomAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
