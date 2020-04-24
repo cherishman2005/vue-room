@@ -50,39 +50,17 @@
       </refresh-token>
     </el-dialog>
 
-    <!-- 初始化roomservice -->
-    <p class="text-unit">设置用户归属地</p>
+    <!-- 初始化RoomService -->
+    <p class="text-unit">初始化</p>
     <el-row type="flex">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <!--
-          <el-form-item label="用户归属地">
-            <template>
-              <el-select v-model="userRegion" placeholder="userRegion" style="width:150px;">
-                <el-option
-                  v-for="item in areas"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px" :disabled='userRegionFlag'>setUserRegion</el-button>
-          </el-form-item>
-          -->
           <el-form-item class="search">
             <el-button type="primary"  @click="initClient" style="border-radius: 4px">initClient</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
-    <!--
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserRegionRes}}</p>
-    </div>
-    -->
 
     <!-- 频道消息 -->
     <el-divider content-position="left">频道消息</el-divider>
@@ -502,7 +480,6 @@
           }],
         result: '',
         userRegion: 'cn',
-        setUserRegionRes: '',
         joinOrLeaveRes: '',
         setUserAttributesReq: {
           key: TEST_ROLE_KEY,
@@ -612,22 +589,6 @@
       closeCreateRoomModel() {
         this.$store.commit('updateCreateRoomModelVisible', false)
       },
-      /*
-      setUserRegion() {
-        if (!this.hummer)
-          return;
-
-        this.hummer.setUserRegion({ region: this.userRegion }).then(res => {
-          console.log("setUserRegion res:", res);
-          this.setUserRegionRes = JSON.stringify(res);
-          if (res.rescode == 0) {
-            this.userRegionFlag = true;
-          }
-        }).catch(err => {
-          console.error("setUserRegion err:", err);
-        });
-      },
-      */
       // 初始化RoomService
       initClient() {
         if (!this.hummer) {
