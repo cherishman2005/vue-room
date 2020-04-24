@@ -13,6 +13,18 @@
           <el-form-item label="uid">
             <el-input v-model="uid" disabled style="width:150px;"></el-input>
           </el-form-item>
+          <el-form-item label="用户归属地">
+            <template>
+              <el-select v-model="userRegion" placeholder="userRegion" style="width:150px;">
+                <el-option
+                  v-for="item in areas"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="login" style="border-radius: 4px">login</el-button>
           </el-form-item>
@@ -43,6 +55,7 @@
     <el-row type="flex">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <!--
           <el-form-item label="用户归属地">
             <template>
               <el-select v-model="userRegion" placeholder="userRegion" style="width:150px;">
@@ -58,15 +71,18 @@
           <el-form-item class="search">
             <el-button type="primary"  @click="setUserRegion" style="border-radius: 4px" :disabled='userRegionFlag'>setUserRegion</el-button>
           </el-form-item>
+          -->
           <el-form-item class="search">
             <el-button type="primary"  @click="initClient" style="border-radius: 4px">initClient</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
+    <!--
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserRegionRes}}</p>
     </div>
+    -->
 
     <!-- 频道消息 -->
     <el-divider content-position="left">频道消息</el-divider>
@@ -596,6 +612,7 @@
       closeCreateRoomModel() {
         this.$store.commit('updateCreateRoomModelVisible', false)
       },
+      /*
       setUserRegion() {
         if (!this.hummer)
           return;
@@ -610,6 +627,7 @@
           console.error("setUserRegion err:", err);
         });
       },
+      */
       // 初始化RoomService
       initClient() {
         if (!this.hummer) {
@@ -1039,7 +1057,7 @@
           return;
         
         this.loginRes = '';
-        this.hummer.login({uid: this.uid, token: this.token}).then(res => {
+        this.hummer.login({region: this.userRegion, uid: this.uid, token: this.token}).then(res => {
           console.log("login Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
         }).catch(err => {
