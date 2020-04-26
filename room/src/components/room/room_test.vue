@@ -254,19 +254,19 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="region">
-            <el-input v-model="getRoomUserCountReq.region"></el-input>
+            <el-input v-model="getRoomMemberCountReq.region"></el-input>
           </el-form-item>
           <el-form-item label="roomIds">
-            <el-input v-model="getRoomUserCountReq.roomIds"></el-input>
+            <el-input v-model="getRoomMemberCountReq.roomIds"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="getRoomUserCount" style="border-radius: 4px">getRoomUserCount</el-button>
+            <el-button type="primary" @click="getRoomMemberCount" style="border-radius: 4px">getRoomMemberCount</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomUserCountRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomMemberCountRes}}</p>
     </div>
     
     <p class="text-unit">设置频道属性</p>
@@ -519,11 +519,11 @@
           receiver: UID,
         },
         sendMessageToUserRes: "",
-        getRoomUserCountReq: {
+        getRoomMemberCountReq: {
           region: 'cn',
           roomIds: TEST_ROOM_ID
         },
-        getRoomUserCountRes: '',
+        getRoomMemberCountRes: '',
         setRoomAttributesReq: {
           key: TEST_ROOM_NAME_KEY,
           prop: 'nginx大讲堂',
@@ -625,13 +625,13 @@
 
         let room = this.rooms[this.regionRoomId];
         this.onReceiveRoomMessage(room);
-        this.onNotifyJoinRoom(room);
-        this.onNotifyLeaveRoom(room);
-        this.onNotifyUserCountChange(room);
+        this.onMemberJoined(room);
+        this.onMemberLeft(room);
+        this.onMemberCountUpdated(room);
         // 用户属性变更
-        this.onNotifyUserAttributesChange(room);
+        this.onMemberAttributesUpdated(room);
         // 频道属性变更
-        this.onNotifyRoomAttributesChange(room);
+        this.onRoomAttributesUpdated(room);
       },
       join() {
         if (!this.rooms[this.regionRoomId])
@@ -819,27 +819,27 @@
           this.getUserAttributesByKeysRes = JSON.stringify(err);
         });
       },
-      getRoomUserCount() {
+      getRoomMemberCount() {
         if (!this.client)
           return;
 
-        let region = this.getRoomUserCountReq.region;
+        let region = this.getRoomMemberCountReq.region;
 
-        let roomIdsStr = this.getRoomUserCountReq.roomIds;
+        let roomIdsStr = this.getRoomMemberCountReq.roomIds;
         let roomIds = [];
 
         let elements = roomIdsStr.split(",");
         for (let k of elements) {
           roomIds.push(k);
         }
-        this.getRoomUserCountRes = '';
+        this.getRoomMemberCountRes = '';
 
-        this.client.getRoomUserCount({region, roomIds}).then(res => {
-          console.log("getRoomUserCount res:", res);
-          this.getRoomUserCountRes = JSON.stringify(res);
+        this.client.getRoomMemberCount({region, roomIds}).then(res => {
+          console.log("getRoomMemberCount res:", res);
+          this.getRoomMemberCountRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("getRoomUserCount err:", err);
-          this.getRoomUserCountRes = JSON.stringify(err);
+          console.error("getRoomMemberCount err:", err);
+          this.getRoomMemberCountRes = JSON.stringify(err);
         });
       },
       // 频道属性
@@ -1097,42 +1097,42 @@
           console.log("组播MQ队列mq_room_data: " + JSON.stringify(this.mq_room_data));
         });
       },
-      onNotifyJoinRoom(room) {
-        room.room.on('NotifyJoinRoom', (data) => {
-          console.log(`接收消息NotifyJoinRoom [${room.region}:${room.roomId}]:` + JSON.stringify(data));
+      onMemberJoined(room) {
+        room.room.on('MemberJoined', (data) => {
+          console.log(`接收消息MemberJoined [${room.region}:${room.roomId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `NotifyJoinRoom [${room.region}:${room.roomId}]:` + JSON.stringify(data),
+            message: `MemberJoined [${room.region}:${room.roomId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyLeaveRoom(room) {
-        room.room.on('NotifyLeaveRoom', (data) => {
-          console.log(`接收消息NotifyLeaveRoom [${room.region}:${room.roomId}]:` + JSON.stringify(data));
+      onMemberLeft(room) {
+        room.room.on('MemberLeft', (data) => {
+          console.log(`接收消息MemberLeft [${room.region}:${room.roomId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `NotifyLeaveRoom [${room.region}:${room.roomId}]:` + JSON.stringify(data),
+            message: `MemberLeft [${room.region}:${room.roomId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserCountChange(room) {
-        room.room.on('NotifyUserCountChange', (data) => {
-          console.log(`用户数量变更NotifyUserCountChange [${room.region}:${room.roomId}]: ` + JSON.stringify(data));
+      onMemberCountUpdated(room) {
+        room.room.on('MemberCountUpdated', (data) => {
+          console.log(`用户数量变更MemberCountUpdated [${room.region}:${room.roomId}]: ` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `NotifyUserCountChange [${room.region}:${room.roomId}]: ` + JSON.stringify(data),
+            message: `MemberCountUpdated [${room.region}:${room.roomId}]: ` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserAttributesChange(room) {
+      onMemberAttributesUpdated(room) {
         const roomEvents = [
-          "NotifyUserAttributesSet",
-          "NotifyUserAttributesDelete",
-          "NotifyUserAttributesClear",
-          "NotifyUserAttributesAddOrUpdate"
+          "MemberAttributesSet",
+          "MemberAttributesDeleted",
+          "MemberAttributesCleared",
+          "MemberAttributesAddedOrUpdated"
         ];
         roomEvents.forEach(eventName => {
           room.room.on(eventName, (data) => {
@@ -1145,12 +1145,12 @@
           });
         });
       },
-      onNotifyRoomAttributesChange(room) {
+      onRoomAttributesUpdated(room) {
         const roomEvents = [
-          "NotifyRoomAttributesSet",
-          "NotifyRoomAttributesDelete",
-          "NotifyRoomAttributesClear",
-          "NotifyRoomAttributesAddOrUpdate"
+          "RoomAttributesSet",
+          "RoomAttributesDeleted",
+          "RoomAttributesCleared",
+          "RoomAttributesAddedOrUpdated"
         ];
         roomEvents.forEach(eventName => {
           room.room.on(eventName, (data) => {
@@ -1164,11 +1164,11 @@
         });
       },
       onConnectStatusChange() {
-        this.hummer.on('ConnectionStateChange', (data) => {
-          console.log("=== ConnectionStateChange ===:" + JSON.stringify(data));
+        this.hummer.on('ConnectionStateChanged', (data) => {
+          console.log("=== ConnectionStateChanged ===:" + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `ConnectionStateChange: ` + JSON.stringify(data),
+            message: `ConnectionStateChanged: ` + JSON.stringify(data),
             type: 'success'
           });
         });

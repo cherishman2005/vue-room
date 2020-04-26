@@ -209,7 +209,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getChatRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getChatRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室所有管理员</p>
@@ -226,7 +226,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getChatRoomManagerRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getChatRoomManagerRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室用户数</p>
@@ -234,13 +234,13 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="getUserCount" style="border-radius: 4px">getUserCount</el-button>
+            <el-button type="primary" @click="getUserCount" style="border-radius:4px">getUserCount</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getUserCountRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getUserCountRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室用户列表</p>
@@ -260,13 +260,13 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{getUserListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getUserListRes}}</p>
     </div>
 
     <p class="text-unit">设置用户属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="key">
             <el-input v-model="setUserAttributesReq.key"></el-input>
           </el-form-item>
@@ -280,21 +280,21 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%;height: 46px; text-align:left;" >{{setUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">查询用户属性列表</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="getUserAttributesList" style="border-radius: 4px">getUserAttributesList</el-button>
+            <el-button type="primary" @click="getUserAttributesList" style="border-radius:4px">getUserAttributesList</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getUserAttributesListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%;height:46px; text-align:left;">{{getUserAttributesListRes}}</p>
     </div>
 
     <p class="text-unit">获取实例信息</p>
@@ -302,13 +302,13 @@
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
+            <el-button type="primary" @click="getInstanceInfo" style="border-radius:4px">getInstanceInfo</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getInstanceInfoRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getInstanceInfoRes}}</p>
     </div>
 
   </div>
@@ -353,7 +353,7 @@
           admin: UID,
           uid: '0',
           secs: '3000',
-          reason: "js test KickOffUser",
+          reason: "js KickOffUser",
         },
         kickOffUserRes: '',
         sendGroupMessageReq: {
@@ -410,7 +410,7 @@
 
       this.hummer.setLogLevel(-1);
 
-      this.onConnectStatusChange();
+      this.onConnectionStateChanged();
       this.onTokenExpired();
     },
     destroyed() {
@@ -442,7 +442,7 @@
         
         this.loginRes = '';
         this.hummer.login({uid: this.uid, token: this.token}).then(res => {
-          console.log("login Res: " + JSON.stringify(res));
+          console.log("login res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
         }).catch(err => {
           console.error("login err:", err);
@@ -501,15 +501,15 @@
         console.log('chatrooms=', this.chatrooms);
 
         let client = this.chatrooms[this.regionChatroomId];
-        this.onRecvSingleUserMessage(client);
-        this.onDismissChatRoom(client);
-        this.onUpdateChatRoomAttributes(client);
-        this.onKickOffUser(client);
-        this.onRecvGroupMessage(client);
+        this.onSingleUserMessageReceived(client);
+        this.onChatRoomDismissed(client);
+        this.onChatRoomAttributesUpdated(client);
+        this.onUserKickedOff(client);
+        this.onGroupMessageReceived(client);
         this.onTextChat(client);
-        this.onUserCount(client);
-        this.onUserOnlineChange(client);
-        this.onNotifyUserAttributesSet(client);
+        this.onUserCountUpdated(client);
+        this.onUserOnlineUpdated(client);
+        this.onUserAttributesSet(client);
 
         setStorage("roomid", this.roomid);
       },
@@ -749,7 +749,7 @@
       },
 
       /*  消息接收模块 */
-      onRecvSingleUserMessage(client) {
+      onSingleUserMessageReceived(client) {
         client.chatroom.on('SingleUserMessage', (data) => {
           console.log("接收消息SingleUserMessage： " + JSON.stringify(data));
 
@@ -760,40 +760,40 @@
           });
         });
       },
-      onDismissChatRoom(client) {
-        client.chatroom.on('DismissChatRoom', (data) => {
-          console.log("接收消息DismissChatRoom： " + JSON.stringify(data));
+      onChatRoomDismissed(client) {
+        client.chatroom.on('ChatRoomDismissed', (data) => {
+          console.log("接收消息ChatRoomDismissed： " + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息DismissChatRoomBc： " + JSON.stringify(data),
+            message: "接收消息ChatRoomDismissed： " + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onUpdateChatRoomAttributes(client)  {
-        client.chatroom.on('UpdateChatRoomAttributes', (data) => {
-          console.log("接收消息UpdateChatRoomAttributes：" + JSON.stringify(data));
+      onChatRoomAttributesUpdated(client)  {
+        client.chatroom.on('ChatRoomAttributesUpdated', (data) => {
+          console.log("接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息UpdateChatRoomAttributes：" + JSON.stringify(data),
+            message: "接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onKickOffUser(client) {
-        client.chatroom.on('KickOffUser', (data) => {
-          console.log("接收消息KickOffUser：" + JSON.stringify(data));
+      onUserKickedOff(client) {
+        client.chatroom.on('UserKickedOff', (data) => {
+          console.log("接收消息UserKickedOff：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息KickOffUser：" + JSON.stringify(data),
+            message: "接收消息UserKickedOff：" + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onRecvGroupMessage(client) {
+      onGroupMessageReceived(client) {
         client.chatroom.on('GroupMessage', (data) => {
           console.log("接收消息GroupMessage：" + JSON.stringify(data));
 
@@ -810,50 +810,50 @@
 
           this.$message({
             duration: 3000,
-            message: "接收消息TextChatBc：" + JSON.stringify(data),
+            message: "接收消息TextChat：" + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onUserCount(client) {
-        client.chatroom.on('NotifyUserCount', (data) => {
-          console.log("接收消息NotifyUserCount：" + JSON.stringify(data));
+      onUserCountUpdated(client) {
+        client.chatroom.on('UserCountUpdated', (data) => {
+          console.log("接收消息UserCountUpdated：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息NotifyUserCount：" + JSON.stringify(data),
+            message: "接收消息UserCountUpdated：" + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onNotifyUserAttributesSet(client) {
-        client.chatroom.on('NotifyUserAttributesSet', (data) => {
-          console.log("接收消息NotifyUserAttributesSet：" + JSON.stringify(data));
+      onUserAttributesSet(client) {
+        client.chatroom.on('UserAttributesSet', (data) => {
+          console.log("接收消息UserAttributesSet：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息NotifyUserAttributesSet：" + JSON.stringify(data),
+            message: "接收消息UserAttributesSet：" + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onUserOnlineChange(client) {
-        client.chatroom.on('NotifyUserOnlineChange', (data) => {
-          console.log("接收消息NotifyUserOnlineChange：" + JSON.stringify(data));
+      onUserOnlineUpdated(client) {
+        client.chatroom.on('UserOnlineUpdated', (data) => {
+          console.log("接收消息UserOnlineUpdated：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息NotifyUserOnlineChange：" + JSON.stringify(data),
+            message: "接收消息UserOnlineUpdated：" + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onConnectStatusChange() {
-        this.hummer.on('ConnectionStateChange', (data) => {
-          console.log("=== ConnectionStateChange ===:" + JSON.stringify(data));
+      onConnectionStateChanged() {
+        this.hummer.on('ConnectionStateChanged', (data) => {
+          console.log("=== ConnectionStateChanged ===:" + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `ConnectionStateChange: ` + JSON.stringify(data),
+            message: `ConnectionStateChanged: ` + JSON.stringify(data),
             type: 'success'
           });
         });
