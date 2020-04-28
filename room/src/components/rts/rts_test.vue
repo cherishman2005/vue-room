@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <h2 style="text-align:left;">Channel调测系统（Channel Service Tutorial）</h2>
+    <h2 style="text-align:left;">RTS调测系统（Real-Time Signal Service Tutorial）</h2>
 
     <!-- 登录/登出 -->
     <p class="text-unit">登录/登出</p>
@@ -26,19 +26,19 @@
             </template>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="login" style="border-radius: 4px">login</el-button>
+            <el-button type="primary" @click="login" style="border-radius:4px">login</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="logout" style="border-radius: 4px">logout</el-button>
+            <el-button type="primary" @click="logout" style="border-radius:4px">logout</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="showRefreshTokenModel" style="border-radius: 4px">refreshToken</el-button>
+            <el-button type="primary" @click="showRefreshTokenModel" style="border-radius:4px">refreshToken</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px;text-align:left;">{{loginRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{loginRes}}</p>
     </div>
 
     <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
@@ -51,12 +51,12 @@
     </el-dialog>
 
     <!-- 初始化RoomService -->
-    <p class="text-unit">初始化</p>
+    <p class="text-unit">初始化RTS</p>
     <el-row type="flex">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="initClient" style="border-radius: 4px">initClient</el-button>
+            <el-button type="primary" @click="initRTS" style="border-radius: 4px">initRTS</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -70,7 +70,7 @@
       <el-col :span="24" style="height:35px;text-align:left;">
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary"  @click="showCreateRoomModel" style="border-radius: 4px">createRoom</el-button>
+            <el-button type="primary" @click="showCreateRoomModel" style="border-radius: 4px">createRoom</el-button>
           </el-form-item>
           <el-form-item label="频道列表[region:roomId](用于选择频道)">
             <template>
@@ -97,10 +97,10 @@
       <el-col :span="24" style="height: 35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="join" style="border-radius: 4px">join</el-button>
+            <el-button type="primary" @click="join" style="border-radius:4px">join</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="leave" style="border-radius: 4px">leave</el-button>
+            <el-button type="primary" @click="leave" style="border-radius:4px">leave</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -124,7 +124,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{sendMessageRes}}</p>
     </div>
 
     <p class="text-unit">设置用户属性</p>
@@ -266,7 +266,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomMemberCountRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getRoomMemberCountRes}}</p>
     </div>
     
     <p class="text-unit">设置频道属性</p>
@@ -286,7 +286,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{setRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">删除频道某些属性</p>
@@ -297,13 +297,13 @@
             <el-input v-model="deleteRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="deleteRoomAttributesByKeys" style="border-radius: 4px">deleteRoomAttributesByKeys</el-button>
+            <el-button type="primary" @click="deleteRoomAttributesByKeys" style="border-radius:4px">deleteRoomAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{deleteRoomAttributesByKeysRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{deleteRoomAttributesByKeysRes}}</p>
     </div>
 
     <p class="text-unit">删除频道所有属性</p>
@@ -311,13 +311,13 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="clearRoomAttributes" style="border-radius: 4px">clearRoomAttributes</el-button>
+            <el-button type="primary" @click="clearRoomAttributes" style="border-radius:4px">clearRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height:46px; text-align:left;" >{{clearRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{clearRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">增加或更新频道某些属性</p>
@@ -331,13 +331,13 @@
             <el-input v-model="addOrUpdateRoomAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="addOrUpdateRoomAttributes" style="border-radius: 4px">addOrUpdateRoomAttributes</el-button>
+            <el-button type="primary" @click="addOrUpdateRoomAttributes" style="border-radius:4px">addOrUpdateRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{addOrUpdateRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">查询某指定频道指定属性名的属性</p>
@@ -348,13 +348,13 @@
             <el-input v-model="getRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="getRoomAttributesByKeys" style="border-radius: 4px">getRoomAttributesByKeys</el-button>
+            <el-button type="primary" @click="getRoomAttributesByKeys" style="border-radius:4px">getRoomAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomAttributesByKeysRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getRoomAttributesByKeysRes}}</p>
     </div>
 
     <p class="text-unit">查询某指定频道的全部属性</p>
@@ -362,7 +362,7 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="getRoomAttributes" style="border-radius: 4px">getRoomAttributes</el-button>
+            <el-button type="primary" @click="getRoomAttributes" style="border-radius:4px">getRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -454,7 +454,7 @@
   const TEST_ROOM_NAME_KEY = 'room_name';
 
   export default {
-    name : 'room-test',
+    name : 'rts-test',
     data() {
       return {
         hummer: null,
@@ -589,8 +589,8 @@
       closeCreateRoomModel() {
         this.$store.commit('updateCreateRoomModelVisible', false)
       },
-      // 初始化RoomService
-      initClient() {
+      // 初始化RTS
+      initRTS() {
         if (!this.hummer) {
           console.log("hummer is null");
           return;
@@ -601,10 +601,10 @@
           return;
         }
         
-        // 初始化RoomService
-        this.client = this.hummer.createClient();
+        // 初始化RTS
+        this.client = this.hummer.createRTS();
 
-        // 接收P2P消息
+        // 接收Peer消息
         this.onReceiveMessage();
       },
       getRoom(data) {
@@ -1018,7 +1018,11 @@
           return;
         
         this.loginRes = '';
-        this.hummer.login({region: this.userRegion, uid: this.uid, token: this.token}).then(res => {
+        this.hummer.login({
+          region: this.userRegion, 
+          uid: this.uid, 
+          token: this.token
+        }).then(res => {
           console.log("login Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
         }).catch(err => {

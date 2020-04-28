@@ -12,7 +12,7 @@ const im_perf = resolve => require(['@/components/im/im_perf.vue'], resolve)
 const signal_test = resolve => require(['@/components/signal/signal_test.vue'], resolve)
 const signal = resolve => require(['@/components/signal/signal.vue'], resolve)
 
-const room_test = resolve => require(['@/components/room/room_test.vue'], resolve)
+const rts_test = resolve => require(['@/components/rts/rts_test.vue'], resolve)
 
 Vue.use(Router);
 const routes = [
@@ -25,7 +25,7 @@ const routes = [
   {path: '/im-perf', component: im_perf, name: "im-perf" },
   {path: '/signal-test', component: signal_test, name: "signal-test" },
   {path: '/signal', component: signal, name: "signal" },
-  {path: '/room-test', component: room_test, name: "room-test" },
+  {path: '/rts-test', component: rts_test, name: "rts-test" },
 ];
 
 const router = new Router({
