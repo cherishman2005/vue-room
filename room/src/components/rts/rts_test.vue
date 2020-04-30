@@ -17,7 +17,7 @@
             <template>
               <el-select v-model="userRegion" placeholder="userRegion" style="width:150px;">
                 <el-option
-                  v-for="item in areas"
+                  v-for="item in regions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -200,8 +200,8 @@
 
     <p class="text-unit">查询某指定用户指定属性名的属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="uid">
             <el-input v-model="getUserAttributesByKeysReq.uid"></el-input>
           </el-form-item>
@@ -254,7 +254,16 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="region">
-            <el-input v-model="getRoomMemberCountReq.region"></el-input>
+            <template>
+              <el-select v-model="getRoomMemberCountReq.region" placeholder="region" style="width:150px;">
+                <el-option
+                  v-for="item in regions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
           </el-form-item>
           <el-form-item label="roomIds">
             <el-input v-model="getRoomMemberCountReq.roomIds"></el-input>
@@ -272,7 +281,7 @@
     <p class="text-unit">设置频道属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">     
+        <el-form :inline="true" size="small">     
           <el-form-item label="key">
             <el-input v-model="setRoomAttributesReq.key"></el-input>
           </el-form-item>
@@ -342,8 +351,8 @@
 
     <p class="text-unit">查询某指定频道指定属性名的属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="keys">
             <el-input v-model="getRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
@@ -464,8 +473,7 @@
         uid: UID,
         token: TOKEN,
         region: REGION || 'cn',
-        area: 'cn',
-        areas: getRegions(),
+        regions: getRegions(),
         userRegionFlag: false,
         regionRoomId: null,
         regionRoomIds: [],
@@ -589,6 +597,44 @@
       closeCreateRoomModel() {
         this.$store.commit('updateCreateRoomModelVisible', false)
       },
+      login() {
+        if (!this.hummer)
+          return;
+        
+        this.loginRes = '';
+        this.hummer.login({
+          region: this.userRegion, 
+          uid: this.uid, 
+          token: this.token
+        }).then(res => {
+          console.log("login Res: " + JSON.stringify(res));
+          this.loginRes = JSON.stringify(res);
+        }).catch(err => {
+          console.error("login err:", err);
+          this.loginRes = JSON.stringify(err);
+        });
+      },
+      logout() {
+        if (!this.hummer)
+          return;
+        
+        this.loginRes = '';
+        this.hummer.logout().then(res => {
+          console.log("logout Res: " + JSON.stringify(res));
+          this.loginRes = JSON.stringify(res);
+          if (res.rescode === 0) {
+            this.rooms = [];
+            this.regionRoomIds = [];
+          }
+        }).catch(err => {
+          console.error("logout err:", err);
+          this.loginRes = JSON.stringify(err);
+        });
+      },
+      refreshToken(data) {
+        this.loginRes = JSON.stringify(data);
+        console.log('refreshToken res=', data);
+      },
       // 初始化RTS
       initRTS() {
         if (!this.hummer) {
@@ -623,26 +669,27 @@
 
         console.log('rooms=', this.rooms);
 
-        let room = this.rooms[this.regionRoomId];
-        this.onReceiveRoomMessage(room);
-        this.onMemberJoined(room);
-        this.onMemberLeft(room);
-        this.onMemberCountUpdated(room);
+        let rtsRoom = this.rooms[this.regionRoomId];
+        this.onReceiveRoomMessage(rtsRoom);
+        this.onMemberJoined(rtsRoom);
+        this.onMemberLeft(rtsRoom);
+        this.onMemberCountUpdated(rtsRoom);
         // 用户属性变更
-        this.onMemberAttributesUpdated(room);
+        this.onMemberAttributesUpdated(rtsRoom);
         // 频道属性变更
-        this.onRoomAttributesUpdated(room);
+        this.onRoomAttributesUpdated(rtsRoom);
       },
       join() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
-
+        
         let extra = {"Name": "阿武"};
         let params = { extra };
         console.log("join Req: " + JSON.stringify(params));
         
         this.joinOrLeaveRes = '';
-        this.rooms[this.regionRoomId].room.join(params).then(res => {
+        rtsRoom.room.join(params).then(res => {
           console.log("自己进入频道join res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
@@ -651,11 +698,12 @@
         });
       },
       leave() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         this.joinOrLeaveRes = '';
-        this.rooms[this.regionRoomId].room.leave().then(res => {
+        rtsRoom.room.leave().then(res => {
           console.log("自己离开频道leave res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
@@ -664,13 +712,14 @@
         });
       },
       sendMessage() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
-
+        
         let content = this.sendMessageReq.content;
         
         this.sendMessageRes = '';
-        this.rooms[this.regionRoomId].room.sendMessage({
+        rtsRoom.room.sendMessage({
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
         }).then(res => {
@@ -684,7 +733,8 @@
         });
       },
       setUserAttributes() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         let attributes = {
@@ -700,7 +750,7 @@
         
         let req = { attributes };
         this.setUserAttributesRes = '';
-        this.rooms[this.regionRoomId].room.setUserAttributes(req).then(res => {
+        rtsRoom.room.setUserAttributes(req).then(res => {
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -709,7 +759,8 @@
         });
       },
       deleteUserAttributesByKeys() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         let keys_str = this.deleteUserAttributesReq.keys;
@@ -724,7 +775,7 @@
         let req = { keys };
         this.deleteUserAttributesRes = '';
 
-        this.rooms[this.regionRoomId].room.deleteUserAttributesByKeys(req).then(res => {
+        rtsRoom.room.deleteUserAttributesByKeys(req).then(res => {
           console.log("deleteUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -733,12 +784,13 @@
         });
       },
       clearUserAttributes() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         this.clearUserAttributesRes = '';
 
-        this.rooms[this.regionRoomId].room.clearUserAttributes().then(res => {
+        rtsRoom.room.clearUserAttributes().then(res => {
           console.log("clearUserAttributes Res: ", res);
           this.clearUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -747,7 +799,8 @@
         });
       },
       addOrUpdateUserAttributes() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         let attributes = {
@@ -760,7 +813,7 @@
         
         let req = { attributes };
         this.addOrUpdateUserAttributesRes = '';
-        this.rooms[this.regionRoomId].room.addOrUpdateUserAttributes(req).then(res => {
+        rtsRoom.room.addOrUpdateUserAttributes(req).then(res => {
           console.log("addOrUpdateUserAttributes Res: ", res);
           this.addOrUpdateUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -769,11 +822,12 @@
         });
       },
       getMembers() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         this.getMembersRes = '';
-        this.rooms[this.regionRoomId].room.getMembers().then(res => {
+        rtsRoom.room.getMembers().then(res => {
           console.log("getMembers res:", res);
           this.getMembersRes = JSON.stringify(res);
         }).catch(err => {
@@ -782,14 +836,15 @@
         });
       },
       getUserAttributes() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         let uid = this.getUserAttributesReq.uid;
         let req = { uid };
 
         this.getUserAttributesRes = '';
-        this.rooms[this.regionRoomId].room.getUserAttributes(req).then(res => {
+        rtsRoom.room.getUserAttributes(req).then(res => {
           console.log("getUserAttributes res:", res);
           this.getUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -798,7 +853,8 @@
         });
       },
       getUserAttributesByKeys() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         let keys_str = this.getUserAttributesByKeysReq.keys;
@@ -811,7 +867,7 @@
         let req = { uid, keys };
 
         this.getUserAttributesByKeysRes = '';
-        this.rooms[this.regionRoomId].room.getUserAttributesByKeys(req).then(res => {
+        rtsRoom.room.getUserAttributesByKeys(req).then(res => {
           console.log("getUserAttributesByKeys res:", res);
           this.getUserAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
@@ -844,7 +900,8 @@
       },
       // 频道属性
       setRoomAttributes() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         let attributes = {
@@ -862,7 +919,7 @@
         console.log('setRoomAttributes: req=', req);
 
         this.setRoomAttributesRes = '';
-        this.rooms[this.regionRoomId].room.setRoomAttributes(req).then(res => {
+        rtsRoom.room.setRoomAttributes(req).then(res => {
           console.log("setRoomAttributes res: ", res);
           this.setRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -871,7 +928,8 @@
         });
       },
       deleteRoomAttributesByKeys() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
           
         let keys_str = this.deleteRoomAttributesByKeysReq.keys;
@@ -888,7 +946,7 @@
 
         this.deleteRoomAttributesByKeysRes = '';
 
-        this.rooms[this.regionRoomId].room.deleteRoomAttributesByKeys(req).then(res => {
+        rtsRoom.room.deleteRoomAttributesByKeys(req).then(res => {
           console.log("deleteRoomAttributesByKeys res: ", res);
           this.deleteRoomAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
@@ -897,11 +955,12 @@
         });
       },
       clearRoomAttributes() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         this.clearRoomAttributesRes = '';
-        this.rooms[this.regionRoomId].room.clearRoomAttributes().then(res => {
+        rtsRoom.room.clearRoomAttributes().then(res => {
           console.log("clearRoomAttributes res: ", res);
           this.clearRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -910,7 +969,8 @@
         });
       },
       addOrUpdateRoomAttributes() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         let attributes = {
@@ -925,7 +985,7 @@
         console.log('addOrUpdateRoomAttributes: req=', req);
 
         this.addOrUpdateRoomAttributesRes = '';
-        this.rooms[this.regionRoomId].room.addOrUpdateRoomAttributes(req).then(res => {
+        rtsRoom.room.addOrUpdateRoomAttributes(req).then(res => {
           console.log("addOrUpdateRoomAttributes res: ", res);
           this.addOrUpdateRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -934,11 +994,12 @@
         });
       },
       getRoomAttributes() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
 
         this.getRoomAttributesRes = '';
-        this.rooms[this.regionRoomId].room.getRoomAttributes().then(res => {
+        rtsRoom.room.getRoomAttributes().then(res => {
           console.log("getRoomAttributes res:", res);
           this.getRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -947,7 +1008,8 @@
         });
       },
       getRoomAttributesByKeys() {
-        if (!this.rooms[this.regionRoomId])
+        const rtsRoom = this.rooms[this.regionRoomId];
+        if (!rtsRoom)
           return;
         
         let keys_str = this.getRoomAttributesByKeysReq.keys;
@@ -961,7 +1023,7 @@
         console.log('getRoomAttributesByKeys: req=', req);
 
         this.getRoomAttributesByKeysRes = '';
-        this.rooms[this.regionRoomId].room.getRoomAttributesByKeys(req).then(res => {
+        rtsRoom.room.getRoomAttributesByKeys(req).then(res => {
           console.log("getRoomAttributesByKeys res:", res);
           this.getRoomAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
@@ -1013,44 +1075,6 @@
           this.queryUsersOnlineStatusRes = JSON.stringify(err);
         });
       },
-      login() {
-        if (!this.hummer)
-          return;
-        
-        this.loginRes = '';
-        this.hummer.login({
-          region: this.userRegion, 
-          uid: this.uid, 
-          token: this.token
-        }).then(res => {
-          console.log("login Res: " + JSON.stringify(res));
-          this.loginRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("login err:", err);
-          this.loginRes = JSON.stringify(err);
-        });
-      },
-      logout() {
-        if (!this.hummer)
-          return;
-        
-        this.loginRes = '';
-        this.hummer.logout().then(res => {
-          console.log("logout Res: " + JSON.stringify(res));
-          this.loginRes = JSON.stringify(res);
-          if (res.rescode === 0) {
-            this.rooms = [];
-            this.regionRoomIds = [];
-          }
-        }).catch(err => {
-          console.error("logout err:", err);
-          this.loginRes = JSON.stringify(err);
-        });
-      },
-      refreshToken(data) {
-        this.loginRes = JSON.stringify(data);
-        console.log('refreshToken res=', data);
-      },
       getInstanceInfo() {
         if (!this.hummer)
           return;
@@ -1086,52 +1110,52 @@
         });
       },
       /* 组播消息接收模块 */
-      onReceiveRoomMessage(room) {
-        room.room.on('RoomMessage', (data) => {
+      onReceiveRoomMessage(rtsRoom) {
+        rtsRoom.room.on('RoomMessage', (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-          console.log(`接收组播消息RoomMessage: [${room.region}:${room.roomId}]:` + JSON.stringify(data));
+          console.log(`接收组播消息RoomMessage: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
           this.mq_room_data.push(data);
 
           this.$message({
             duration: 3000,
-            message: `RoomMessage: [${room.region}:${room.roomId}]:` + JSON.stringify(data),
+            message: `RoomMessage: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
             type: 'success'
           });
 
           console.log("组播MQ队列mq_room_data: " + JSON.stringify(this.mq_room_data));
         });
       },
-      onMemberJoined(room) {
-        room.room.on('MemberJoined', (data) => {
-          console.log(`接收消息MemberJoined [${room.region}:${room.roomId}]:` + JSON.stringify(data));
+      onMemberJoined(rtsRoom) {
+        rtsRoom.room.on('MemberJoined', (data) => {
+          console.log(`接收消息MemberJoined [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `MemberJoined [${room.region}:${room.roomId}]:` + JSON.stringify(data),
+            message: `MemberJoined [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onMemberLeft(room) {
-        room.room.on('MemberLeft', (data) => {
-          console.log(`接收消息MemberLeft [${room.region}:${room.roomId}]:` + JSON.stringify(data));
+      onMemberLeft(rtsRoom) {
+        rtsRoom.room.on('MemberLeft', (data) => {
+          console.log(`接收消息MemberLeft [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `MemberLeft [${room.region}:${room.roomId}]:` + JSON.stringify(data),
+            message: `MemberLeft [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onMemberCountUpdated(room) {
-        room.room.on('MemberCountUpdated', (data) => {
-          console.log(`用户数量变更MemberCountUpdated [${room.region}:${room.roomId}]: ` + JSON.stringify(data));
+      onMemberCountUpdated(rtsRoom) {
+        rtsRoom.room.on('MemberCountUpdated', (data) => {
+          console.log(`用户数量变更MemberCountUpdated [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `MemberCountUpdated [${room.region}:${room.roomId}]: ` + JSON.stringify(data),
+            message: `MemberCountUpdated [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
-      onMemberAttributesUpdated(room) {
+      onMemberAttributesUpdated(rtsRoom) {
         const roomEvents = [
           "MemberAttributesSet",
           "MemberAttributesDeleted",
@@ -1139,17 +1163,17 @@
           "MemberAttributesAddedOrUpdated"
         ];
         roomEvents.forEach(eventName => {
-          room.room.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${room.region}:${room.roomId}]: ` + JSON.stringify(data));
+          rtsRoom.room.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
             this.$message({
               duration: 3000,
-              message: `${eventName} [${room.region}:${room.roomId}]: ` + JSON.stringify(data),
+              message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
               type: 'success'
             });
           });
         });
       },
-      onRoomAttributesUpdated(room) {
+      onRoomAttributesUpdated(rtsRoom) {
         const roomEvents = [
           "RoomAttributesSet",
           "RoomAttributesDeleted",
@@ -1157,11 +1181,11 @@
           "RoomAttributesAddedOrUpdated"
         ];
         roomEvents.forEach(eventName => {
-          room.room.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${room.region}:${room.roomId}]: ` + JSON.stringify(data));
+          rtsRoom.room.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
             this.$message({
               duration: 3000,
-              message: `${eventName} [${room.region}:${room.roomId}]: ` + JSON.stringify(data),
+              message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
               type: 'success'
             });
           });
