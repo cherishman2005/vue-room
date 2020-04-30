@@ -52,7 +52,7 @@
             <el-input v-model="roomid" style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="showCreateGroupModel" style="border-radius: 4px">createChatRoomId</el-button>
+            <el-button type="primary" @click="showCreateGroupModel" style="border-radius: 4px">createChatRoom</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="initChatRoom" style="border-radius: 4px">initChatRoom</el-button>

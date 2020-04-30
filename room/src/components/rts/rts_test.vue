@@ -678,6 +678,8 @@
         this.onMemberAttributesUpdated(rtsRoom);
         // 频道属性变更
         this.onRoomAttributesUpdated(rtsRoom);
+
+        this.onRoomMemberOffline(rtsRoom);
       },
       join() {
         const rtsRoom = this.rooms[this.regionRoomId];
@@ -1179,6 +1181,21 @@
           "RoomAttributesDeleted",
           "RoomAttributesCleared",
           "RoomAttributesAddedOrUpdated"
+        ];
+        roomEvents.forEach(eventName => {
+          rtsRoom.room.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
+            this.$message({
+              duration: 3000,
+              message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
+              type: 'success'
+            });
+          });
+        });
+      },
+      onRoomMemberOffline(rtsRoom) {
+        const roomEvents = [
+          "RoomMemberOffline"
         ];
         roomEvents.forEach(eventName => {
           rtsRoom.room.on(eventName, (data) => {
