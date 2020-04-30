@@ -648,7 +648,7 @@
         }
         
         // 初始化RTS
-        this.client = this.hummer.createRTS();
+        this.client = this.hummer.createRTSInstance();
 
         // 接收Peer消息
         this.onReceiveMessage();

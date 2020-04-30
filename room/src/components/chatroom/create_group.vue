@@ -72,20 +72,20 @@
           if (!valid) {
             return false;
           }
-          this.createChatRoomId();
+          this.createChatRoom();
         })
       },
       closeCreateGroupModel() {
         this.$store.commit('updateCreateGroupModelVisible', false);
       },
-      createChatRoomId() {
+      createChatRoom() {
         if (!this.hummer) {
           console.warn('hummer is null');
           this.closeCreateChannelModel();
           return;
         }
 
-        let props = {
+        let attributes = {
           "Name": "Hummer聊天室",
           "Description": "测试",
           "Bulletin": "公告",
@@ -93,15 +93,15 @@
         };
         
         let region = this.form.region;
-        let params = {region, props};
-        this.hummer.createChatRoomId(params).then((res) => {
-          console.log("createChatRoomId res: ", res);
+        let params = {region, attributes};
+        this.hummer.createChatRoom(params).then((res) => {
+          console.log("createChatRoom res: ", res);
           if (res.rescode === 0) {
             let data = {
               region: this.form.region,
               roomid: res.roomid
             };
-            this.$emit('onGetChatRoomId', data);
+            this.$emit('onGetChatRoom', data);
 
             this.closeCreateGroupModel();
           }

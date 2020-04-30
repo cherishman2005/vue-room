@@ -40,7 +40,7 @@
 
     <!-- 初始化chatroom -->
     <el-row type="flex">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item label="appid">
             <el-input v-model="appid" disabled style="width:150px;"></el-input>
@@ -61,8 +61,8 @@
       </el-col>
     </el-row>
 
-    <el-dialog align="left" title="创建ChatRoomId" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
-      <create-group :hummer="hummer" @onGetChatRoomId=getChatRoomId></create-group>
+    <el-dialog align="left" title="创建ChatRoom" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
+      <create-group :hummer="hummer" @onGetChatRoom=getChatRoom></create-group>
     </el-dialog>
 
     <p class="text-unit">加入/退出聊天室</p>
@@ -430,8 +430,8 @@
       closeCreateGroupModel() {
         this.$store.commit('updateCreateGroupModelVisible', false)
       },
-      getChatRoomId(data) {
-        console.log('getChatRoomId data=', data);
+      getChatRoom(data) {
+        console.log('getChatRoom data=', data);
 
         this.region = data.region;
         this.roomid = data.roomid;
@@ -482,7 +482,7 @@
           return;
         }
 
-        this.chatroom = this.hummer.createChatRoom({
+        this.chatroom = this.hummer.createChatRoomInstance({
           region: this.region,
           roomid: this.roomid
         });
