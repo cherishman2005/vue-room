@@ -1193,36 +1193,34 @@
         });
       },
       onRoomMemberOffline(rtsRoom) {
-        const roomEvents = [
-          "RoomMemberOffline"
-        ];
-        roomEvents.forEach(eventName => {
-          rtsRoom.room.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
-            this.$message({
-              duration: 3000,
-              message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
-              type: 'success'
-            });
+        const eventName = "RoomMemberOffline";
+        rtsRoom.room.on(eventName, () => {
+          console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`);
+          this.$message({
+            duration: 3000,
+            message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`,
+            type: 'success'
           });
         });
       },
       onConnectStatusChange() {
-        this.hummer.on('ConnectionStateChanged', (data) => {
-          console.log("=== ConnectionStateChanged ===:" + JSON.stringify(data));
+        const eventName = "ConnectionStateChanged";
+        this.hummer.on(eventName, (data) => {
+          console.log(`=== ${eventName} ===:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `ConnectionStateChanged: ` + JSON.stringify(data),
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
       onTokenExpired() {
-        this.hummer.on('TokenExpired', () => {
-          console.log("=== TokenExpired ===");
+        const eventName = "TokenExpired";
+        this.hummer.on(eventName, () => {
+          console.log(`=== ${eventName} ===`);
           this.$message({
             duration: 3000,
-            message: `TokenExpired`,
+            message: `${eventName}`,
             type: 'success'
           });
         });
