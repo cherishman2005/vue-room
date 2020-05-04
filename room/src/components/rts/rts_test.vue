@@ -602,39 +602,42 @@
       closeCreateRoomModel() {
         this.$store.commit('updateCreateRoomModelVisible', false)
       },
-      login() {
+      async login() {
         if (!this.hummer)
           return;
         
-        this.loginRes = '';
-        this.hummer.login({
-          region: this.userRegion, 
-          uid: this.uid, 
-          token: this.token
-        }).then(res => {
+        try {
+          this.loginRes = '';
+          let res = await this.hummer.login({
+            region: this.userRegion, 
+            uid: this.uid, 
+            token: this.token
+          });
+
           console.log("login Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("login err:", err);
-          this.loginRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("login err:", e);
+          this.loginRes = JSON.stringify(e);
+        }
       },
-      logout() {
+      async logout() {
         if (!this.hummer)
           return;
         
-        this.loginRes = '';
-        this.hummer.logout().then(res => {
+        try {
+          this.loginRes = '';
+          const res = await this.hummer.logout();
           console.log("logout Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
           if (res.rescode === 0) {
             this.rooms = [];
             this.regionRoomIds = [];
           }
-        }).catch(err => {
-          console.error("logout err:", err);
-          this.loginRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("logout err:", e);
+          this.loginRes = JSON.stringify(e);
+        }
       },
       refreshToken(data) {
         this.loginRes = JSON.stringify(data);
@@ -684,398 +687,416 @@
 
         this.onRoomMemberOffline(rtsRoom);
       },
-      join() {
-        if (!this.rtsRoom)
-          return;
-        
-        let extra = {"Name": "阿武"};
-        let params = { extra };
-        console.log("join Req: " + JSON.stringify(params));
-        
-        this.joinOrLeaveRes = '';
-        this.rtsRoom.room.join(params).then(res => {
-          console.log("自己进入频道join res:", res);
-          this.joinOrLeaveRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("join err:", err);
-          this.joinOrLeaveRes = JSON.stringify(err);
-        });
-      },
-      leave() {
+      async join() {
         if (!this.rtsRoom)
           return;
 
-        this.joinOrLeaveRes = '';
-        this.rtsRoom.room.leave().then(res => {
-          console.log("自己离开频道leave res:", res);
+        try {
+          let extra = {"Name": "阿武"};
+          let req = { extra };
+          console.log("join: req=" + JSON.stringify(req));
+          
+          this.joinOrLeaveRes = '';
+          const res = await this.rtsRoom.room.join(req);
+          console.log("自己进入频道join res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("leave err:", err);
-          this.joinOrLeaveRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("join err:", e);
+          this.joinOrLeaveRes = JSON.stringify(e);
+        }
       },
-      sendMessage() {
+      async leave() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          this.joinOrLeaveRes = '';
+          const res = await this.rtsRoom.room.leave();
+          console.log("自己离开频道leave: res=", res);
+          this.joinOrLeaveRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("leave err:", e);
+          this.joinOrLeaveRes = JSON.stringify(e);
+        }
+      },
+      async sendMessage() {
         if (!this.rtsRoom)
           return;
         
-        let content = this.sendMessageReq.content;
-        
-        this.sendMessageRes = '';
-        this.rtsRoom.room.sendMessage({
-          type: "100", 
-          content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
-        }).then(res => {
-          console.log("sendMessage Res: " + JSON.stringify(res));
+        try {
+          let content = this.sendMessageReq.content;
+          
+          this.sendMessageRes = '';
+          const res = await this.rtsRoom.room.sendMessage({
+            type: "100", 
+            content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
+          });
+          console.log("sendMessage res=" + JSON.stringify(res));
           this.sendMessageRes = JSON.stringify(res);
 
           console.log("消息队列mq_room_data: " + JSON.stringify(this.mq_room_data));
-        }).catch(err => {
-          console.error("sendMessage err:", err);
-          this.sendMessageRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("sendMessage err:", e);
+          this.sendMessageRes = JSON.stringify(e);
+        }
       },
-      setUserAttributes() {
+      async setUserAttributes() {
         if (!this.rtsRoom)
           return;
 
-        let attributes = {
-          "Name": "awu",
-          "Description": "js_sdk测试",
-          "Bulletin": "bull",
-          "Extention": "ex"
-        };
-  
-        let key = this.setUserAttributesReq.key;
-        let prop = this.setUserAttributesReq.prop;
-        attributes[key] = prop;
-        
-        let req = { attributes };
-        this.setUserAttributesRes = '';
-        this.rtsRoom.room.setUserAttributes(req).then(res => {
+        try {
+          let attributes = {
+            "Name": "awu",
+            "Description": "js_sdk测试",
+            "Bulletin": "bull",
+            "Extention": "ex"
+          };
+    
+          let key = this.setUserAttributesReq.key;
+          let prop = this.setUserAttributesReq.prop;
+          attributes[key] = prop;
+          
+          let req = { attributes };
+          this.setUserAttributesRes = '';
+          const res = await this.rtsRoom.room.setUserAttributes(req);
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("setUserAttributes err:", err);
-          this.setUserAttributesRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("setUserAttributes err:", e);
+          this.setUserAttributesRes = JSON.stringify(e);
+        }
       },
-      deleteUserAttributesByKeys() {
+      async deleteUserAttributesByKeys() {
         if (!this.rtsRoom)
           return;
 
-        let keys_str = this.deleteUserAttributesReq.keys;
+        try {
+          let keys_str = this.deleteUserAttributesReq.keys;
 
-        let keys = [];
+          let keys = [];
 
-        let elements = keys_str.split(",");
-        for (let k of elements) {
-          keys.push(k);
-        }
+          let elements = keys_str.split(",");
+          for (let k of elements) {
+            keys.push(k);
+          }
 
-        let req = { keys };
-        this.deleteUserAttributesRes = '';
+          let req = { keys };
+          this.deleteUserAttributesRes = '';
 
-        this.rtsRoom.room.deleteUserAttributesByKeys(req).then(res => {
-          console.log("deleteUserAttributesByKeys Res: ", res);
+          const res = await this.rtsRoom.room.deleteUserAttributesByKeys(req);
+          console.log("deleteUserAttributesByKeys res=", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
-        }).catch((err) => {
-          console.error("deleteUserAttributesByKeys err:", err);
-          this.deleteUserAttributesRes = JSON.stringify(err);
-        });
-      },
-      clearUserAttributes() {
-        if (!this.rtsRoom)
-          return;
-
-        this.clearUserAttributesRes = '';
-
-        this.rtsRoom.room.clearUserAttributes().then(res => {
-          console.log("clearUserAttributes Res: ", res);
-          this.clearUserAttributesRes = JSON.stringify(res);
-        }).catch((err) => {
-          console.error("clearUserAttributes err:", err);
-          this.clearUserAttributesRes = JSON.stringify(err);
-        });
-      },
-      addOrUpdateUserAttributes() {
-        if (!this.rtsRoom)
-          return;
-
-        let attributes = {
-          "Name": "awu",
-        };
-  
-        let key = this.addOrUpdateUserAttributesReq.key;
-        let prop = this.addOrUpdateUserAttributesReq.prop;
-        attributes[key] = prop;
-        
-        let req = { attributes };
-        this.addOrUpdateUserAttributesRes = '';
-        this.rtsRoom.room.addOrUpdateUserAttributes(req).then(res => {
-          console.log("addOrUpdateUserAttributes Res: ", res);
-          this.addOrUpdateUserAttributesRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("addOrUpdateUserAttributes err:", err);
-          this.addOrUpdateUserAttributesRes = JSON.stringify(err);
-        });
-      },
-      getMembers() {
-        if (!this.rtsRoom)
-          return;
-
-        this.getMembersRes = '';
-        this.rtsRoom.room.getMembers().then(res => {
-          console.log("getMembers res:", res);
-          this.getMembersRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("getMembers err:", err);
-          this.getMembersRes = JSON.stringify(err);
-        });
-      },
-      getUserAttributes() {
-        if (!this.rtsRoom)
-          return;
-
-        let uid = this.getUserAttributesReq.uid;
-        let req = { uid };
-
-        this.getUserAttributesRes = '';
-        this.rtsRoom.room.getUserAttributes(req).then(res => {
-          console.log("getUserAttributes res:", res);
-          this.getUserAttributesRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("getUserAttributes err:", err);
-          this.getUserAttributesRes = JSON.stringify(err);
-        });
-      },
-      getUserAttributesByKeys() {
-        if (!this.rtsRoom)
-          return;
-
-        let keys_str = this.getUserAttributesByKeysReq.keys;
-        let keys = [];
-        let elements = keys_str.split(",");
-        for (let k of elements) {
-          keys.push(k);
+        } catch(e) {
+          console.error("deleteUserAttributesByKeys err:", e);
+          this.deleteUserAttributesRes = JSON.stringify(e);
         }
-        let uid = this.getUserAttributesByKeysReq.uid;
-        let req = { uid, keys };
-
-        this.getUserAttributesByKeysRes = '';
-        this.rtsRoom.room.getUserAttributesByKeys(req).then(res => {
-          console.log("getUserAttributesByKeys res:", res);
-          this.getUserAttributesByKeysRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("getUserAttributesByKeys err:", err);
-          this.getUserAttributesByKeysRes = JSON.stringify(err);
-        });
       },
-      getRoomMemberCount() {
+      async clearUserAttributes() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          this.clearUserAttributesRes = '';
+          const res = await this.rtsRoom.room.clearUserAttributes();
+          console.log("clearUserAttributes res=", res);
+          this.clearUserAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("clearUserAttributes err:", e);
+          this.clearUserAttributesRes = JSON.stringify(e);
+        }
+      },
+      async addOrUpdateUserAttributes() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          let attributes = {
+            "Name": "awu",
+          };
+    
+          let key = this.addOrUpdateUserAttributesReq.key;
+          let prop = this.addOrUpdateUserAttributesReq.prop;
+          attributes[key] = prop;
+          
+          let req = { attributes };
+          this.addOrUpdateUserAttributesRes = '';
+          const res = await this.rtsRoom.room.addOrUpdateUserAttributes(req);
+          console.log("addOrUpdateUserAttributes res=", res);
+          this.addOrUpdateUserAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("addOrUpdateUserAttributes err:", e);
+          this.addOrUpdateUserAttributesRes = JSON.stringify(e);
+        }
+      },
+      async getMembers() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          this.getMembersRes = '';
+          const res = await this.rtsRoom.room.getMembers();
+          console.log("getMembers res=", res);
+          this.getMembersRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("getMembers err:", e);
+          this.getMembersRes = JSON.stringify(e);
+        }
+      },
+      async getUserAttributes() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          let uid = this.getUserAttributesReq.uid;
+          let req = { uid };
+
+          this.getUserAttributesRes = '';
+          const res = await this.rtsRoom.room.getUserAttributes(req);
+          console.log("getUserAttributes res=", res);
+          this.getUserAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("getUserAttributes err:", e);
+          this.getUserAttributesRes = JSON.stringify(e);
+        }
+      },
+      async getUserAttributesByKeys() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          let keys_str = this.getUserAttributesByKeysReq.keys;
+          let keys = [];
+          let elements = keys_str.split(",");
+          for (let k of elements) {
+            keys.push(k);
+          }
+          let uid = this.getUserAttributesByKeysReq.uid;
+          let req = { uid, keys };
+
+          this.getUserAttributesByKeysRes = '';
+          const res = await this.rtsRoom.room.getUserAttributesByKeys(req);
+          console.log("getUserAttributesByKeys res=", res);
+          this.getUserAttributesByKeysRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("getUserAttributesByKeys err:", e);
+          this.getUserAttributesByKeysRes = JSON.stringify(e);
+        }
+      },
+      async getRoomMemberCount() {
         if (!this.client)
           return;
 
-        let region = this.getRoomMemberCountReq.region;
+        try {
+          let region = this.getRoomMemberCountReq.region;
 
-        let roomIdsStr = this.getRoomMemberCountReq.roomIds;
-        let roomIds = [];
+          let roomIdsStr = this.getRoomMemberCountReq.roomIds;
+          let roomIds = [];
 
-        let elements = roomIdsStr.split(",");
-        for (let k of elements) {
-          roomIds.push(k);
-        }
-        this.getRoomMemberCountRes = '';
+          let elements = roomIdsStr.split(",");
+          for (let k of elements) {
+            roomIds.push(k);
+          }
+          this.getRoomMemberCountRes = '';
 
-        this.client.getRoomMemberCount({region, roomIds}).then(res => {
-          console.log("getRoomMemberCount res:", res);
+          const res = await this.client.getRoomMemberCount({region, roomIds});
+          console.log("getRoomMemberCount res=", res);
           this.getRoomMemberCountRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("getRoomMemberCount err:", err);
-          this.getRoomMemberCountRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("getRoomMemberCount err:", e);
+          this.getRoomMemberCountRes = JSON.stringify(e);
+        }
       },
       // Room Attributes
-      setRoomAttributes() {
+      async setRoomAttributes() {
         if (!this.rtsRoom)
           return;
 
-        let attributes = {
-          "Name": "awu",
-          "Description": "js_sdk测试",
-          "Bulletin": "bull",
-          "Extention": "ex"
-        };
-  
-        let key = this.setRoomAttributesReq.key;
-        let prop = this.setRoomAttributesReq.prop;
-        attributes[key] = prop;
-        
-        let req = { attributes };
-        console.log('setRoomAttributes: req=', req);
-
-        this.setRoomAttributesRes = '';
-        this.rtsRoom.room.setRoomAttributes(req).then(res => {
-          console.log("setRoomAttributes res: ", res);
-          this.setRoomAttributesRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("setRoomAttributes err:", err);
-          this.setRoomAttributesRes = JSON.stringify(err);
-        });
-      },
-      deleteRoomAttributesByKeys() {
-        if (!this.rtsRoom)
-          return;
+        try {
+          let attributes = {
+            "Name": "awu",
+            "Description": "js_sdk测试",
+            "Bulletin": "bull",
+            "Extention": "ex"
+          };
+    
+          let key = this.setRoomAttributesReq.key;
+          let prop = this.setRoomAttributesReq.prop;
+          attributes[key] = prop;
           
-        let keys_str = this.deleteRoomAttributesByKeysReq.keys;
+          let req = { attributes };
+          console.log('setRoomAttributes: req=', req);
 
-        let keys = [];
-
-        let elements = keys_str.split(",");
-        for (let k of elements) {
-          keys.push(k);
+          this.setRoomAttributesRes = '';
+          const res = await this.rtsRoom.room.setRoomAttributes(req);
+          console.log("setRoomAttributes res=", res);
+          this.setRoomAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("setRoomAttributes err:", e);
+          this.setRoomAttributesRes = JSON.stringify(e);
         }
+      },
+      async deleteRoomAttributesByKeys() {
+        if (!this.rtsRoom)
+          return;
 
-        let req = { keys };
-        console.log('deleteRoomAttributesByKeys: req=', req);
+        try {
+          let keys_str = this.deleteRoomAttributesByKeysReq.keys;
 
-        this.deleteRoomAttributesByKeysRes = '';
+          let keys = [];
 
-        this.rtsRoom.room.deleteRoomAttributesByKeys(req).then(res => {
-          console.log("deleteRoomAttributesByKeys res: ", res);
+          let elements = keys_str.split(",");
+          for (let k of elements) {
+            keys.push(k);
+          }
+
+          let req = { keys };
+          console.log('deleteRoomAttributesByKeys: req=', req);
+
+          this.deleteRoomAttributesByKeysRes = '';
+          const res = await this.rtsRoom.room.deleteRoomAttributesByKeys(req);
+          console.log("deleteRoomAttributesByKeys res=", res);
           this.deleteRoomAttributesByKeysRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("deleteRoomAttributesByKeys err:", err);
-          this.deleteRoomAttributesByKeysRes = JSON.stringify(err);
-        });
-      },
-      clearRoomAttributes() {
-        if (!this.rtsRoom)
-          return;
-
-        this.clearRoomAttributesRes = '';
-        this.rtsRoom.room.clearRoomAttributes().then(res => {
-          console.log("clearRoomAttributes res: ", res);
-          this.clearRoomAttributesRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("clearRoomAttributes err:", err);
-          this.clearRoomAttributesRes = JSON.stringify(err);
-        });
-      },
-      addOrUpdateRoomAttributes() {
-        if (!this.rtsRoom)
-          return;
-
-        let attributes = {
-          "owner": "awu",
-        };
-  
-        let key = this.addOrUpdateRoomAttributesReq.key;
-        let prop = this.addOrUpdateRoomAttributesReq.prop;
-        attributes[key] = prop;
-        
-        let req = { attributes };
-        console.log('addOrUpdateRoomAttributes: req=', req);
-
-        this.addOrUpdateRoomAttributesRes = '';
-        this.rtsRoom.room.addOrUpdateRoomAttributes(req).then(res => {
-          console.log("addOrUpdateRoomAttributes res: ", res);
-          this.addOrUpdateRoomAttributesRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("addOrUpdateRoomAttributes err:", err);
-          this.addOrUpdateRoomAttributesRes = JSON.stringify(err);
-        });
-      },
-      getRoomAttributes() {
-        if (!this.rtsRoom)
-          return;
-
-        this.getRoomAttributesRes = '';
-        this.rtsRoom.room.getRoomAttributes().then(res => {
-          console.log("getRoomAttributes res:", res);
-          this.getRoomAttributesRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("getRoomAttributes err:", err);
-          this.getRoomAttributesRes = JSON.stringify(err);
-        });
-      },
-      getRoomAttributesByKeys() {
-        if (!this.rtsRoom)
-          return;
-        
-        let keys_str = this.getRoomAttributesByKeysReq.keys;
-        let keys = [];
-        let elements = keys_str.split(",");
-        for (let k of elements) {
-          keys.push(k);
+        } catch(e) {
+          console.error("deleteRoomAttributesByKeys err:", e);
+          this.deleteRoomAttributesByKeysRes = JSON.stringify(e);
         }
+      },
+      async clearRoomAttributes() {
+        if (!this.rtsRoom)
+          return;
 
-        let req = { keys };
-        console.log('getRoomAttributesByKeys: req=', req);
+        try {
+          this.clearRoomAttributesRes = '';
+          const res = await this.rtsRoom.room.clearRoomAttributes();
+          console.log("clearRoomAttributes res=", res);
+          this.clearRoomAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("clearRoomAttributes err:", e);
+          this.clearRoomAttributesRes = JSON.stringify(e);
+        }
+      },
+      async addOrUpdateRoomAttributes() {
+        if (!this.rtsRoom)
+          return;
 
-        this.getRoomAttributesByKeysRes = '';
-        this.rtsRoom.room.getRoomAttributesByKeys(req).then(res => {
-          console.log("getRoomAttributesByKeys res:", res);
+        try {
+          let attributes = {
+            "owner": "awu",
+          };
+    
+          let key = this.addOrUpdateRoomAttributesReq.key;
+          let prop = this.addOrUpdateRoomAttributesReq.prop;
+          attributes[key] = prop;
+          
+          let req = { attributes };
+          console.log('addOrUpdateRoomAttributes: req=', req);
+
+          this.addOrUpdateRoomAttributesRes = '';
+          const res = await this.rtsRoom.room.addOrUpdateRoomAttributes(req);
+          console.log("addOrUpdateRoomAttributes res=", res);
+          this.addOrUpdateRoomAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("addOrUpdateRoomAttributes err:", e);
+          this.addOrUpdateRoomAttributesRes = JSON.stringify(e);
+        }
+      },
+      async getRoomAttributes() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          this.getRoomAttributesRes = '';
+          const res = await this.rtsRoom.room.getRoomAttributes();
+          console.log("getRoomAttributes res=", res);
+          this.getRoomAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("getRoomAttributes err:", e);
+          this.getRoomAttributesRes = JSON.stringify(e);
+        }
+      },
+      async getRoomAttributesByKeys() {
+        if (!this.rtsRoom)
+          return;
+        
+        try {
+          let keys_str = this.getRoomAttributesByKeysReq.keys;
+          let keys = [];
+          let elements = keys_str.split(",");
+          for (let k of elements) {
+            keys.push(k);
+          }
+
+          let req = { keys };
+          console.log('getRoomAttributesByKeys: req=', req);
+
+          this.getRoomAttributesByKeysRes = '';
+          const res = await this.rtsRoom.room.getRoomAttributesByKeys(req);
+          console.log("getRoomAttributesByKeys res=", res);
           this.getRoomAttributesByKeysRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("getRoomAttributesByKeys err:", err);
-          this.getRoomAttributesByKeysRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("getRoomAttributesByKeys err:", e);
+          this.getRoomAttributesByKeysRes = JSON.stringify(e);
+        }
       },
 
-      sendMessageToUser() {
+      async sendMessageToUser() {
         if (!this.client)
           return;
 
-        let content = this.sendMessageToUserReq.content;
-        let receiver = this.sendMessageToUserReq.receiver;
-        
-        this.sendMessageToUserRes = '';
-        this.client.sendMessageToUser({
-          receiver: receiver, 
-          type: "100", 
-          content: Hummer.Utify.encodeStringToUtf8Bytes(content),
-        }).then(res => {
-          console.log("sendMessageToUser Res: " + JSON.stringify(res));
+        try {
+          let content = this.sendMessageToUserReq.content;
+          let receiver = this.sendMessageToUserReq.receiver;
+          
+          this.sendMessageToUserRes = '';
+          const res = await this.client.sendMessageToUser({
+            receiver: receiver, 
+            type: "100", 
+            content: Hummer.Utify.encodeStringToUtf8Bytes(content),
+          });
+          console.log("sendMessageToUser res=" + JSON.stringify(res));
           this.sendMessageToUserRes = JSON.stringify(res);
 
           console.log("消息队列mq_data: " + JSON.stringify(this.mq_data));
-        }).catch(err => {
-          console.error("sendMessageToUser err:", err);
-          this.sendMessageToUserRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("sendMessageToUser err:", e);
+          this.sendMessageToUserRes = JSON.stringify(e);
+        }
       },
-      queryUsersOnlineStatus() {
+      async queryUsersOnlineStatus() {
         if (!this.client)
           return;
 
-        let uidsStr = this.queryUsersOnlineStatusReq.uids;
-        let uids = [];
+        try {
+          let uidsStr = this.queryUsersOnlineStatusReq.uids;
+          let uids = [];
 
-        let elements = uidsStr.split(",");
-        for (let k of elements) {
-          uids.push(k);
-        }
-        this.queryUsersOnlineStatusRes = '';
+          let elements = uidsStr.split(",");
+          for (let k of elements) {
+            uids.push(k);
+          }
+          this.queryUsersOnlineStatusRes = '';
 
-        this.client.queryUsersOnlineStatus({ uids: uids }).then(res => {
-          console.log("queryUsersOnlineStatus res:", res);
+          const res = await this.client.queryUsersOnlineStatus({ uids: uids });
+          console.log("queryUsersOnlineStatus res=", res);
           this.queryUsersOnlineStatusRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("queryUsersOnlineStatus err:", err);
-          this.queryUsersOnlineStatusRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("queryUsersOnlineStatus err:", e);
+          this.queryUsersOnlineStatusRes = JSON.stringify(e);
+        }
       },
-      getInstanceInfo() {
+      async getInstanceInfo() {
         if (!this.hummer)
           return;
 
-        this.result = '';
-        this.hummer.getInstanceInfo().then(res => {
-          console.log("getInstanceInfo Res: ", res);
+        try {
+          this.result = '';
+          const res = await this.hummer.getInstanceInfo();
+          console.log("getInstanceInfo res=", res);
           this.result = JSON.stringify(res);
-        }).catch(err => {
-          console.error("getInstanceInfo err:", err);
-          this.result = JSON.stringify(err);
-        });
+        } catch(e) {
+          console.error("getInstanceInfo err:", e);
+          this.result = JSON.stringify(e); 
+        }
       },
       clearMqData() {
         this.mq_data = [];
