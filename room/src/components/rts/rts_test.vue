@@ -449,10 +449,9 @@
   import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateRoom from './create_room.vue';
-  //import Hummer from 'hummer-channel-sdk';
+  //import Hummer from 'hummer-rts-sdk';
 
   const UID = getStorage('uid');
-  const AREA = getStorage('area');
   const REGION = getStorage('region');
   const APPID = getStorage('appid');
   const TOKEN = getStorage('token');
