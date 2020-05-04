@@ -476,6 +476,7 @@
         userRegionFlag: false,
         regionRoomId: null,
         regionRoomIds: [],
+        rtsRoom: null,
         mq_data: [],
         mq_room_data: [],
         reliable: [{
@@ -569,8 +570,13 @@
       })
     },
     watch: {
+      regionRoomId(val) {
+        this.rtsRoom = this.rooms[val];
+      }
     },
     created() {
+      console.log('Hummer Version=' + Hummer.VERSION);
+
       // 初始化Hummer
       this.hummer = Hummer.createHummer({appid: this.appid});
 
@@ -669,10 +675,8 @@
         console.log('rooms=', this.rooms);
 
         let rtsRoom = this.rooms[this.regionRoomId];
+        this.subscribeRoomEvents(rtsRoom);
         this.onReceiveRoomMessage(rtsRoom);
-        this.onMemberJoined(rtsRoom);
-        this.onMemberLeft(rtsRoom);
-        this.onMemberCountUpdated(rtsRoom);
         // 用户属性变更
         this.onMemberAttributesUpdated(rtsRoom);
         // 频道属性变更
@@ -681,8 +685,7 @@
         this.onRoomMemberOffline(rtsRoom);
       },
       join() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
         
         let extra = {"Name": "阿武"};
@@ -690,7 +693,7 @@
         console.log("join Req: " + JSON.stringify(params));
         
         this.joinOrLeaveRes = '';
-        rtsRoom.room.join(params).then(res => {
+        this.rtsRoom.room.join(params).then(res => {
           console.log("自己进入频道join res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
@@ -699,12 +702,11 @@
         });
       },
       leave() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         this.joinOrLeaveRes = '';
-        rtsRoom.room.leave().then(res => {
+        this.rtsRoom.room.leave().then(res => {
           console.log("自己离开频道leave res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
@@ -713,14 +715,13 @@
         });
       },
       sendMessage() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
         
         let content = this.sendMessageReq.content;
         
         this.sendMessageRes = '';
-        rtsRoom.room.sendMessage({
+        this.rtsRoom.room.sendMessage({
           type: "100", 
           content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
         }).then(res => {
@@ -734,8 +735,7 @@
         });
       },
       setUserAttributes() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         let attributes = {
@@ -751,7 +751,7 @@
         
         let req = { attributes };
         this.setUserAttributesRes = '';
-        rtsRoom.room.setUserAttributes(req).then(res => {
+        this.rtsRoom.room.setUserAttributes(req).then(res => {
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -760,8 +760,7 @@
         });
       },
       deleteUserAttributesByKeys() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         let keys_str = this.deleteUserAttributesReq.keys;
@@ -776,7 +775,7 @@
         let req = { keys };
         this.deleteUserAttributesRes = '';
 
-        rtsRoom.room.deleteUserAttributesByKeys(req).then(res => {
+        this.rtsRoom.room.deleteUserAttributesByKeys(req).then(res => {
           console.log("deleteUserAttributesByKeys Res: ", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -785,13 +784,12 @@
         });
       },
       clearUserAttributes() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         this.clearUserAttributesRes = '';
 
-        rtsRoom.room.clearUserAttributes().then(res => {
+        this.rtsRoom.room.clearUserAttributes().then(res => {
           console.log("clearUserAttributes Res: ", res);
           this.clearUserAttributesRes = JSON.stringify(res);
         }).catch((err) => {
@@ -800,8 +798,7 @@
         });
       },
       addOrUpdateUserAttributes() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         let attributes = {
@@ -814,7 +811,7 @@
         
         let req = { attributes };
         this.addOrUpdateUserAttributesRes = '';
-        rtsRoom.room.addOrUpdateUserAttributes(req).then(res => {
+        this.rtsRoom.room.addOrUpdateUserAttributes(req).then(res => {
           console.log("addOrUpdateUserAttributes Res: ", res);
           this.addOrUpdateUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -823,12 +820,11 @@
         });
       },
       getMembers() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         this.getMembersRes = '';
-        rtsRoom.room.getMembers().then(res => {
+        this.rtsRoom.room.getMembers().then(res => {
           console.log("getMembers res:", res);
           this.getMembersRes = JSON.stringify(res);
         }).catch(err => {
@@ -837,15 +833,14 @@
         });
       },
       getUserAttributes() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         let uid = this.getUserAttributesReq.uid;
         let req = { uid };
 
         this.getUserAttributesRes = '';
-        rtsRoom.room.getUserAttributes(req).then(res => {
+        this.rtsRoom.room.getUserAttributes(req).then(res => {
           console.log("getUserAttributes res:", res);
           this.getUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -854,8 +849,7 @@
         });
       },
       getUserAttributesByKeys() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         let keys_str = this.getUserAttributesByKeysReq.keys;
@@ -868,7 +862,7 @@
         let req = { uid, keys };
 
         this.getUserAttributesByKeysRes = '';
-        rtsRoom.room.getUserAttributesByKeys(req).then(res => {
+        this.rtsRoom.room.getUserAttributesByKeys(req).then(res => {
           console.log("getUserAttributesByKeys res:", res);
           this.getUserAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
@@ -899,10 +893,9 @@
           this.getRoomMemberCountRes = JSON.stringify(err);
         });
       },
-      // 频道属性
+      // Room Attributes
       setRoomAttributes() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         let attributes = {
@@ -920,7 +913,7 @@
         console.log('setRoomAttributes: req=', req);
 
         this.setRoomAttributesRes = '';
-        rtsRoom.room.setRoomAttributes(req).then(res => {
+        this.rtsRoom.room.setRoomAttributes(req).then(res => {
           console.log("setRoomAttributes res: ", res);
           this.setRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -929,8 +922,7 @@
         });
       },
       deleteRoomAttributesByKeys() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
           
         let keys_str = this.deleteRoomAttributesByKeysReq.keys;
@@ -947,7 +939,7 @@
 
         this.deleteRoomAttributesByKeysRes = '';
 
-        rtsRoom.room.deleteRoomAttributesByKeys(req).then(res => {
+        this.rtsRoom.room.deleteRoomAttributesByKeys(req).then(res => {
           console.log("deleteRoomAttributesByKeys res: ", res);
           this.deleteRoomAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
@@ -956,12 +948,11 @@
         });
       },
       clearRoomAttributes() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         this.clearRoomAttributesRes = '';
-        rtsRoom.room.clearRoomAttributes().then(res => {
+        this.rtsRoom.room.clearRoomAttributes().then(res => {
           console.log("clearRoomAttributes res: ", res);
           this.clearRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -970,8 +961,7 @@
         });
       },
       addOrUpdateRoomAttributes() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         let attributes = {
@@ -986,7 +976,7 @@
         console.log('addOrUpdateRoomAttributes: req=', req);
 
         this.addOrUpdateRoomAttributesRes = '';
-        rtsRoom.room.addOrUpdateRoomAttributes(req).then(res => {
+        this.rtsRoom.room.addOrUpdateRoomAttributes(req).then(res => {
           console.log("addOrUpdateRoomAttributes res: ", res);
           this.addOrUpdateRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -995,12 +985,11 @@
         });
       },
       getRoomAttributes() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
 
         this.getRoomAttributesRes = '';
-        rtsRoom.room.getRoomAttributes().then(res => {
+        this.rtsRoom.room.getRoomAttributes().then(res => {
           console.log("getRoomAttributes res:", res);
           this.getRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -1009,8 +998,7 @@
         });
       },
       getRoomAttributesByKeys() {
-        const rtsRoom = this.rooms[this.regionRoomId];
-        if (!rtsRoom)
+        if (!this.rtsRoom)
           return;
         
         let keys_str = this.getRoomAttributesByKeysReq.keys;
@@ -1024,7 +1012,7 @@
         console.log('getRoomAttributesByKeys: req=', req);
 
         this.getRoomAttributesByKeysRes = '';
-        rtsRoom.room.getRoomAttributesByKeys(req).then(res => {
+        this.rtsRoom.room.getRoomAttributesByKeys(req).then(res => {
           console.log("getRoomAttributesByKeys res:", res);
           this.getRoomAttributesByKeysRes = JSON.stringify(res);
         }).catch(err => {
@@ -1096,64 +1084,54 @@
 
       /* 消息接收模块 */
       onReceiveMessage() {
-        this.client.on('MessageFromUser', (data) => {
+        const eventName = "MessageFromUser";
+        this.client.on(eventName, (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-          console.log("接收消息MessageFromUser: " + JSON.stringify(data));
+          console.log(`接收消息${eventName}: ` + JSON.stringify(data));
           this.mq_data.push(data);
 
           this.$message({
             duration: 3000,
-            message: "MessageFromUser: " + JSON.stringify(data),
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
 
           console.log("MQ队列mq_data: " + JSON.stringify(this.mq_data));
         });
       },
+
+      subscribeRoomEvents(rtsRoom) {
+        const roomEvents = [
+          "MemberJoined",
+          "MemberLeft",
+          "MemberCountUpdated",
+        ];
+        roomEvents.forEach(eventName => {
+          rtsRoom.room.on(eventName, (data) => {
+            console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
+            this.$message({
+              duration: 3000,
+              message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
+              type: 'success'
+            });
+          });
+        });
+      },
       /* 组播消息接收模块 */
       onReceiveRoomMessage(rtsRoom) {
-        rtsRoom.room.on('RoomMessage', (data) => {
+        const eventName = 'RoomMessage';
+        rtsRoom.room.on(eventName, (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-          console.log(`接收组播消息RoomMessage: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
+          console.log(`接收组播消息${eventName}: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
           this.mq_room_data.push(data);
 
           this.$message({
             duration: 3000,
-            message: `RoomMessage: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
+            message: `${eventName}: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
             type: 'success'
           });
 
           console.log("组播MQ队列mq_room_data: " + JSON.stringify(this.mq_room_data));
-        });
-      },
-      onMemberJoined(rtsRoom) {
-        rtsRoom.room.on('MemberJoined', (data) => {
-          console.log(`接收消息MemberJoined [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
-          this.$message({
-            duration: 3000,
-            message: `MemberJoined [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
-            type: 'success'
-          });
-        });
-      },
-      onMemberLeft(rtsRoom) {
-        rtsRoom.room.on('MemberLeft', (data) => {
-          console.log(`接收消息MemberLeft [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
-          this.$message({
-            duration: 3000,
-            message: `MemberLeft [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
-            type: 'success'
-          });
-        });
-      },
-      onMemberCountUpdated(rtsRoom) {
-        rtsRoom.room.on('MemberCountUpdated', (data) => {
-          console.log(`用户数量变更MemberCountUpdated [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
-          this.$message({
-            duration: 3000,
-            message: `MemberCountUpdated [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
-            type: 'success'
-          });
         });
       },
       onMemberAttributesUpdated(rtsRoom) {
