@@ -118,7 +118,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{dismissChatRoomRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%;height:46px;text-align:left;" >{{dismissChatRoomRes}}</p>
     </div>
 
     <p class="text-unit">剔除用户</p>
@@ -163,8 +163,8 @@
 
     <p class="text-unit">A给B发送消息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="content">
             <el-input v-model="sendSingleUserMessageReq.content"></el-input>
           </el-form-item>
@@ -183,7 +183,7 @@
 
     <p class="text-unit">客户端发送公屏</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="chat">
             <el-input v-model="sendTextChatReq.chat"></el-input>
@@ -196,6 +196,32 @@
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendTextChatRes}}</p>
+    </div>
+
+    <p class="text-unit">禁言/解禁</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item label="uid">
+            <el-input v-model="muteUserReq.uid"></el-input>
+          </el-form-item>
+          <el-form-item label="secs">
+            <el-input v-model="muteUserReq.secs"></el-input>
+          </el-form-item>
+          <el-form-item label="reason">
+            <el-input v-model="muteUserReq.reason"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="muteUser" style="border-radius: 4px">muteUser</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="unMuteUser" style="border-radius: 4px">unMuteUser</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{muteUserRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室信息</p>
@@ -231,7 +257,7 @@
 
     <p class="text-unit">获取聊天室用户数</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24"  style="height:35px; text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary" @click="getUserCount" style="border-radius:4px">getUserCount</el-button>
@@ -245,22 +271,36 @@
 
     <p class="text-unit">获取聊天室用户列表</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24"  style="height:35px; text-align:left;" >
         <el-form :inline="true"  size="small">
-         <el-form-item label="num">
+          <el-form-item label="num">
             <el-input v-model="getUserListReq.num"></el-input>
           </el-form-item>
           <el-form-item label="pos">
             <el-input v-model="getUserListReq.pos"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="getUserList" style="border-radius: 4px">GetUserList</el-button>
+            <el-button type="primary" @click="getUserList" style="border-radius:4px">GetUserList</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getUserListRes}}</p>
+    </div>
+
+    <p class="text-unit">获取禁言用户列表</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+         <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary" @click="getMutedUserList" style="border-radius:4px">getMutedUserList</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getMutedUserListRes}}</p>
     </div>
 
     <p class="text-unit">设置用户属性</p>
@@ -338,6 +378,7 @@
         token: TOKEN,
         region: 'cn',
         chatroom: null,
+        chatClient: null,
         chatrooms: [],
         regionChatroomId: '',
         regionChatroomIds: [],
@@ -350,12 +391,17 @@
         updateChatRoomAttributesRes: '',
         dismissChatRoomRes: '',
         kickOffUserReq: {
-          admin: UID,
           uid: '0',
           secs: '3000',
           reason: "js KickOffUser",
         },
         kickOffUserRes: '',
+        muteUserReq: {
+          uid: '0',
+          secs: '3000',
+          reason: "js mute/unMute",
+        },
+        muteUserRes: '',
         sendGroupMessageReq: {
           content: "js_sdk sendGroupMessage",
         },
@@ -380,6 +426,7 @@
           pos: 0,
         },
         getUserListRes: '',
+        getMutedUserListRes: '',
         display: {
           RcvSingleUserData: "",
         },
@@ -402,6 +449,9 @@
       })
     },
     watch: {
+      regionChatroomId(val) {
+        this.chatClient = this.chatrooms[val];
+      }
     },
     created() {
       let token = getStorage("token");
@@ -458,8 +508,8 @@
           console.log("logout Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
           if (res.rescode === 0) {
-            this.channels = [];
-            this.regionChannelIds = [];
+            this.chatrooms = [];
+            this.regionChatroomIds = [];
           }
         }).catch(err => {
           console.error("logout err:", err);
@@ -477,21 +527,21 @@
         }
 
         this.regionChatroomId = getRegionRoomId(this.region, this.roomid);
-        if (this.chatrooms[this.regionChatroomId]) {
+        if (this.chatClient) {
           console.log('chatroom exists, and chatrooms=', this.chatrooms);
           return;
         }
 
-        this.chatroom = this.hummer.createChatRoomInstance({
+        let chatroom = this.hummer.createChatRoomInstance({
           region: this.region,
           roomid: this.roomid
         });
-        if (!this.chatroom) {
+        if (!chatroom) {
           return;
         }
         
         this.chatrooms[this.regionChatroomId] = {
-          chatroom: this.chatroom,
+          chatroom: chatroom,
           region: this.region,
           roomid: this.roomid
         }
@@ -506,7 +556,7 @@
         this.onChatRoomAttributesUpdated(client);
         this.onUserKickedOff(client);
         this.onGroupMessageReceived(client);
-        this.onTextChat(client);
+        this.subscribeTextChat(client);
         this.onUserCountUpdated(client);
         this.onUserOnlineUpdated(client);
         this.onUserAttributesSet(client);
@@ -514,16 +564,16 @@
         setStorage("roomid", this.roomid);
       },
       joinChatRoom() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
 
-        console.log('regionChatroomId=', this.regionChatroomId, ' chatroom=', this.chatrooms[this.regionChatroomId]);
+        console.log('regionChatroomId=', this.regionChatroomId, ' chatroom=', this.chatClient);
         
         let joinProps = {"H5_sdk": 'js_sdk'};
         let req = { joinProps }
 
         this.joinOrLeaveRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.joinChatRoom(req).then(res => {
+        this.chatClient.chatroom.joinChatRoom(req).then(res => {
           console.log("joinChatRoom Res: " + JSON.stringify(res));
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
@@ -531,11 +581,11 @@
         })
       },
       leaveChatRoom() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
         
         this.joinOrLeaveRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.leaveChatRoom().then((res) => {
+        this.chatClient.chatroom.leaveChatRoom().then((res) => {
           console.log("leaveChatRoom Res: " + JSON.stringify(res));
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch((err) => {
@@ -543,7 +593,7 @@
         })
       },
       updateChatRoomAttributes() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
 
         let attributes = {
@@ -556,7 +606,7 @@
         let req = { attributes };
 
         this.updateChatRoomAttributesRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.updateChatRoomAttributes(req).then((res) => {
+        this.chatClient.chatroom.updateChatRoomAttributes(req).then((res) => {
           this.updateChatRoomAttributesRes = JSON.stringify(res);
           console.log("updateChatRoomAttributes Res: " + JSON.stringify(res));
         }).catch(err => {
@@ -564,16 +614,16 @@
         })
       },
       dismissChatRoom() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
 
         this.dismissChatRoomRes = ''; 
-        this.chatrooms[this.regionChatroomId].chatroom.dismissChatRoom().then((res) => {
+        this.chatClient.chatroom.dismissChatRoom().then((res) => {
           console.log("dismissChatRoom Res: ", res);
           this.dismissChatRoomRes = JSON.stringify(res);
           if (res.rescode == 0) {
-            delete this.chatrooms[this.regionChatroomId];
-            this.chatrooms[this.regionChatroomId] = null;
+            delete this.chatClient;
+            this.chatClient = null;
             this.roomid = 0;
             setStorage("roomid", this.roomid);
           }
@@ -582,7 +632,7 @@
         });
       },
       kickOffUser() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
 
         let uid = this.kickOffUserReq.uid;
@@ -591,7 +641,7 @@
 
         let req = { uid, secs, reason };
         this.kickOffUserRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.kickOffUser(req).then(res => {
+        this.chatClient.chatroom.kickOffUser(req).then(res => {
           this.kickOffUserRes = JSON.stringify(res);
           console.log("kickOffUser res: " + JSON.stringify(res));
         }).catch((err) => {
@@ -599,13 +649,13 @@
         })
       },
       sendGroupMessage() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
           
         let content = this.sendGroupMessageReq.content;
         let req = { content };
         this.sendGroupMessageRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.sendGroupMessage(req).then((res) => {
+        this.chatClient.chatroom.sendGroupMessage(req).then((res) => {
           console.log("sendGroupMessage res: " + JSON.stringify(res));
           this.sendGroupMessageRes = JSON.stringify(res);
         }).catch(err => {
@@ -613,7 +663,7 @@
         })
       },
       sendSingleUserMessage() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
           
         let content = this.sendSingleUserMessageReq.content;
@@ -621,7 +671,7 @@
 
         let req = { content, receiver };
         this.sendSingleUserMessageRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.sendSingleUserMessage(req).then((res) => {
+        this.chatClient.chatroom.sendSingleUserMessage(req).then((res) => {
           console.log("sendSingleUserMessage res: " +  JSON.stringify(res));
           this.sendSingleUserMessageRes = JSON.stringify(res);
         }).catch(err => {
@@ -629,7 +679,7 @@
         })
       },
       sendTextChat() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
           
         let chat = this.sendTextChatReq.chat;
@@ -639,19 +689,55 @@
         let req = { chat, chatProps, extProps }
 
         this.sendTextChatRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.sendTextChat(req).then((res) => {
+        this.chatClient.chatroom.sendTextChat(req).then((res) => {
           console.log("sendTextChat res: " + JSON.stringify(res));
           this.sendTextChatRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
         })
       },
+      async muteUser() {
+        if (!this.chatClient)
+          return;
+
+        try {
+          let uid = this.muteUserReq.uid;
+          let secs = this.muteUserReq.secs;
+          let reason = this.muteUserReq.reason;
+
+          let req = { uid, secs, reason };
+          this.muteUserRes = '';
+          const res = await this.chatClient.chatroom.muteUser(req);
+          this.muteUserRes = JSON.stringify(res);
+          console.log("muteUser res=" + JSON.stringify(res));
+        } catch (e) {
+          console.log("muteUser err=", e);
+        };
+      },
+      async unMuteUser() {
+        if (!this.chatClient)
+          return;
+
+        try {
+          let uid = this.muteUserReq.uid;
+          let secs = this.muteUserReq.secs;
+          let reason = this.muteUserReq.reason;
+
+          let req = { uid, secs, reason };
+          this.muteUserRes = '';
+          const res = await this.chatClient.chatroom.unMuteUser(req);
+          this.muteUserRes = JSON.stringify(res);
+          console.log("unMuteUser res=" + JSON.stringify(res));
+        } catch (e) {
+          console.log("unMuteUser err=", e);
+        };
+      },
       getChatRoomAttributes() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
         
         this.getChatRoomAttributesRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.getChatRoomAttributes().then((res) => {
+        this.chatClient.chatroom.getChatRoomAttributes().then((res) => {
           console.log("getChatRoomAttributes res: " + JSON.stringify(res));
           this.getChatRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -659,14 +745,14 @@
         })
       },
       getChatRoomManager() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
           
         let roler = this.getChatRoomManagerReq.roler;
         let params = { roler }
 
         this.getChatRoomManagerRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.getChatRoomManager(params).then((res) => {
+        this.chatClient.chatroom.getChatRoomManager(params).then((res) => {
           console.log("getChatRoomManager Res: " + JSON.stringify(res));
           this.getChatRoomManagerRes = JSON.stringify(res);
         }).catch((err) => {
@@ -674,11 +760,11 @@
         })
       },
       getUserCount() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
         
         this.getUserCountRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.getUserCount().then((res) => {
+        this.chatClient.chatroom.getUserCount().then((res) => {
           console.log("getUserCount Res: " + JSON.stringify(res));
           this.getUserCountRes = JSON.stringify(res);
         }).catch(err => {
@@ -686,7 +772,7 @@
         })
       },
       getUserList() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
           
         let num = this.getUserListReq.num;
@@ -695,15 +781,28 @@
         let req = { num, pos }
 
         this.getUserListRes = '';
-        this.chatrooms[this.regionChatroomId].chatroom.getUserList(req).then(res => {
+        this.chatClient.chatroom.getUserList(req).then(res => {
           console.log("getUserList Res: " + JSON.stringify(res));
           this.getUserListRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
         })
       },
+      async getMutedUserList() {
+        if (!this.chatClient)
+          return;
+          
+        this.getMutedUserListRes = '';
+        try {
+          const res = await this.chatClient.chatroom.getMutedUserList();
+          console.log("getMutedUserList res=" + JSON.stringify(res));
+          this.getMutedUserListRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("getMutedUserList err=", e);
+        };
+      },
       setUserAttributes() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
 
         let attributes = { 
@@ -717,7 +816,7 @@
         attributes[key] = prop;
         
         let req = { attributes };
-        this.chatrooms[this.regionChatroomId].chatroom.setUserAttributes(req).then((res) => {
+        this.chatClient.chatroom.setUserAttributes(req).then((res) => {
           console.log("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
@@ -725,10 +824,10 @@
         })
       },
       getUserAttributesList() {
-        if (!this.chatrooms[this.regionChatroomId])
+        if (!this.chatClient)
           return;
           
-        this.chatrooms[this.regionChatroomId].chatroom.getUserAttributesList().then((res) => {
+        this.chatClient.chatroom.getUserAttributesList().then((res) => {
           console.log("getUserAttributesList Res: " + JSON.stringify(res));
           this.getUserAttributesListRes = JSON.stringify(res);
         }).catch((err) => {
@@ -804,14 +903,22 @@
           });
         });
       },
-      onTextChat(client) {
-        client.chatroom.on('TextChat', (data) => {
-          console.log("接收消息TextChat：" + JSON.stringify(data));
+      subscribeTextChat(client) {
+        const eventName = [
+          'TextChat',
+          'UsersMuted',
+          'UsersUnMuted',
+        ];
 
-          this.$message({
-            duration: 3000,
-            message: "接收消息TextChat：" + JSON.stringify(data),
-            type: 'success'
+        eventName.forEach(eventName => {
+          client.chatroom.on(eventName, (data) => {
+            console.log(`接收消息${eventName}：` + JSON.stringify(data));
+
+            this.$message({
+              duration: 3000,
+              message: `接收消息${eventName}：` + JSON.stringify(data),
+              type: 'success'
+            });
           });
         });
       },
