@@ -582,6 +582,8 @@
 
       this.hummer.setLogLevel(-1);
 
+      console.log('hummer state=' + this.hummer.getState());
+
       this.onConnectStatusChange();
       this.onTokenExpired();
     },
@@ -1211,6 +1213,8 @@
             message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
+
+          console.log('hummer state=' + this.hummer.getState());
         });
       },
       onTokenExpired() {
