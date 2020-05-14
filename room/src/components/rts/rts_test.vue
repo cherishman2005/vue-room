@@ -645,7 +645,6 @@
         this.loginRes = JSON.stringify(data);
         console.log('refreshToken res=', data);
       },
-      // 初始化RTS
       initRTS() {
         if (!this.hummer) {
           console.log("hummer is null");
@@ -727,11 +726,13 @@
         
         try {
           let content = this.sendMessageReq.content;
+          let appExtras = {nickname: "awu", rtc: 'sfu/mcu'};
           
           this.sendMessageRes = '';
           const res = await this.rtsRoom.room.sendMessage({
             type: "100", 
             content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
+            appExtras: appExtras
           });
           console.log("sendMessage res=" + JSON.stringify(res));
           this.sendMessageRes = JSON.stringify(res);
@@ -1048,12 +1049,14 @@
         try {
           let content = this.sendMessageToUserReq.content;
           let receiver = this.sendMessageToUserReq.receiver;
+          let appExtras = {nickname: "awu", rtc: 'p2p'}
           
           this.sendMessageToUserRes = '';
           const res = await this.client.sendMessageToUser({
             receiver: receiver, 
             type: "100", 
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
+            appExtras: appExtras
           });
           console.log("sendMessageToUser res=" + JSON.stringify(res));
           this.sendMessageToUserRes = JSON.stringify(res);
