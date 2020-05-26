@@ -17,6 +17,11 @@ import { getStorage } from '@/utils/BaseUtil'
 
 import './assets/css/chat.css'
 
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/index.css'
+ 
+Vue.use(VXETable)
 Vue.use(ElementUI);
 Vue.use(VueLazyload);
 

@@ -5,8 +5,17 @@ import {mutations} from "./mutations"
 import {actions} from './actions'
 import room from './modules/room'
 import group from './modules/group'
+import setGroupAttributes from './modules/setGroupAttributes'
+import updateGroupAttributes from './modules/updateGroupAttributes'
+import setGroupUserAttributes from './modules/setGroupUserAttributes'
 import token from './modules/token'
 import refreshToken from './modules/refreshToken'
+import appExtras from './modules/appExtras'
+import roomAppExtras from './modules/roomAppExtras'
+import setUserAttributes from './modules/setUserAttributes'
+import addOrUpdateUserAttributes from './modules/addOrUpdateUserAttributes'
+import setRoomAttributes from './modules/setRoomAttributes'
+import addOrUpdateRoomAttributes from './modules/addOrUpdateRoomAttributes'
 
 Vue.use(Vuex)
 
@@ -21,8 +30,17 @@ const state = {
 const modules = { 
   room,
   group,
+  setGroupAttributes,
+  updateGroupAttributes,
+  setGroupUserAttributes,
   token,
-  refreshToken
+  refreshToken,
+  appExtras,
+  roomAppExtras,
+  setUserAttributes,
+  addOrUpdateUserAttributes,
+  setRoomAttributes,
+  addOrUpdateRoomAttributes
 };
 
 var store = new Vuex.Store({

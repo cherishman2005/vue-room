@@ -26,7 +26,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{loginRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px;text-align:left;">{{loginRes}}</p>
     </div>
 
     <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
@@ -40,33 +40,19 @@
 
     <!-- 初始化chatroom -->
     <el-row type="flex">
-      <el-col :span="24" style="height:35px; text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
-          <el-form-item label="region">
-            <template>
-              <el-select v-model="region" placeholder="region" style="width:150px;">
-                <el-option
-                  v-for="item in regions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
+          <el-form-item label="appid">
+            <el-input v-model="appid" disabled style="width:150px;"></el-input>
+          </el-form-item>
+          <el-form-item label="uid">
+            <el-input v-model="uid" disabled style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item label="roomid">
             <el-input v-model="roomid" style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button @click="showSetGroupAttributesModel" style="border-radius:4px">attribtes</el-button>
-          </el-form-item>
-          <!--
-          <el-form-item class="search">
             <el-button type="primary" @click="showCreateGroupModel" style="border-radius: 4px">createChatRoom</el-button>
-          </el-form-item>
-          -->
-          <el-form-item class="search">
-            <el-button type="primary" @click="createChatRoom" style="border-radius: 4px">createChatRoom</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="initChatRoom" style="border-radius: 4px">initChatRoom</el-button>
@@ -75,21 +61,14 @@
       </el-col>
     </el-row>
 
-    <!--
     <el-dialog align="left" title="创建ChatRoom" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
       <create-group :hummer="hummer" @onGetChatRoom=getChatRoom></create-group>
-    </el-dialog>
-    -->
-
-    <el-dialog align="left" title="atrributes" :visible="setGroupAttributesVisible" @close="closeSetGroupAttributesModel">
-      <editable-table 
-      :tableData="this.setGroupAttributes" @onGetPlainObject="onSetChatRoomAttributes"></editable-table>
     </el-dialog>
 
     <p class="text-unit">加入/退出聊天室</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px; text-align:left;" >
-        <el-form :inline="true" size="small">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary" @click="joinChatRoom" style="border-radius: 4px">joinChatRoom</el-button>
           </el-form-item>
@@ -105,13 +84,10 @@
 
     <p class="text-unit">更新聊天室信息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px; text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button @click="showUpdateGroupAttributesModel" style="border-radius:4px">attribtes</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="updateChatRoomAttributes" style="border-radius:4px">updateChatRoomAttributes</el-button>
+            <el-button type="primary" @click="updateChatRoomAttributes" style="border-radius: 4px">updateChatRoomAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -120,28 +96,9 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{updateChatRoomAttributesRes}}</p>
     </div>
 
-    <el-dialog align="left" title="atrributes" :visible="updateGroupAttributesVisible" @close="closeUpdateGroupAttributesModel">
-      <editable-table 
-      :tableData="this.groupAttributes" @onGetPlainObject="onUpdateChatRoomAttributes"></editable-table>
-    </el-dialog>
-
-    <p class="text-unit">获取聊天室属性</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="getChatRoomAttributes" style="border-radius:4px">getChatRoomAttributes</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getChatRoomAttributesRes}}</p>
-    </div>
-
     <p class="text-unit">解散聊天室</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px; text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item class="search">
             <template>
@@ -161,7 +118,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{dismissChatRoomRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%;height:46px;text-align:left;" >{{dismissChatRoomRes}}</p>
     </div>
 
     <p class="text-unit">剔除用户</p>
@@ -187,7 +144,7 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{kickOffUserRes}}</p>
     </div>
 
-    <p class="text-unit">发送广播消息</p>
+    <p class="text-unit">客户端给群组推送消息</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
@@ -204,7 +161,7 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendGroupMessageRes}}</p>
     </div>
 
-    <p class="text-unit">发送单播消息</p>
+    <p class="text-unit">A给B发送消息</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
@@ -224,7 +181,7 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendSingleUserMessageRes}}</p>
     </div>
 
-    <p class="text-unit">发送公屏</p>
+    <p class="text-unit">客户端发送公屏</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
@@ -241,9 +198,49 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendTextChatRes}}</p>
     </div>
 
+    <p class="text-unit">禁言/解禁</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item label="uid">
+            <el-input v-model="muteUserReq.uid"></el-input>
+          </el-form-item>
+          <el-form-item label="secs">
+            <el-input v-model="muteUserReq.secs"></el-input>
+          </el-form-item>
+          <el-form-item label="reason">
+            <el-input v-model="muteUserReq.reason"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="muteUser" style="border-radius: 4px">muteUser</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="unMuteUser" style="border-radius: 4px">unMuteUser</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{muteUserRes}}</p>
+    </div>
+
+    <p class="text-unit">获取聊天室信息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary" @click="getChatRoomAttributes" style="border-radius: 4px">getChatRoomAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getChatRoomAttributesRes}}</p>
+    </div>
+
     <p class="text-unit">获取聊天室所有管理员</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px; text-align:left;" >
+      <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="roler">
             <el-input v-model="getChatRoomManagerReq.roler" disabled></el-input>
@@ -292,34 +289,6 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getUserListRes}}</p>
     </div>
 
-    <p class="text-unit">禁言/解禁</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item label="uid">
-            <el-input v-model="muteUserReq.uid"></el-input>
-          </el-form-item>
-          <!--
-          <el-form-item label="secs">
-            <el-input v-model="muteUserReq.secs"></el-input>
-          </el-form-item>
-          <el-form-item label="reason">
-            <el-input v-model="muteUserReq.reason"></el-input>
-          </el-form-item>
-          -->
-          <el-form-item class="search">
-            <el-button type="primary" @click="muteUser" style="border-radius:4px">muteUser</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="unMuteUser" style="border-radius:4px">unMuteUser</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{muteUserRes}}</p>
-    </div>
-
     <p class="text-unit">获取禁言用户列表</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
@@ -338,8 +307,11 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
-          <el-form-item>
-            <el-button @click="showSetGroupUserAttributesModel" style="border-radius:4px">attribtes</el-button>
+          <el-form-item label="key">
+            <el-input v-model="setUserAttributesReq.key"></el-input>
+          </el-form-item>
+          <el-form-item label="prop">
+            <el-input v-model="setUserAttributesReq.prop"></el-input>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
@@ -350,11 +322,6 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%;height: 46px; text-align:left;" >{{setUserAttributesRes}}</p>
     </div>
-
-    <el-dialog align="left" title="atrributes" :visible="setGroupUserAttributesVisible" @close="closeSetGroupUserAttributesModel">
-      <editable-table 
-      :tableData="this.groupUserAttributes" @onGetPlainObject="onSetChatRoomUserAttributes"></editable-table>
-    </el-dialog>
 
     <p class="text-unit">查询用户属性列表</p>
     <el-row type="flex" class="row-bg">
@@ -368,20 +335,6 @@
     </el-row>
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%;height:46px; text-align:left;">{{getUserAttributesListRes}}</p>
-    </div>
-
-    <p class="text-unit">HummerSDK 当前所处的状态</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="getState" style="border-radius:4px">getState</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{state}}</p>
     </div>
 
     <p class="text-unit">获取实例信息</p>
@@ -398,16 +351,65 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getInstanceInfoRes}}</p>
     </div>
 
+    <!-- Service_Sdk -->
+    <el-divider content-position="left">svc-sdk</el-divider>
+
+    <!-- 初始化svc_sdk -->
+    <el-row type="flex">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item class="search">
+            <el-button type="primary" @click="initSvc" style="border-radius: 4px">initSvc</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+
+    <p class="text-unit">订阅/退订广播组</p>
+    <el-row type="flex">
+      <el-col :span="24"  style="height:30px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item label="groupType">
+            <el-input v-model="groupType"></el-input>
+          </el-form-item>
+          <el-form-item label="groupId">
+            <el-input v-model="groupId"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="subscribeBcGroup" style="border-radius: 4px">subscribeBcGroup</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary"  @click="unSubscribeBcGroup" style="border-radius: 4px">unSubscribeBcGroup</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >sub:{{subscribeBcGroupRes}} unsub:{{unSubscribeBcGroupRes}}</p>
+    </div>
+
+    <p class="text-unit">发送上行消息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px; text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary" @click="sendData" style="border-radius:4px">sendData</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{sendDataRes}}</p>
+    </div>
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex';
   import { getStorage, setStorage } from '@/utils/BaseUtil'
-  import { getRegions, getRegionRoomId } from '@/components/room_config.js';
+  import { getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
-  import CreateGroup from './create_group.vue';
-  import EditableTable from '@/components/units/editable_table.vue';
+  import CreateGroup from './create_group.vue'
   //import Hummer from 'hummer-chatroom-sdk'
  
   const UID = getStorage('uid');
@@ -420,13 +422,11 @@
     data() {
       return {
         hummer: null,
-        appid: Number(APPID),
-        roomid: Number(ROOMID),
+        appid: APPID,
+        roomid: ROOMID,
         uid: UID,
         token: TOKEN,
         region: 'cn',
-        regions: getRegions(),
-        state: '',
         chatroom: null,
         chatClient: null,
         chatrooms: [],
@@ -438,31 +438,18 @@
           joinProps: "",
         },
         joinOrLeaveRes: '',
-        setGroupAttributes: {
-          "Name": "Hummer聊天室",
-          "Description": "测试",
-          "Bulletin": "公告",
-          "Extention": "自定义",
-        },
-        groupAttributes: {
-          "Name": "nginx大讲堂",
-          "Description": "全栈技术",
-          "Bulletin": "bull",
-          "AppExtra": "ex",
-        },
-        groupUserAttributes: {},
         updateChatRoomAttributesRes: '',
         dismissChatRoomRes: '',
         kickOffUserReq: {
-          uid: '123',
+          uid: '0',
           secs: '3000',
           reason: "js KickOffUser",
         },
         kickOffUserRes: '',
         muteUserReq: {
-          uid: '123',
-          secs: '',
-          reason: "",
+          uid: '0',
+          secs: '3000',
+          reason: "js mute/unMute",
         },
         muteUserRes: '',
         sendGroupMessageReq: {
@@ -499,20 +486,22 @@
         },
         setUserAttributesRes: '',
         getUserAttributesListRes: '',
+        svc: null,
+        groupType: '2147483729',
+        groupId: '1577406886',
+        subscribeBcGroupRes: '',
+        unSubscribeBcGroupRes: '',
+        sendDataRes: '',
       }
     },
     components: {
       CreateGroup,
-      RefreshToken,
-      EditableTable,
+      RefreshToken
     },
     computed: {
       ...mapState({
         refreshTokenModelVisible: state => state.refreshToken.refreshTokenModelVisible,
-        createGroupModelVisible: state => state.group.createGroupModelVisible,
-        setGroupAttributesVisible: state => state.setGroupAttributes.setGroupAttributesVisible,
-        updateGroupAttributesVisible: state => state.updateGroupAttributes.updateGroupAttributesVisible,
-        setGroupUserAttributesVisible: state => state.setGroupUserAttributes.setGroupUserAttributesVisible,
+        createGroupModelVisible: state => state.group.createGroupModelVisible
       })
     },
     watch: {
@@ -521,8 +510,6 @@
       }
     },
     created() {
-      console.log('Hummer Version=' + Hummer.VERSION);
-
       let token = getStorage("token");
       // 初始化Hummer
       this.hummer = Hummer.createHummer({appid: this.appid});
@@ -549,70 +536,11 @@
       closeCreateGroupModel() {
         this.$store.commit('updateCreateGroupModelVisible', false)
       },
-      showSetGroupAttributesModel() {
-        this.$store.commit('updateSetGroupAttributesVisible', true);
-      },
-      closeSetGroupAttributesModel() {
-        this.$store.commit('updateSetGroupAttributesVisible', false)
-      },
-      showUpdateGroupAttributesModel() {
-        this.$store.commit('updateUpdateGroupAttributesVisible', true);
-      },
-      closeUpdateGroupAttributesModel() {
-        this.$store.commit('updateUpdateGroupAttributesVisible', false)
-      },
-      showSetGroupUserAttributesModel() {
-        this.$store.commit('updateSetGroupUserAttributesVisible', true);
-      },
-      closeSetGroupUserAttributesModel() {
-        this.$store.commit('updateSetGroupUserAttributesVisible', false)
-      },
       getChatRoom(data) {
         console.log('getChatRoom data=', data);
 
         this.region = data.region;
         this.roomid = data.roomid;
-      },
-      onSetChatRoomAttributes(data) {
-        console.log('onSetChatRoomAttributes attributes=', data);
-        this.setGroupAttributes = data;
-      },
-      createChatRoom() {
-        if (!this.hummer) {
-          console.warn('hummer is null');
-          return;
-        }
-
-        /*
-        let attributes = {
-          "Name": "Hummer聊天室",
-          "Description": "测试",
-          "Bulletin": "公告",
-          "Extention": "自定义",
-        };
-        */
-        let attributes = this.setGroupAttributes;
-
-        this.$confirm('创建chatroom聊天室?', '提示', {
-          type: 'warning',
-          cancelButtonText: '取消',
-          confirmButtonText: '确定'
-        }).then(() => {
-
-          let region = this.region;
-          let params = {region, attributes};
-          this.hummer.createChatRoom(params).then((res) => {
-            console.log("createChatRoom res: ", res);
-            if (res.rescode === 0) {
-              this.roomid = res.roomid;
-            }
-          }).catch(err => {
-            console.log(err)
-          });
-
-        }).catch(err => {
-          console.log(err);
-        });
       },
       login() {
         if (!this.hummer)
@@ -620,10 +548,10 @@
         
         this.loginRes = '';
         this.hummer.login({uid: this.uid, token: this.token}).then(res => {
-          console.log("login res=" + JSON.stringify(res));
+          console.log("login res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
         }).catch(err => {
-          console.error("login err=", err);
+          console.error("login err:", err);
           this.loginRes = JSON.stringify(err);
         });
       },
@@ -655,19 +583,14 @@
         }
 
         this.regionChatroomId = getRegionRoomId(this.region, this.roomid);
-        
         if (this.chatClient) {
           console.log('chatroom exists, and chatrooms=', this.chatrooms);
-          delete this.chatClient;
-          this.chatClient = null;
-          //return;
+          return;
         }
-
-        this.chatClient = this.chatrooms[this.regionChatroomId];
 
         let chatroom = this.hummer.createChatRoomInstance({
           region: this.region,
-          roomid: Number(this.roomid)
+          roomid: this.roomid
         });
         if (!chatroom) {
           return;
@@ -693,7 +616,6 @@
         this.onUserCountUpdated(client);
         this.onUserOnlineUpdated(client);
         this.onUserAttributesSet(client);
-        this.onChatRoomUserOffline(client);
 
         setStorage("roomid", this.roomid);
       },
@@ -726,24 +648,17 @@
           console.error("leaveChatRoom", err);
         })
       },
-      onUpdateChatRoomAttributes(data) {
-        console.log('onUpdateChatRoomAttributes attributes=', data);
-        this.groupAttributes = data;
-      },
       updateChatRoomAttributes() {
         if (!this.chatClient)
           return;
 
-        /*
         let attributes = {
           "Name": "nginx大讲堂",
           "Description": "全栈技术",
           "Bulletin": "bull",
           "AppExtra": "ex",
         };
-        */
-        let attributes = this.groupAttributes || {};
-
+        
         let req = { attributes };
 
         this.updateChatRoomAttributesRes = '';
@@ -942,15 +857,10 @@
           console.error("getMutedUserList err=", e);
         };
       },
-      onSetChatRoomUserAttributes(data) {
-        console.log('onSetChatRoomUserAttributes attributes=', data);
-        this.groupUserAttributes = data;
-      },
       setUserAttributes() {
         if (!this.chatClient)
           return;
 
-        /*
         let attributes = { 
           "Name": "awu", 
           "Description": "js_sdk测试", 
@@ -960,8 +870,6 @@
         let key = this.setUserAttributesReq.key;
         let prop = this.setUserAttributesReq.prop;
         attributes[key] = prop;
-        */
-        let attributes = this.groupUserAttributes || {};
         
         let req = { attributes };
         this.chatClient.chatroom.setUserAttributes(req).then((res) => {
@@ -981,12 +889,6 @@
         }).catch((err) => {
           console.log(err)
         })
-      },
-      getState() {
-        this.state = '';
-        this.state = this.hummer && this.hummer.getState();
-        console.log("getState: " + this.state);
-        
       },
       getInstanceInfo() {
         if (!this.hummer)
@@ -1109,17 +1011,6 @@
           });
         });
       },
-      onChatRoomUserOffline(client) {
-        const eventName = "ChatRoomUserOffline";
-        client.chatroom.on(eventName, () => {
-          console.log(`接收消息${eventName}`);
-          this.$message({
-            duration: 3000,
-            message: `${eventName}`,
-            type: 'success'
-          });
-        });
-      },
       onConnectionStateChanged() {
         this.hummer.on('ConnectionStateChanged', (data) => {
           console.log("=== ConnectionStateChanged ===:" + JSON.stringify(data));
@@ -1137,6 +1028,76 @@
             duration: 3000,
             message: `TokenExpired`,
             type: 'success'
+          });
+        });
+      },
+      // ----  svc-sdk ----
+      initSvc() {
+        if (!this.hummer) {
+          console.log("hummer is null");
+          return;
+        }
+
+        this.svc = this.hummer.createSvcInstance();
+        if (!this.svc) {
+          return;
+        }
+        
+        console.log('svc=', this.svc);
+
+        this.onMessageReceived(this.svc);
+      },
+      async sendData() {
+        if (!this.svc)
+          return;
+
+        try {
+          let svcName = 'svc_cn_chatroom_online_query_d';
+          let fnName = 'GetUserList';
+          let data = '';
+          let req = {svcName, fnName, data};
+          const res = await this.svc.sendData(req);
+          console.log("sendData res=" + JSON.stringify(res));
+          this.sendDataRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("sendData err=", e);
+        }
+      },
+      async subscribeBcGroup() {
+        if (!this.svc)
+          return;
+
+        try {
+          let req = [{ groupType: this.groupType, groupId: this.groupId }];
+          const res = await this.svc.subscribeBcGroup(req);
+          console.log("subscribeBcGroup res=" + JSON.stringify(res));
+          this.subscribeBcGroupRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("subscribeBcGroup err=", e);
+        }
+      },
+      async unSubscribeBcGroup() {
+        if (!this.svc)
+          return;
+
+        try {
+          let req = [{ groupType: this.groupType, groupId: this.groupId }];
+          const res = await this.svc.unSubscribeBcGroup(req);
+          console.log("unSubscribeBcGroup res=" + JSON.stringify(res));
+          this.unSubscribeBcGroupRes = JSON.stringify(res);
+        } catch(e) {
+          console.error("unSubscribeBcGroup err=", e);
+        }
+      },
+      onMessageReceived(svc) {
+        const eventName = [
+          'BroadcastMessage',
+          'UnicastMessage'
+        ];
+
+        eventName.forEach(eventName => {
+          svc.on(eventName, (data) => {
+            console.log(`接收数据${eventName}：` + JSON.stringify(data));
           });
         });
       }

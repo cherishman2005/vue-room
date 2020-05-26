@@ -62,17 +62,17 @@
       </el-col>
     </el-row>
 
-    <!-- 频道消息 -->
-    <el-divider content-position="left">频道消息</el-divider>
+    <!-- 房间消息 -->
+    <el-divider content-position="left">房间消息</el-divider>
 
-    <p class="text-unit">创建频道实例</p>
+    <p class="text-unit">创建房间实例</p>
     <el-row type="flex">
       <el-col :span="24" style="height:35px;text-align:left;">
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary" @click="showCreateRoomModel" style="border-radius: 4px">createRoom</el-button>
           </el-form-item>
-          <el-form-item label="频道列表[region:roomId](用于选择频道)">
+          <el-form-item label="房间列表[region:roomId](用于选择房间)">
             <template>
               <el-select v-model="regionRoomId" placeholder="" style="width: 200px;">
                 <el-option
@@ -88,13 +88,13 @@
       </el-col>
     </el-row>
 
-    <el-dialog align="left" title="创建频道实例" :visible="createRoomModelVisible" @close="closeCreateRoomModel" customClass="customWidth">
+    <el-dialog align="left" title="创建房间实例" :visible="createRoomModelVisible" @close="closeCreateRoomModel" customClass="customWidth">
       <create-room :client="client" @onGetRoom=getRoom></create-room>
     </el-dialog>
 
     <p class="text-unit">加入/退出Room</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height: 35px;text-align:left;" >
+      <el-col :span="24" style="height:35px; text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item class="search">
             <el-button type="primary" @click="join" style="border-radius:4px">join</el-button>
@@ -106,19 +106,21 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{joinOrLeaveRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{joinOrLeaveRes}}</p>
     </div>
 
-    <p class="text-unit">A给频道发消息</p>
+    <p class="text-unit">A给房间发消息</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
-          <el-form-item label="content">
-            <el-input v-model="sendMessageReq.content" style="width: 200px;"></el-input>
+          <el-form-item>
+            <el-button @click="showCreateRoomAppExtrasModel" style="border-radius:4px">appExtras</el-button>
           </el-form-item>
-
+          <el-form-item label="content">
+            <el-input v-model="sendMessageReq.content" style="width:200px;"></el-input>
+          </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="sendMessage" style="border-radius: 4px">sendMessage</el-button>
+            <el-button type="primary" @click="sendMessage" style="border-radius:4px">sendMessage</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -127,25 +129,31 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{sendMessageRes}}</p>
     </div>
 
+    <el-dialog align="left" title="AppExtras" :visible="createRoomAppExtrasVisible" @close="closeCreateRoomAppExtrasModel">
+      <editable-table :tableData="roomAppExtras" @onGetPlainObject=getRoomAppExtras></editable-table>
+    </el-dialog>
+
     <p class="text-unit">设置用户属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px; text-align:left;" >
         <el-form :inline="true"  size="small">
-          <el-form-item label="key">
-            <el-input v-model="setUserAttributesReq.key"></el-input>
-          </el-form-item>
-          <el-form-item label="prop">
-            <el-input v-model="setUserAttributesReq.prop"></el-input>
+          <el-form-item>
+            <el-button @click="showSetUserAttributesModel" style="border-radius:4px">attribtes</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary"  @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
+            <el-button type="primary"  @click="setUserAttributes" style="border-radius:4px">setUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{setUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{setUserAttributesRes}}</p>
     </div>
+
+    <el-dialog align="left" title="atrributes" :visible="setUserAttributesVisible" @close="closeSetUserAttributesModel">
+      <editable-table 
+      :tableData="setUserAttributesReq.attributes" @onGetPlainObject="onSetUserAttributes"></editable-table>
+    </el-dialog>
 
     <p class="text-unit">删除用户某些属性</p>
     <el-row type="flex" class="row-bg">
@@ -155,16 +163,16 @@
             <el-input v-model="deleteUserAttributesReq.keys"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="deleteUserAttributesByKeys" style="border-radius: 4px">deleteUserAttributesByKeys</el-button>
+            <el-button type="primary" @click="deleteUserAttributesByKeys" style="border-radius:4px">deleteUserAttributesByKeys</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{deleteUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{deleteUserAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">删除用户所有属性</p>
+    <p class="text-unit">清空用户属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
@@ -182,11 +190,8 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
-          <el-form-item label="key">
-            <el-input v-model="addOrUpdateUserAttributesReq.key"></el-input>
-          </el-form-item>
-          <el-form-item label="prop">
-            <el-input v-model="addOrUpdateUserAttributesReq.prop"></el-input>
+          <el-form-item>
+            <el-button @click="showAddOrUpdateUserAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="addOrUpdateUserAttributes" style="border-radius: 4px">addOrUpdateUserAttributes</el-button>
@@ -197,6 +202,12 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateUserAttributesRes}}</p>
     </div>
+
+    <el-dialog align="left" title="atrributes" :visible="addOrUpdateUserAttributesVisible" @close="closeAddOrUpdateUserAttributesModel">
+      <editable-table 
+      :tableData="addOrUpdateUserAttributesReq.attributes" @onGetPlainObject="onAddOrUpdateUserAttributes"></editable-table>
+    </el-dialog>
+
 
     <p class="text-unit">查询某指定用户指定属性名的属性</p>
     <el-row type="flex" class="row-bg">
@@ -235,7 +246,7 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getUserAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">查询频道用户列表</p>
+    <p class="text-unit">查询房间用户列表</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
@@ -249,7 +260,7 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getMembersRes}}</p>
     </div>
 
-    <p class="text-unit">查询单个或多个频道的成员人数</p>
+    <p class="text-unit">查询单个或多个房间的成员人数</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
@@ -278,15 +289,12 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getRoomMemberCountRes}}</p>
     </div>
     
-    <p class="text-unit">设置频道属性</p>
+    <p class="text-unit">设置房间属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">     
-          <el-form-item label="key">
-            <el-input v-model="setRoomAttributesReq.key"></el-input>
-          </el-form-item>
-          <el-form-item label="prop">
-            <el-input v-model="setRoomAttributesReq.prop"></el-input>
+          <el-form-item>
+            <el-button @click="showSetRoomAttributesModel" style="border-radius:4px">attribtes</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="setRoomAttributes" style="border-radius: 4px">setRoomAttributes</el-button>
@@ -298,7 +306,12 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{setRoomAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">删除频道某些属性</p>
+    <el-dialog align="left" title="atrributes" :visible="setRoomAttributesVisible" @close="closeSetRoomAttributesModel">
+      <editable-table 
+      :tableData="setRoomAttributesReq.attributes" @onGetPlainObject="onSetRoomAttributes"></editable-table>
+    </el-dialog>
+
+    <p class="text-unit">删除房间某些属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">   
@@ -315,7 +328,7 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{deleteRoomAttributesByKeysRes}}</p>
     </div>
 
-    <p class="text-unit">删除频道所有属性</p>
+    <p class="text-unit">清空房间属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
@@ -329,15 +342,12 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{clearRoomAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">增加或更新频道某些属性</p>
+    <p class="text-unit">增加或更新房间某些属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="key">
-            <el-input v-model="addOrUpdateRoomAttributesReq.key"></el-input>
-          </el-form-item>
-          <el-form-item label="prop">
-            <el-input v-model="addOrUpdateRoomAttributesReq.prop"></el-input>
+        <el-form :inline="true" size="small">
+          <el-form-item>
+            <el-button @click="showAddOrUpdateRoomAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="addOrUpdateRoomAttributes" style="border-radius:4px">addOrUpdateRoomAttributes</el-button>
@@ -349,9 +359,15 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{addOrUpdateRoomAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">查询某指定频道指定属性名的属性</p>
+    <el-dialog align="left" title="atrributes" :visible="addOrUpdateRoomAttributesVisible" @close="closeAddOrUpdateRoomAttributesModel">
+      <editable-table 
+      :tableData="addOrUpdateRoomAttributesReq.attributes" @onGetPlainObject="onAddOrUpdateRoomAttributes"></editable-table>
+    </el-dialog>
+
+
+    <p class="text-unit">查询某指定房间指定属性名的属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px; text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item label="keys">
             <el-input v-model="getRoomAttributesByKeysReq.keys"></el-input>
@@ -366,7 +382,7 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getRoomAttributesByKeysRes}}</p>
     </div>
 
-    <p class="text-unit">查询某指定频道的全部属性</p>
+    <p class="text-unit">查询某指定房间的全部属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
@@ -377,7 +393,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getRoomAttributesRes}}</p>
     </div>
 
     <!-- P2P消息 -->
@@ -387,37 +403,44 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item>
+            <el-button @click="showCreateAppExtrasModel" style="border-radius:4px">appExtras</el-button>
+          </el-form-item>
           <el-form-item label="content">
-            <el-input v-model="sendMessageToUserReq.content" style="width: 200px;"></el-input>
+            <el-input v-model="sendMessageToUserReq.content" style="width:200px;"></el-input>
           </el-form-item>
           <el-form-item label="receiver">
             <el-input v-model="sendMessageToUserReq.receiver" style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="sendMessageToUser" style="border-radius: 4px">sendMessageToUser</el-button>
+            <el-button type="primary" @click="sendMessageToUser" style="border-radius:4px">sendMessageToUser</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{sendMessageToUserRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{sendMessageToUserRes}}</p>
     </div>
+
+    <el-dialog align="left" title="AppExtras" :visible="createAppExtrasVisible" @close="closeCreateAppExtrasModel">
+      <editable-table :tableData="appExtras" @onGetPlainObject=getAppExtras></editable-table>
+    </el-dialog>
     
     <p class="text-unit">批量查询登录在线状态</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24"  style="height:35px; text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item label="uids">
             <el-input v-model="queryUsersOnlineStatusReq.uids"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="queryUsersOnlineStatus" style="border-radius: 4px">queryUsersOnlineStatus</el-button>
+            <el-button type="primary" @click="queryUsersOnlineStatus" style="border-radius:4px">queryUsersOnlineStatus</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{queryUsersOnlineStatusRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{queryUsersOnlineStatusRes}}</p>
     </div>
 
     <!-- 辅助工具 -->
@@ -425,13 +448,13 @@
 
     <p class="text-unit">获取实例信息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24"  style="height:35px; text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="getInstanceInfo" style="border-radius: 4px">getInstanceInfo</el-button>
+            <el-button type="primary" @click="getInstanceInfo" style="border-radius:4px">getInstanceInfo</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="clearMqData" style="border-radius: 4px">清除MQ队列</el-button>
+            <el-button type="primary" @click="clearMqData" style="border-radius:4px">清除MQ队列</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -449,6 +472,7 @@
   import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateRoom from './create_room.vue';
+  import EditableTable from '@/components/units/editable_table.vue';
   //import Hummer from 'hummer-rts-sdk';
 
   const UID = getStorage('uid');
@@ -468,7 +492,7 @@
         hummer: null,
         client: null,
         rooms: [],
-        appid: APPID,
+        appid: Number(APPID),
         uid: UID,
         token: TOKEN,
         region: REGION || 'cn',
@@ -477,6 +501,8 @@
         regionRoomId: null,
         regionRoomIds: [],
         rtsRoom: null,
+        appExtras: {},
+        roomAppExtras: {},
         mq_data: [],
         mq_room_data: [],
         reliable: [{
@@ -490,8 +516,9 @@
         userRegion: 'cn',
         joinOrLeaveRes: '',
         setUserAttributesReq: {
-          key: TEST_ROLE_KEY,
-          prop: 'teacher',
+          //key: TEST_ROLE_KEY,
+          //prop: 'teacher',
+          attribtes: {},
         },
         setUserAttributesRes: '',
         deleteUserAttributesReq: {
@@ -501,8 +528,9 @@
         deleteUserAttributesRes: '',
         clearUserAttributesRes: '',
         addOrUpdateUserAttributesReq: {
-          key: TEST_ROLE_KEY,
-          prop: 'student',
+          //key: TEST_ROLE_KEY,
+          //prop: 'student',
+          attribtes: {},
         },
         addOrUpdateUserAttributesRes: '',
         getMembersReq: {
@@ -533,8 +561,9 @@
         },
         getRoomMemberCountRes: '',
         setRoomAttributesReq: {
-          key: TEST_ROOM_NAME_KEY,
-          prop: 'nginx大讲堂',
+          //key: TEST_ROOM_NAME_KEY,
+          //prop: 'nginx大讲堂',
+          attributes: {},
         },
         setRoomAttributesRes: '',
         deleteRoomAttributesByKeysReq: {
@@ -543,8 +572,9 @@
         deleteRoomAttributesByKeysRes: '',
         clearRoomAttributesRes: '',
         addOrUpdateRoomAttributesReq: {
-          key: TEST_ROOM_NAME_KEY,
-          prop: 'nginx大讲堂',
+          //key: TEST_ROOM_NAME_KEY,
+          //prop: 'nginx大讲堂',
+          attributes: {},
         },
         addOrUpdateRoomAttributesRes: '',
         getRoomAttributesRes: '',
@@ -562,11 +592,18 @@
     components: {
       CreateRoom,
       RefreshToken,
+      EditableTable,
     },
     computed: {
       ...mapState({
         createRoomModelVisible: state => state.room.createRoomModelVisible,
         refreshTokenModelVisible: state => state.refreshToken.refreshTokenModelVisible,
+        createAppExtrasVisible: state => state.appExtras.createAppExtrasVisible,
+        createRoomAppExtrasVisible: state => state.roomAppExtras.createRoomAppExtrasVisible,
+        setUserAttributesVisible: state => state.setUserAttributes.setUserAttributesVisible,
+        addOrUpdateUserAttributesVisible: state => state.addOrUpdateUserAttributes.addOrUpdateUserAttributesVisible,
+        setRoomAttributesVisible: state => state.setRoomAttributes.setRoomAttributesVisible,
+        addOrUpdateRoomAttributesVisible: state => state.addOrUpdateRoomAttributes.addOrUpdateRoomAttributesVisible,
       })
     },
     watch: {
@@ -603,6 +640,43 @@
       },
       closeCreateRoomModel() {
         this.$store.commit('updateCreateRoomModelVisible', false)
+      },
+      showCreateAppExtrasModel() {
+        this.$store.commit('updateCreateAppExtrasVisible', true);
+      },
+      closeCreateAppExtrasModel() {
+        this.$store.commit('updateCreateAppExtrasVisible', false)
+      },
+      showCreateRoomAppExtrasModel() {
+        this.$store.commit('updateCreateRoomAppExtrasVisible', true);
+      },
+      closeCreateRoomAppExtrasModel() {
+        this.$store.commit('updateCreateRoomAppExtrasVisible', false)
+      },
+      showSetUserAttributesModel() {
+        this.$store.commit('updateSetUserAttributesVisible', true);
+      },
+      closeSetUserAttributesModel() {
+        this.$store.commit('updateSetUserAttributesVisible', false)
+      },
+      showAddOrUpdateUserAttributesModel() {
+        this.$store.commit('updateAddOrUpdateUserAttributesVisible', true);
+      },
+      closeAddOrUpdateUserAttributesModel() {
+        this.$store.commit('updateAddOrUpdateUserAttributesVisible', false)
+      },
+      showSetRoomAttributesModel() {
+        console.log('showSetRoomAttributesModel');
+        this.$store.commit('updateSetRoomAttributesVisible', true);
+      },
+      closeSetRoomAttributesModel() {
+        this.$store.commit('updateSetRoomAttributesVisible', false)
+      },
+      showAddOrUpdateRoomAttributesModel() {
+        this.$store.commit('updateAddOrUpdateRoomAttributesVisible', true);
+      },
+      closeAddOrUpdateRoomAttributesModel() {
+        this.$store.commit('updateAddOrUpdateRoomAttributesVisible', false)
       },
       async login() {
         if (!this.hummer)
@@ -683,7 +757,7 @@
         this.onReceiveRoomMessage(rtsRoom);
         // 用户属性变更
         this.onMemberAttributesUpdated(rtsRoom);
-        // 频道属性变更
+        // 房间属性变更
         this.onRoomAttributesUpdated(rtsRoom);
 
         this.onRoomMemberOffline(rtsRoom);
@@ -699,7 +773,7 @@
           
           this.joinOrLeaveRes = '';
           const res = await this.rtsRoom.room.join(req);
-          console.log("自己进入频道join res:", res);
+          console.log("自己进入房间join res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         } catch(e) {
           console.error("join err:", e);
@@ -713,12 +787,16 @@
         try {
           this.joinOrLeaveRes = '';
           const res = await this.rtsRoom.room.leave();
-          console.log("自己离开频道leave: res=", res);
+          console.log("自己离开房间leave: res=", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         } catch(e) {
           console.error("leave err:", e);
           this.joinOrLeaveRes = JSON.stringify(e);
         }
+      },
+      getRoomAppExtras(data) {
+        console.log('getRoomAppExtras roomAppExtras=', data);
+        this.roomAppExtras = data;
       },
       async sendMessage() {
         if (!this.rtsRoom)
@@ -726,13 +804,13 @@
         
         try {
           let content = this.sendMessageReq.content;
-          let appExtras = {nickname: "awu", rtc: 'sfu/mcu'};
+          //let appExtras = {nickname: "awu", rtc: 'sfu/mcu'};
           
           this.sendMessageRes = '';
           const res = await this.rtsRoom.room.sendMessage({
             type: "100", 
             content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
-            appExtras: appExtras
+            appExtras: this.roomAppExtras
           });
           console.log("sendMessage res=" + JSON.stringify(res));
           this.sendMessageRes = JSON.stringify(res);
@@ -743,21 +821,22 @@
           this.sendMessageRes = JSON.stringify(e);
         }
       },
+      onSetUserAttributes(data) {
+        console.log('onSetUserAttributes attributes=', data);
+        this.setUserAttributesReq.attributes = data;
+      },
       async setUserAttributes() {
         if (!this.rtsRoom)
           return;
 
         try {
-          let attributes = {
-            "Name": "awu",
-            "Description": "js_sdk测试",
-            "Bulletin": "bull",
-            "Extention": "ex"
-          };
+          let attributes = this.setUserAttributesReq.attributes || {};
     
+          /*
           let key = this.setUserAttributesReq.key;
           let prop = this.setUserAttributesReq.prop;
           attributes[key] = prop;
+          */
           
           let req = { attributes };
           this.setUserAttributesRes = '';
@@ -808,18 +887,22 @@
           this.clearUserAttributesRes = JSON.stringify(e);
         }
       },
+      onAddOrUpdateUserAttributes(data) {
+        console.log('onAddOrUpdateUserAttributes attributes=', data);
+        this.addOrUpdateUserAttributesReq.attributes = data;
+      },
       async addOrUpdateUserAttributes() {
         if (!this.rtsRoom)
           return;
 
         try {
-          let attributes = {
-            "Name": "awu",
-          };
+          let attributes = this.addOrUpdateUserAttributesReq.attributes || {};
     
+          /*
           let key = this.addOrUpdateUserAttributesReq.key;
           let prop = this.addOrUpdateUserAttributesReq.prop;
           attributes[key] = prop;
+          */
           
           let req = { attributes };
           this.addOrUpdateUserAttributesRes = '';
@@ -909,12 +992,17 @@
           this.getRoomMemberCountRes = JSON.stringify(e);
         }
       },
+      onSetRoomAttributes(data) {
+        console.log('onSetRoomAttributes attributes=', data);
+        this.setRoomAttributesReq.attributes = data;
+      },
       // Room Attributes
       async setRoomAttributes() {
         if (!this.rtsRoom)
           return;
 
         try {
+          /*
           let attributes = {
             "Name": "awu",
             "Description": "js_sdk测试",
@@ -925,7 +1013,9 @@
           let key = this.setRoomAttributesReq.key;
           let prop = this.setRoomAttributesReq.prop;
           attributes[key] = prop;
+          */
           
+          let attributes = this.setRoomAttributesReq.attributes || {};
           let req = { attributes };
           console.log('setRoomAttributes: req=', req);
 
@@ -978,19 +1068,23 @@
           this.clearRoomAttributesRes = JSON.stringify(e);
         }
       },
+      onAddOrUpdateRoomAttributes(data) {
+        console.log('onAddOrUpdateRoomAttributes attributes=', data);
+        this.addOrUpdateRoomAttributesReq.attributes = data;
+      },
       async addOrUpdateRoomAttributes() {
         if (!this.rtsRoom)
           return;
 
         try {
-          let attributes = {
-            "owner": "awu",
-          };
-    
+          /*
+          let attributes = {};
           let key = this.addOrUpdateRoomAttributesReq.key;
           let prop = this.addOrUpdateRoomAttributesReq.prop;
           attributes[key] = prop;
-          
+          */
+
+          let attributes = this.addOrUpdateRoomAttributesReq.attributes || {};
           let req = { attributes };
           console.log('addOrUpdateRoomAttributes: req=', req);
 
@@ -1041,7 +1135,10 @@
           this.getRoomAttributesByKeysRes = JSON.stringify(e);
         }
       },
-
+      getAppExtras(data) {
+        console.log('getAppExtras appExtras=', data);
+        this.appExtras = data;
+      },
       async sendMessageToUser() {
         if (!this.client)
           return;
@@ -1049,14 +1146,14 @@
         try {
           let content = this.sendMessageToUserReq.content;
           let receiver = this.sendMessageToUserReq.receiver;
-          let appExtras = {nickname: "awu", rtc: 'p2p'}
+          //let appExtras = {nickname: "awu", rtc: 'p2p'}
           
           this.sendMessageToUserRes = '';
           const res = await this.client.sendMessageToUser({
             receiver: receiver, 
             type: "100", 
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
-            appExtras: appExtras
+            appExtras: this.appExtras
           });
           console.log("sendMessageToUser res=" + JSON.stringify(res));
           this.sendMessageToUserRes = JSON.stringify(res);
