@@ -712,6 +712,7 @@
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
           console.error("joinChatRoom", err);
+          this.joinOrLeaveRes = JSON.stringify(err);
         })
       },
       leaveChatRoom() {
@@ -722,8 +723,9 @@
         this.chatClient.chatroom.leaveChatRoom().then((res) => {
           console.log("leaveChatRoom Res: " + JSON.stringify(res));
           this.joinOrLeaveRes = JSON.stringify(res);
-        }).catch((err) => {
+        }).catch(err => {
           console.error("leaveChatRoom", err);
+          this.joinOrLeaveRes = JSON.stringify(err);
         })
       },
       onUpdateChatRoomAttributes(data) {
@@ -752,6 +754,7 @@
           console.log("updateChatRoomAttributes Res: " + JSON.stringify(res));
         }).catch(err => {
           console.log(err)
+          this.updateChatRoomAttributesRes = JSON.stringify(err);
         })
       },
       dismissChatRoom() {
@@ -769,7 +772,8 @@
             setStorage("roomid", this.roomid);
           }
         }).catch(err => {
-          console.log(err)
+          console.log(err);
+          this.dismissChatRoomRes = JSON.stringify(err);
         });
       },
       kickOffUser() {
@@ -787,6 +791,7 @@
           console.log("kickOffUser res: " + JSON.stringify(res));
         }).catch((err) => {
           console.log(err)
+          this.kickOffUserRes = JSON.stringify(err);
         })
       },
       sendGroupMessage() {
@@ -801,6 +806,7 @@
           this.sendGroupMessageRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
+          this.sendGroupMessageRes = JSON.stringify(err);
         })
       },
       sendSingleUserMessage() {
@@ -817,6 +823,7 @@
           this.sendSingleUserMessageRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
+          this.sendSingleUserMessageRes = JSON.stringify(err);
         })
       },
       sendTextChat() {
@@ -835,6 +842,7 @@
           this.sendTextChatRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
+          this.sendTextChatRes = JSON.stringify(err);
         })
       },
       async muteUser() {
@@ -853,6 +861,7 @@
           console.log("muteUser res=" + JSON.stringify(res));
         } catch (e) {
           console.log("muteUser err=", e);
+          this.muteUserRes = JSON.stringify(e);
         };
       },
       async unMuteUser() {
@@ -871,6 +880,7 @@
           console.log("unMuteUser res=" + JSON.stringify(res));
         } catch (e) {
           console.log("unMuteUser err=", e);
+          this.muteUserRes = JSON.stringify(e);
         };
       },
       getChatRoomAttributes() {
@@ -883,6 +893,7 @@
           this.getChatRoomAttributesRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
+          this.getChatRoomAttributesRes = JSON.stringify(err);
         })
       },
       getChatRoomManager() {
@@ -898,6 +909,7 @@
           this.getChatRoomManagerRes = JSON.stringify(res);
         }).catch((err) => {
           console.log(err)
+          this.getChatRoomManagerRes = JSON.stringify(err);
         })
       },
       getUserCount() {
@@ -910,6 +922,7 @@
           this.getUserCountRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
+          this.getUserCountRes = JSON.stringify(err);
         })
       },
       getUserList() {
@@ -927,6 +940,7 @@
           this.getUserListRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
+          this.getUserListRes = JSON.stringify(err);
         })
       },
       async getMutedUserList() {
@@ -940,6 +954,7 @@
           this.getMutedUserListRes = JSON.stringify(res);
         } catch(e) {
           console.error("getMutedUserList err=", e);
+          this.getMutedUserListRes = JSON.stringify(e);
         };
       },
       onSetChatRoomUserAttributes(data) {
@@ -969,6 +984,7 @@
           this.setUserAttributesRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
+          this.setUserAttributesRes = JSON.stringify(err);
         })
       },
       getUserAttributesList() {
@@ -978,8 +994,9 @@
         this.chatClient.chatroom.getUserAttributesList().then((res) => {
           console.log("getUserAttributesList Res: " + JSON.stringify(res));
           this.getUserAttributesListRes = JSON.stringify(res);
-        }).catch((err) => {
+        }).catch(err => {
           console.log(err)
+          this.getUserAttributesListRes = JSON.stringify(err);
         })
       },
       getState() {
@@ -998,6 +1015,7 @@
           this.getInstanceInfoRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err);
+          this.getInstanceInfoRes = JSON.stringify(err);
         });
       },
 
