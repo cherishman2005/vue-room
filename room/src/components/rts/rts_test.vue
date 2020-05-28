@@ -747,6 +747,11 @@
           return;
         }
 
+        // todo
+        if (Object.keys(this.rooms).indexOf(this.regionRoomId) > -1) {
+          return;
+        }
+
         this.rooms[this.regionRoomId] = data;
         this.regionRoomIds.push({value: this.regionRoomId, label: this.regionRoomId});
 
@@ -1210,7 +1215,7 @@
         const eventName = "MessageFromUser";
         this.client.on(eventName, (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-          console.log(`接收消息${eventName}: ` + JSON.stringify(data));
+          console.log(`rts-demo 接收消息${eventName}: ` + JSON.stringify(data));
           this.mq_data.push(data);
 
           this.$message({
@@ -1231,7 +1236,7 @@
         ];
         roomEvents.forEach(eventName => {
           rtsRoom.room.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
+            console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
             this.$message({
               duration: 3000,
               message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
@@ -1245,7 +1250,7 @@
         const eventName = 'RoomMessage';
         rtsRoom.room.on(eventName, (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-          console.log(`接收组播消息${eventName}: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
+          console.log(`rts-demo 接收组播消息${eventName}: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
           this.mq_room_data.push(data);
 
           this.$message({
@@ -1266,7 +1271,7 @@
         ];
         roomEvents.forEach(eventName => {
           rtsRoom.room.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
+            console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
             this.$message({
               duration: 3000,
               message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
@@ -1284,7 +1289,7 @@
         ];
         roomEvents.forEach(eventName => {
           rtsRoom.room.on(eventName, (data) => {
-            console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
+            console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
             this.$message({
               duration: 3000,
               message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
@@ -1296,7 +1301,7 @@
       onRoomMemberOffline(rtsRoom) {
         const eventName = "RoomMemberOffline";
         rtsRoom.room.on(eventName, () => {
-          console.log(`接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`);
+          console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`);
           this.$message({
             duration: 3000,
             message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`,
@@ -1307,7 +1312,7 @@
       onConnectStatusChange() {
         const eventName = "ConnectionStateChanged";
         this.hummer.on(eventName, (data) => {
-          console.log(`=== ${eventName} ===:` + JSON.stringify(data));
+          console.log(`rts-demo === ${eventName} ===:` + JSON.stringify(data));
           this.$message({
             duration: 3000,
             message: `${eventName}: ` + JSON.stringify(data),
@@ -1320,7 +1325,7 @@
       onTokenExpired() {
         const eventName = "TokenExpired";
         this.hummer.on(eventName, () => {
-          console.log(`=== ${eventName} ===`);
+          console.log(`rts-demo === ${eventName} ===`);
           this.$message({
             duration: 3000,
             message: `${eventName}`,
