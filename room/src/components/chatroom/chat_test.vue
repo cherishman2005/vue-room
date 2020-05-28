@@ -673,7 +673,13 @@
           return;
         }
         
+        // todo:
+        if (Object.keys(this.chatrooms).indexOf(this.regionChatroomId) > -1) {
+          return;
+        }
+
         this.chatrooms[this.regionChatroomId] = {
+          
           chatroom: chatroom,
           region: this.region,
           roomid: this.roomid
@@ -1022,7 +1028,7 @@
       /*  消息接收模块 */
       onSingleUserMessageReceived(client) {
         client.chatroom.on('SingleUserMessage', (data) => {
-          console.log("接收消息SingleUserMessage： " + JSON.stringify(data));
+          console.log("chatroom-demo 接收消息SingleUserMessage： " + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1033,7 +1039,7 @@
       },
       onChatRoomDismissed(client) {
         client.chatroom.on('ChatRoomDismissed', (data) => {
-          console.log("接收消息ChatRoomDismissed： " + JSON.stringify(data));
+          console.log("chatroom-demo 接收消息ChatRoomDismissed： " + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1044,7 +1050,7 @@
       },
       onChatRoomAttributesUpdated(client)  {
         client.chatroom.on('ChatRoomAttributesUpdated', (data) => {
-          console.log("接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data));
+          console.log("chatroom-demo 接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1055,7 +1061,7 @@
       },
       onUserKickedOff(client) {
         client.chatroom.on('UserKickedOff', (data) => {
-          console.log("接收消息UserKickedOff：" + JSON.stringify(data));
+          console.log("chatroom-demo 接收消息UserKickedOff：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1066,7 +1072,7 @@
       },
       onGroupMessageReceived(client) {
         client.chatroom.on('GroupMessage', (data) => {
-          console.log("接收消息GroupMessage：" + JSON.stringify(data));
+          console.log("chatroom-demo 接收消息GroupMessage：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1084,7 +1090,7 @@
 
         eventName.forEach(eventName => {
           client.chatroom.on(eventName, (data) => {
-            console.log(`接收消息${eventName}：` + JSON.stringify(data));
+            console.log(`chatroom-demo 接收消息${eventName}：` + JSON.stringify(data));
 
             this.$message({
               duration: 3000,
@@ -1096,7 +1102,7 @@
       },
       onUserCountUpdated(client) {
         client.chatroom.on('UserCountUpdated', (data) => {
-          console.log("接收消息UserCountUpdated：" + JSON.stringify(data));
+          console.log("chatroom-demo 接收消息UserCountUpdated：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1107,7 +1113,7 @@
       },
       onUserAttributesSet(client) {
         client.chatroom.on('UserAttributesSet', (data) => {
-          console.log("接收消息UserAttributesSet：" + JSON.stringify(data));
+          console.log("chatroom-demo 接收消息UserAttributesSet：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1118,7 +1124,7 @@
       },
       onUserOnlineUpdated(client) {
         client.chatroom.on('UserOnlineUpdated', (data) => {
-          console.log("接收消息UserOnlineUpdated：" + JSON.stringify(data));
+          console.log("chatroom-demo 接收消息UserOnlineUpdated：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1130,7 +1136,7 @@
       onChatRoomUserOffline(client) {
         const eventName = "ChatRoomUserOffline";
         client.chatroom.on(eventName, () => {
-          console.log(`接收消息${eventName}`);
+          console.log(`chatroom-demo 接收消息${eventName}`);
           this.$message({
             duration: 3000,
             message: `${eventName}`,
@@ -1140,7 +1146,7 @@
       },
       onConnectionStateChanged() {
         this.hummer.on('ConnectionStateChanged', (data) => {
-          console.log("=== ConnectionStateChanged ===:" + JSON.stringify(data));
+          console.log("chatroom-demo === ConnectionStateChanged ===:" + JSON.stringify(data));
           this.$message({
             duration: 3000,
             message: `ConnectionStateChanged: ` + JSON.stringify(data),
@@ -1150,7 +1156,7 @@
       },
       onTokenExpired() {
         this.hummer.on('TokenExpired', () => {
-          console.log("=== TokenExpired ===");
+          console.log("chatroom-demo === TokenExpired ===");
           this.$message({
             duration: 3000,
             message: `TokenExpired`,
