@@ -1,10 +1,10 @@
 <template>
     <div>
         <el-row>
-            <el-col span="24">
+            <el-col :span="24">
                 <el-table size="mini" :data="key_value.data" border style="width: 100%" highlight-current-row>
                     <el-table-column type="index"></el-table-column>
-                    <el-table-column v-for="(v,i) in key_value.columns" :prop="v.field" :label="v.title" :width="v.width">
+                    <el-table-column v-for="(v,i) in key_value.columns" :prop="v.field" :label="v.title" :width="v.width" :key="i">
                         <template slot-scope="scope">
                             <span v-if="scope.row.isSet">
                                 <el-input size="mini" placeholder="请输入内容" v-model="key_value.sel[v.field]">
@@ -28,7 +28,7 @@
                     </el-table-column>
                 </el-table>
             </el-col>
-            <el-col span="24">
+            <el-col :span="24">
                 <div class="el-table-add-row" style="width: 99.2%;" @click="addTableData()"><span>+ 添加</span></div>
             </el-col>
         </el-row>
@@ -62,8 +62,11 @@
         props: {
             tableData: {
                 type: Object,
-                required: true
-            },
+                required: true,
+                default () {
+                  return {}
+                }
+            }
         },
         components: {
             ElForm: Form,
@@ -77,7 +80,7 @@
         data() {
             return {
                 key_value: {
-                    sel: null,//选中行   
+                    sel: null,//选中行
                     columns: [
                         { field: "key", title: "key", width: 120 },
                         { field: "value", title: "value", width: 220 },
@@ -121,6 +124,7 @@
                 this.$store.commit('updateSetGroupAttributesVisible', false);
                 this.$store.commit('updateUpdateGroupAttributesVisible', false);
                 this.$store.commit('updateSetGroupUserAttributesVisible', false);
+                this.$emit('close')
             },
             createPlainObject() {
                 //console.log('key_value.data=', this.key_value.data);
@@ -140,7 +144,7 @@
             },
             //读取表格数据
             readTableData() {
-                //根据实际情况，自己改下啊 
+                //根据实际情况，自己改下啊
                 this.key_value.data.map(i => {
                     i.id = generateId.get();//模拟后台插入成功后有了id
                     i.isSet = false;//给后台返回数据添加`isSet`标识

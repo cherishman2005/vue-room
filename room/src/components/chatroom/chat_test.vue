@@ -30,9 +30,9 @@
     </div>
 
     <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
-      <refresh-token 
-        :hummer="hummer" 
-        :uid="uid" 
+      <refresh-token
+        :hummer="hummer"
+        :uid="uid"
         @onRefreshToken=refreshToken
       >
       </refresh-token>
@@ -82,7 +82,7 @@
     -->
 
     <el-dialog align="left" title="atrributes" :visible="setGroupAttributesVisible" @close="closeSetGroupAttributesModel">
-      <editable-table 
+      <editable-table
       :tableData="this.setGroupAttributes" @onGetPlainObject="onSetChatRoomAttributes"></editable-table>
     </el-dialog>
 
@@ -121,7 +121,7 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="updateGroupAttributesVisible" @close="closeUpdateGroupAttributesModel">
-      <editable-table 
+      <editable-table
       :tableData="this.groupAttributes" @onGetPlainObject="onUpdateChatRoomAttributes"></editable-table>
     </el-dialog>
 
@@ -191,6 +191,9 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
+          <el-form-item class="search">
+            <el-button @click="showSendGroupMessageAttributesModel" style="border-radius:4px">attribtes</el-button>
+          </el-form-item>
           <el-form-item label="content">
             <el-input v-model="sendGroupMessageReq.content"></el-input>
           </el-form-item>
@@ -204,10 +207,25 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendGroupMessageRes}}</p>
     </div>
 
+    <el-dialog
+      align="left"
+      title="atrributes"
+      :visible="setSendGroupMessageAttributesVisible"
+      @close="closeSendGroupMessageAttributesModel">
+      <editable-table
+        :tableData="this.sendGroupMessageAttributes"
+        @onGetPlainObject="onSendGroupMessageAttributes"
+        @close="closeSendGroupMessageAttributesModel">
+      </editable-table>
+    </el-dialog>
+
     <p class="text-unit">发送单播消息</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
+          <el-form-item class="search">
+            <el-button @click="showSendSingleUserAttributesModel" style="border-radius:4px">attribtes</el-button>
+          </el-form-item>
           <el-form-item label="content">
             <el-input v-model="sendSingleUserMessageReq.content"></el-input>
           </el-form-item>
@@ -224,10 +242,28 @@
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendSingleUserMessageRes}}</p>
     </div>
 
+    <el-dialog
+      align="left"
+      title="atrributes"
+      :visible="setSendSingleUserAttributesVisible"
+      @close="closeSendSingleUserAttributesModel">
+      <editable-table
+        :tableData="this.sendSingleUserAttributes"
+        @onGetPlainObject="onSendSingleUserAttributes"
+        @close="closeSendSingleUserAttributesModel">
+      </editable-table>
+    </el-dialog>
+
     <p class="text-unit">发送公屏</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button @click="showSendTextChatAttributesModel" style="border-radius:4px">chatProps</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button @click="showSendTextExtAttributesModel" style="border-radius:4px">extProps</el-button>
+          </el-form-item>
           <el-form-item label="chat">
             <el-input v-model="sendTextChatReq.chat"></el-input>
           </el-form-item>
@@ -240,6 +276,30 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendTextChatRes}}</p>
     </div>
+
+    <el-dialog
+      align="left"
+      title="extProps"
+      :visible="setSendTextExtAttributesVisible"
+      @close="closeSendTextExtAttributesModel">
+      <editable-table
+        :tableData="this.sendTextExtAttributes"
+        @onGetPlainObject="onSendTextExtAttributes"
+        @close="closeSendTextExtAttributesModel">
+      </editable-table>
+    </el-dialog>
+
+    <el-dialog
+      align="left"
+      title="chatProps"
+      :visible="setSendTextChatAttributesVisible"
+      @close="closeSendTextChatAttributesModel">
+      <editable-table
+        :tableData="this.sendTextChatAttributes"
+        @onGetPlainObject="onSendTextChatAttributes"
+        @close="closeSendTextChatAttributesModel">
+      </editable-table>
+    </el-dialog>
 
     <p class="text-unit">获取聊天室所有管理员</p>
     <el-row type="flex" class="row-bg">
@@ -352,7 +412,7 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="setGroupUserAttributesVisible" @close="closeSetGroupUserAttributesModel">
-      <editable-table 
+      <editable-table
       :tableData="this.groupUserAttributes" @onGetPlainObject="onSetChatRoomUserAttributes"></editable-table>
     </el-dialog>
 
@@ -409,7 +469,7 @@
   import CreateGroup from './create_group.vue';
   import EditableTable from '@/components/units/editable_table.vue';
   //import Hummer from 'hummer-chatroom-sdk'
- 
+
   const UID = getStorage('uid');
   const ROOMID = Number(getStorage('roomid'));
   const APPID = getStorage("appid");
@@ -499,6 +559,10 @@
         },
         setUserAttributesRes: '',
         getUserAttributesListRes: '',
+        sendTextExtAttributes: {},
+        sendTextChatAttributes: {},
+        sendSingleUserAttributes: {},
+        sendGroupMessageAttributes: {}
       }
     },
     components: {
@@ -513,6 +577,10 @@
         setGroupAttributesVisible: state => state.setGroupAttributes.setGroupAttributesVisible,
         updateGroupAttributesVisible: state => state.updateGroupAttributes.updateGroupAttributesVisible,
         setGroupUserAttributesVisible: state => state.setGroupUserAttributes.setGroupUserAttributesVisible,
+        setSendTextExtAttributesVisible: state => state.setSendTextExtAttributes.setSendTextExtAttributesVisible,
+        setSendSingleUserAttributesVisible: state => state.setSendSingleUserAttributes.setSendSingleUserAttributesVisible,
+        setSendGroupMessageAttributesVisible: state => state.setSendGroupMessageAttributes.setSendGroupMessageAttributesVisible,
+        setSendTextChatAttributesVisible: state => state.setSendTextChatAttributes.setSendTextChatAttributesVisible
       })
     },
     watch: {
@@ -567,6 +635,46 @@
       closeSetGroupUserAttributesModel() {
         this.$store.commit('updateSetGroupUserAttributesVisible', false)
       },
+      showSendTextExtAttributesModel() {
+        this.$store.commit('updateSendTextExtAttributesVisible', true);
+      },
+      closeSendTextExtAttributesModel() {
+        this.$store.commit('updateSendTextExtAttributesVisible', false);
+      },
+      showSendSingleUserAttributesModel () {
+        this.$store.commit('updateSendSingleUserAttributesVisible', true);
+      },
+      closeSendSingleUserAttributesModel () {
+        this.$store.commit('updateSendSingleUserAttributesVisible', false);
+      },
+      showSendGroupMessageAttributesModel () {
+        this.$store.commit('updateSendGroupMessageAttributesVisible', true);
+      },
+      closeSendGroupMessageAttributesModel () {
+        this.$store.commit('updateSendGroupMessageAttributesVisible', false);
+      },
+      showSendTextChatAttributesModel () {
+        this.$store.commit('updateSendTextChatAttributesVisible', true);
+      },
+      closeSendTextChatAttributesModel () {
+        this.$store.commit('updateSendTextChatAttributesVisible', false);
+      },
+      onSendTextChatAttributes (data) {
+        console.log('onSendTextChatAttributes attributes=', data)
+        this.sendTextChatAttributes = data
+      },
+      onSendSingleUserAttributes (data) {
+        console.log('onSendSingleUserAttributes attributes=', data)
+        this.sendSingleUserAttributes = data
+      },
+      onSendTextExtAttributes (data) {
+        console.log('onSendTextAttributes attributes=', data)
+        this.sendTextExtAttributes = data
+      },
+      onSendGroupMessageAttributes (data) {
+        console.log('onSendGroupMessageAttributes attributes=', data)
+        this.sendGroupMessageAttributes = data
+      },
       getChatRoom(data) {
         console.log('getChatRoom data=', data);
 
@@ -617,7 +725,7 @@
       login() {
         if (!this.hummer)
           return;
-        
+
         this.loginRes = '';
         this.hummer.login({uid: this.uid, token: this.token}).then(res => {
           console.log("login res=" + JSON.stringify(res));
@@ -630,7 +738,7 @@
       logout() {
         if (!this.hummer)
           return;
-        
+
         this.loginRes = '';
         this.hummer.logout().then(res => {
           console.log("logout Res: " + JSON.stringify(res));
@@ -655,7 +763,7 @@
         }
 
         this.regionChatroomId = getRegionRoomId(this.region, this.roomid);
-        
+
         if (this.chatClient) {
           console.log('chatroom exists, and chatrooms=', this.chatrooms);
           delete this.chatClient;
@@ -672,7 +780,7 @@
         if (!chatroom) {
           return;
         }
-        
+
         this.chatrooms[this.regionChatroomId] = {
           chatroom: chatroom,
           region: this.region,
@@ -702,7 +810,7 @@
           return;
 
         console.log('regionChatroomId=', this.regionChatroomId, ' chatroom=', this.chatClient);
-        
+
         let joinProps = {"H5_sdk": 'js_sdk'};
         let req = { joinProps }
 
@@ -718,7 +826,7 @@
       leaveChatRoom() {
         if (!this.chatClient)
           return;
-        
+
         this.joinOrLeaveRes = '';
         this.chatClient.chatroom.leaveChatRoom().then((res) => {
           console.log("leaveChatRoom Res: " + JSON.stringify(res));
@@ -761,7 +869,7 @@
         if (!this.chatClient)
           return;
 
-        this.dismissChatRoomRes = ''; 
+        this.dismissChatRoomRes = '';
         this.chatClient.chatroom.dismissChatRoom().then((res) => {
           console.log("dismissChatRoom Res: ", res);
           this.dismissChatRoomRes = JSON.stringify(res);
@@ -797,7 +905,7 @@
       sendGroupMessage() {
         if (!this.chatClient)
           return;
-          
+
         let content = this.sendGroupMessageReq.content;
         let req = { content };
         this.sendGroupMessageRes = '';
@@ -812,7 +920,7 @@
       sendSingleUserMessage() {
         if (!this.chatClient)
           return;
-          
+
         let content = this.sendSingleUserMessageReq.content;
         let receiver = this.sendSingleUserMessageReq.receiver;
 
@@ -829,14 +937,15 @@
       sendTextChat() {
         if (!this.chatClient)
           return;
-          
+
         let chat = this.sendTextChatReq.chat;
-        let chatProps = { "Name": "名称chatProps" };
-        let extProps = { "Name": "名称extProps" };
-  
+        let chatProps = this.sendTextChatAttributes;
+        let extProps = this.sendTextExtAttributes;
+
         let req = { chat, chatProps, extProps }
 
         this.sendTextChatRes = '';
+        console.log(1111, req)
         this.chatClient.chatroom.sendTextChat(req).then((res) => {
           console.log("sendTextChat res: " + JSON.stringify(res));
           this.sendTextChatRes = JSON.stringify(res);
@@ -886,7 +995,7 @@
       getChatRoomAttributes() {
         if (!this.chatClient)
           return;
-        
+
         this.getChatRoomAttributesRes = '';
         this.chatClient.chatroom.getChatRoomAttributes().then((res) => {
           console.log("getChatRoomAttributes res: " + JSON.stringify(res));
@@ -899,7 +1008,7 @@
       getChatRoomManager() {
         if (!this.chatClient)
           return;
-          
+
         let roler = this.getChatRoomManagerReq.roler;
         let params = { roler }
 
@@ -915,7 +1024,7 @@
       getUserCount() {
         if (!this.chatClient)
           return;
-        
+
         this.getUserCountRes = '';
         this.chatClient.chatroom.getUserCount().then((res) => {
           console.log("getUserCount Res: " + JSON.stringify(res));
@@ -928,7 +1037,7 @@
       getUserList() {
         if (!this.chatClient)
           return;
-          
+
         let num = this.getUserListReq.num;
         let pos = this.getUserListReq.pos;
 
@@ -946,7 +1055,7 @@
       async getMutedUserList() {
         if (!this.chatClient)
           return;
-          
+
         this.getMutedUserListRes = '';
         try {
           const res = await this.chatClient.chatroom.getMutedUserList();
@@ -966,18 +1075,18 @@
           return;
 
         /*
-        let attributes = { 
-          "Name": "awu", 
-          "Description": "js_sdk测试", 
-          "Bulletin": "bull", 
-          "Extention": "ex" 
+        let attributes = {
+          "Name": "awu",
+          "Description": "js_sdk测试",
+          "Bulletin": "bull",
+          "Extention": "ex"
         };
         let key = this.setUserAttributesReq.key;
         let prop = this.setUserAttributesReq.prop;
         attributes[key] = prop;
         */
         let attributes = this.groupUserAttributes || {};
-        
+
         let req = { attributes };
         this.chatClient.chatroom.setUserAttributes(req).then((res) => {
           console.log("setUserAttributes Res: ", res);
@@ -990,7 +1099,7 @@
       getUserAttributesList() {
         if (!this.chatClient)
           return;
-          
+
         this.chatClient.chatroom.getUserAttributesList().then((res) => {
           console.log("getUserAttributesList Res: " + JSON.stringify(res));
           this.getUserAttributesListRes = JSON.stringify(res);
@@ -1003,12 +1112,12 @@
         this.state = '';
         this.state = this.hummer && this.hummer.getState();
         console.log("getState: " + this.state);
-        
+
       },
       getInstanceInfo() {
         if (!this.hummer)
           return;
-        
+
         this.getInstanceInfoRes = '';
         this.hummer.getInstanceInfo().then(res => {
           console.log("getInstanceInfo: " + JSON.stringify(res));

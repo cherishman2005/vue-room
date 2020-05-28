@@ -16,6 +16,11 @@ import setUserAttributes from './modules/setUserAttributes'
 import addOrUpdateUserAttributes from './modules/addOrUpdateUserAttributes'
 import setRoomAttributes from './modules/setRoomAttributes'
 import addOrUpdateRoomAttributes from './modules/addOrUpdateRoomAttributes'
+import setSendTextExtAttributes from './modules/setSendTextExtAttributes'
+import setSendSingleUserAttributes from './modules/setSendSingleUserAttributes'
+import setSendGroupMessageAttributes from './modules/setSendGroupMessageAttributes'
+import setSendTextChatAttributes from './modules/setSendTextChatAttributes'
+
 
 Vue.use(Vuex)
 
@@ -27,7 +32,7 @@ const state = {
   score: 0
 }
 
-const modules = { 
+const modules = {
   room,
   group,
   setGroupAttributes,
@@ -40,7 +45,11 @@ const modules = {
   setUserAttributes,
   addOrUpdateUserAttributes,
   setRoomAttributes,
-  addOrUpdateRoomAttributes
+  addOrUpdateRoomAttributes,
+  setSendTextExtAttributes,
+  setSendSingleUserAttributes,
+  setSendGroupMessageAttributes,
+  setSendTextChatAttributes
 };
 
 var store = new Vuex.Store({
