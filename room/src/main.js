@@ -20,7 +20,7 @@ import './assets/css/chat.css'
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
-
+ 
 Vue.use(VXETable)
 Vue.use(ElementUI);
 Vue.use(VueLazyload);
@@ -45,7 +45,6 @@ function getUdbAuth() {
 const whiteList = ['/author']
 
 router.beforeEach((to, from, next) => {
-  console.log('router: ', to, from)
   let uid = getStorage('uid');
   //alert('main uid: ' + uid);
   if (uid) {

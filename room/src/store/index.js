@@ -20,7 +20,7 @@ import setSendTextExtAttributes from './modules/setSendTextExtAttributes'
 import setSendSingleUserAttributes from './modules/setSendSingleUserAttributes'
 import setSendGroupMessageAttributes from './modules/setSendGroupMessageAttributes'
 import setSendTextChatAttributes from './modules/setSendTextChatAttributes'
-
+import joinChatRoomProps from './modules/joinChatRoomProps'
 
 Vue.use(Vuex)
 
@@ -49,7 +49,8 @@ const modules = {
   setSendTextExtAttributes,
   setSendSingleUserAttributes,
   setSendGroupMessageAttributes,
-  setSendTextChatAttributes
+  setSendTextChatAttributes,
+  joinChatRoomProps
 };
 
 var store = new Vuex.Store({

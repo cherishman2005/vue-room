@@ -4,7 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Hummer</title>
-    <script charset="utf-8" src="https://service-test.aivacom.com/hummer-rts-dev.js"></script>
+    <script>
+      var now = Math.round(Date.now() / 1000);
+      document.write('<script src="https://service-test.sunclouds.com/hummer-chatroom-sdk-2.1.0.js?t='
+            + now + '"><\/script\>');
+    </script>
   </head>
   <body>
     <div id="app"></div>

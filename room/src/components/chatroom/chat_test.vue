@@ -2,185 +2,6 @@
   <div class="dashboard-container">
     <h2 style="text-align:left;">聊天室调测系统（ChatRoom Tutorial）</h2>
 
-    <!--  控制监听事件提示语句显示 默认全部开启 -->
-    <p class="text-unit">开关</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="onSwitch" style="border-radius: 4px">switch</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-
-    <el-dialog align="left" title="开关" :visible="isShowSwitch" @close="closeSwitch" customClass="customWidth">
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">ChatRoomAttributesUpdated</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isChatRoomAttributesUpdated">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">ConnectionStateChanged</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isConnectionStateChanged">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">SingleUserMessage</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isSingleUserMessage">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">ChatRoomDismissed</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isChatRoomDismissed">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">UserKickedOff</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isUserKickedOff">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">GroupMessage</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isGroupMessage">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">UserCountUpdated</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isUserCountUpdated">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">UserAttributesSet</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isUserAttributesSet">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">UserOnlineUpdated</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isUserOnlineUpdated">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">ChatRoomUserOffline</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isChatRoomUserOffline">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">TokenExpired</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isTokenExpired">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">TextChat</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isTextChat">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">UsersMuted</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isUsersMuted">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">UsersUnMuted</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switchs.isUsersUnMuted">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-    </el-dialog>
-
     <!-- 登录/登出 -->
     <p class="text-unit">登录/登出</p>
     <el-row type="flex" class="row-bg">
@@ -270,6 +91,9 @@
       <el-col :span="24"  style="height:35px; text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item class="search">
+            <el-button @click="showJoinChatRoomPropsModel" style="border-radius:4px">joinProps</el-button>
+          </el-form-item>
+          <el-form-item class="search">
             <el-button type="primary" @click="joinChatRoom" style="border-radius: 4px">joinChatRoom</el-button>
           </el-form-item>
           <el-form-item class="search">
@@ -281,6 +105,11 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{joinOrLeaveRes}}</p>
     </div>
+
+    <el-dialog align="left" title="joinProps" :visible="joinChatRoomPropsVisible" @close="closeJoinChatRoomPropsModel">
+      <editable-table
+      :tableData="this.joinProps" @onGetPlainObject="onJoinChatRoomProps"></editable-table>
+    </el-dialog>
 
     <p class="text-unit">更新聊天室信息</p>
     <el-row type="flex" class="row-bg">
@@ -371,7 +200,7 @@
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item class="search">
-            <el-button @click="showSendGroupMessageAttributesModel" style="border-radius:4px">attribtes</el-button>
+            <el-button @click="showSendGroupMessageAttributesModel" style="border-radius:4px">kvExtra</el-button>
           </el-form-item>
           <el-form-item label="content">
             <el-input v-model="sendGroupMessageReq.content"></el-input>
@@ -403,7 +232,7 @@
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item class="search">
-            <el-button @click="showSendSingleUserAttributesModel" style="border-radius:4px">attribtes</el-button>
+            <el-button @click="showSendSingleUserAttributesModel" style="border-radius:4px">kvExtra</el-button>
           </el-form-item>
           <el-form-item label="content">
             <el-input v-model="sendSingleUserMessageReq.content"></el-input>
@@ -437,11 +266,16 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <!--
           <el-form-item class="search">
             <el-button @click="showSendTextChatAttributesModel" style="border-radius:4px">chatProps</el-button>
           </el-form-item>
+          -->
+          <el-form-item label="extra">
+            <el-input v-model="sendTextChatReq.extra"></el-input>
+          </el-form-item>
           <el-form-item class="search">
-            <el-button @click="showSendTextExtAttributesModel" style="border-radius:4px">extProps</el-button>
+            <el-button @click="showSendTextExtAttributesModel" style="border-radius:4px">kvExtra</el-button>
           </el-form-item>
           <el-form-item label="chat">
             <el-input v-model="sendTextChatReq.chat"></el-input>
@@ -501,6 +335,21 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px; text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="region">
+            <template>
+              <el-select v-model="getUserCountReq.region" placeholder="region" style="width:150px;">
+                <el-option
+                  v-for="item in regions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+          <el-form-item label="roomid">
+            <el-input v-model="getUserCountReq.roomid" style="width:150px;"></el-input>
+          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="getUserCount" style="border-radius:4px">getUserCount</el-button>
           </el-form-item>
@@ -538,14 +387,12 @@
           <el-form-item label="uid">
             <el-input v-model="muteUserReq.uid"></el-input>
           </el-form-item>
-          <!--
           <el-form-item label="secs">
             <el-input v-model="muteUserReq.secs"></el-input>
           </el-form-item>
           <el-form-item label="reason">
             <el-input v-model="muteUserReq.reason"></el-input>
           </el-form-item>
-          -->
           <el-form-item class="search">
             <el-button type="primary" @click="muteUser" style="border-radius:4px">muteUser</el-button>
           </el-form-item>
@@ -674,7 +521,7 @@
         loginRes: '',
         getInstanceInfoRes: '',
         JoinChatRoomReq: {
-          joinProps: "",
+          joinProps: {},
         },
         joinOrLeaveRes: '',
         setGroupAttributes: {
@@ -715,6 +562,7 @@
         sendSingleUserMessageRes: '',
         sendTextChatReq: {
           chat: "js_sdk sendTextChat",
+          extra: 'extra',
         },
         sendTextChatRes: '',
         getChatRoomAttributesRes: '',
@@ -722,6 +570,10 @@
           roler: "owner"
         },
         getChatRoomManagerRes: '',
+        getUserCountReq: {
+          region: 'cn',
+          roomid: Number(ROOMID),
+        },
         getUserCountRes: '',
         getUserListReq: {
           num: 100,
@@ -742,23 +594,7 @@
         sendTextChatAttributes: {},
         sendSingleUserAttributes: {},
         sendGroupMessageAttributes: {},
-        isShowSwitch: false,
-        switchs: {
-          isChatRoomAttributesUpdated: true,
-          isConnectionStateChanged: true,
-          isSingleUserMessage: true,
-          isChatRoomDismissed: true,
-          isUserKickedOff: true,
-          isGroupMessage: true,
-          isUserCountUpdated: true,
-          isUserAttributesSet: true,
-          isUserOnlineUpdated: true,
-          isChatRoomUserOffline: true,
-          isTokenExpired: true,
-          isTextChat: true,
-          isUsersMuted: true,
-          isUsersUnMuted: true
-        }
+        joinProps: {},
       }
     },
     components: {
@@ -776,7 +612,8 @@
         setSendTextExtAttributesVisible: state => state.setSendTextExtAttributes.setSendTextExtAttributesVisible,
         setSendSingleUserAttributesVisible: state => state.setSendSingleUserAttributes.setSendSingleUserAttributesVisible,
         setSendGroupMessageAttributesVisible: state => state.setSendGroupMessageAttributes.setSendGroupMessageAttributesVisible,
-        setSendTextChatAttributesVisible: state => state.setSendTextChatAttributes.setSendTextChatAttributesVisible
+        setSendTextChatAttributesVisible: state => state.setSendTextChatAttributes.setSendTextChatAttributesVisible,
+        joinChatRoomPropsVisible: state => state.joinChatRoomProps.joinChatRoomPropsVisible,
       })
     },
     watch: {
@@ -819,6 +656,14 @@
       closeSetGroupAttributesModel() {
         this.$store.commit('updateSetGroupAttributesVisible', false)
       },
+   
+      showJoinChatRoomPropsModel() {
+        this.$store.commit('updateJoinChatRoomPropsVisible', true);
+      },
+      closeJoinChatRoomPropsModel() {
+        this.$store.commit('updateJoinChatRoomPropsVisible', false)
+      },
+
       showUpdateGroupAttributesModel() {
         this.$store.commit('updateUpdateGroupAttributesVisible', true);
       },
@@ -1007,13 +852,17 @@
 
         setStorage("roomid", this.roomid);
       },
+      onJoinChatRoomProps(data) {
+        console.log('onJoinChatRoomProps joinProps=', data);
+        this.joinProps = data;
+      },
       joinChatRoom() {
         if (!this.chatClient)
           return;
 
         console.log('regionChatroomId=', this.regionChatroomId, ' chatroom=', this.chatClient);
 
-        let joinProps = {"H5_sdk": 'js_sdk'};
+        let joinProps = this.joinProps;    //{"H5_sdk": 'js_sdk'};
         let req = { joinProps }
 
         this.joinOrLeaveRes = '';
@@ -1109,9 +958,10 @@
           return;
 
         let content = this.sendGroupMessageReq.content;
-        let req = { content };
+        let kvExtra = this.sendGroupMessageAttributes;
+        let req = { content, kvExtra };
         this.sendGroupMessageRes = '';
-        this.chatClient.chatroom.sendGroupMessage(req).then((res) => {
+        this.chatClient.chatroom.sendGroupMessage(req).then(res => {
           console.log("sendGroupMessage res: " + JSON.stringify(res));
           this.sendGroupMessageRes = JSON.stringify(res);
         }).catch(err => {
@@ -1125,10 +975,11 @@
 
         let content = this.sendSingleUserMessageReq.content;
         let receiver = this.sendSingleUserMessageReq.receiver;
+        let kvExtra = this.sendSingleUserAttributes;
 
-        let req = { content, receiver };
+        let req = { content, receiver, kvExtra };
         this.sendSingleUserMessageRes = '';
-        this.chatClient.chatroom.sendSingleUserMessage(req).then((res) => {
+        this.chatClient.chatroom.sendSingleUserMessage(req).then(res => {
           console.log("sendSingleUserMessage res: " +  JSON.stringify(res));
           this.sendSingleUserMessageRes = JSON.stringify(res);
         }).catch(err => {
@@ -1141,13 +992,15 @@
           return;
 
         let chat = this.sendTextChatReq.chat;
-        let chatProps = this.sendTextChatAttributes;
-        let extProps = this.sendTextExtAttributes;
+        //let chatProps = this.sendTextChatAttributes;
+        let extra = this.sendTextChatReq.extra;
+        let kvExtra = this.sendTextExtAttributes;
 
-        let req = { chat, chatProps, extProps }
+        let req = { chat, extra, kvExtra }
 
         this.sendTextChatRes = '';
-        this.chatClient.chatroom.sendTextChat(req).then((res) => {
+        console.log(1111, req)
+        this.chatClient.chatroom.sendTextChat(req).then(res => {
           console.log("sendTextChat res: " + JSON.stringify(res));
           this.sendTextChatRes = JSON.stringify(res);
         }).catch(err => {
@@ -1220,19 +1073,6 @@
         }).catch((err) => {
           console.log(err)
           this.getChatRoomManagerRes = JSON.stringify(err);
-        })
-      },
-      getUserCount() {
-        if (!this.chatClient)
-          return;
-
-        this.getUserCountRes = '';
-        this.chatClient.chatroom.getUserCount().then((res) => {
-          console.log("getUserCount Res: " + JSON.stringify(res));
-          this.getUserCountRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err)
-          this.getUserCountRes = JSON.stringify(err);
         })
       },
       getUserList() {
@@ -1309,6 +1149,23 @@
           this.getUserAttributesListRes = JSON.stringify(err);
         })
       },
+      getUserCount() {
+        if (!this.hummer)
+          return;
+
+        const region = this.getUserCountReq.region;
+        const roomid = Number(this.getUserCountReq.roomid);
+        const req = {region, roomid};
+
+        this.getUserCountRes = '';
+        this.hummer.getChatRoomUserCount(req).then((res) => {
+          console.log("getChatRoomUserCount Res: " + JSON.stringify(res));
+          this.getUserCountRes = JSON.stringify(res);
+        }).catch(err => {
+          console.log(err)
+          this.getUserCountRes = JSON.stringify(err);
+        })
+      },
       getState() {
         this.state = '';
         this.state = this.hummer && this.hummer.getState();
@@ -1334,8 +1191,6 @@
         client.chatroom.on('SingleUserMessage', (data) => {
           console.log("chatroom-demo 接收消息SingleUserMessage： " + JSON.stringify(data));
 
-          if (!this.switchs.isSingleUserMessage) return;
-
           this.$message({
             duration: 3000,
             message: "接收消息SingleUserMessage： " + JSON.stringify(data),
@@ -1346,8 +1201,6 @@
       onChatRoomDismissed(client) {
         client.chatroom.on('ChatRoomDismissed', (data) => {
           console.log("chatroom-demo 接收消息ChatRoomDismissed： " + JSON.stringify(data));
-
-          if (!this.switchs.isChatRoomDismissed) return;
 
           this.$message({
             duration: 3000,
@@ -1360,8 +1213,6 @@
         client.chatroom.on('ChatRoomAttributesUpdated', (data) => {
           console.log("chatroom-demo 接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data));
 
-          if (!this.switchs.isChatRoomAttributesUpdated) return;
-
           this.$message({
             duration: 3000,
             message: "接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data),
@@ -1373,8 +1224,6 @@
         client.chatroom.on('UserKickedOff', (data) => {
           console.log("chatroom-demo 接收消息UserKickedOff：" + JSON.stringify(data));
 
-          if (!this.switchs.isUserKickedOff) return;
-
           this.$message({
             duration: 3000,
             message: "接收消息UserKickedOff：" + JSON.stringify(data),
@@ -1385,8 +1234,6 @@
       onGroupMessageReceived(client) {
         client.chatroom.on('GroupMessage', (data) => {
           console.log("chatroom-demo 接收消息GroupMessage：" + JSON.stringify(data));
-
-          if (!this.switchs.isGroupMessage) return;
 
           this.$message({
             duration: 3000,
@@ -1405,7 +1252,6 @@
         eventName.forEach(eventName => {
           client.chatroom.on(eventName, (data) => {
             console.log(`chatroom-demo 接收消息${eventName}：` + JSON.stringify(data));
-            if (!this.switchs['is' + eventName]) return;
 
             this.$message({
               duration: 3000,
@@ -1419,8 +1265,6 @@
         client.chatroom.on('UserCountUpdated', (data) => {
           console.log("chatroom-demo 接收消息UserCountUpdated：" + JSON.stringify(data));
 
-          if (!this.switchs.isUserCountUpdated) return;
-
           this.$message({
             duration: 3000,
             message: "接收消息UserCountUpdated：" + JSON.stringify(data),
@@ -1431,8 +1275,6 @@
       onUserAttributesSet(client) {
         client.chatroom.on('UserAttributesSet', (data) => {
           console.log("chatroom-demo 接收消息UserAttributesSet：" + JSON.stringify(data));
-
-          if (!this.switchs.isUserAttributesSet) return;
 
           this.$message({
             duration: 3000,
@@ -1445,8 +1287,6 @@
         client.chatroom.on('UserOnlineUpdated', (data) => {
           console.log("chatroom-demo 接收消息UserOnlineUpdated：" + JSON.stringify(data));
 
-          if (!this.switchs.isUserOnlineUpdated) return;
-
           this.$message({
             duration: 3000,
             message: "接收消息UserOnlineUpdated：" + JSON.stringify(data),
@@ -1458,9 +1298,6 @@
         const eventName = "ChatRoomUserOffline";
         client.chatroom.on(eventName, () => {
           console.log(`chatroom-demo 接收消息${eventName}`);
-
-          if (!this.switchs.isChatRoomUserOffline) return;
-
           this.$message({
             duration: 3000,
             message: `${eventName}`,
@@ -1471,9 +1308,6 @@
       onConnectionStateChanged() {
         this.hummer.on('ConnectionStateChanged', (data) => {
           console.log("chatroom-demo === ConnectionStateChanged ===:" + JSON.stringify(data));
-
-          if (!this.switchs.isConnectionStateChanged) return;
-
           this.$message({
             duration: 3000,
             message: `ConnectionStateChanged: ` + JSON.stringify(data),
@@ -1484,21 +1318,12 @@
       onTokenExpired() {
         this.hummer.on('TokenExpired', () => {
           console.log("chatroom-demo === TokenExpired ===");
-
-          if (!this.switchs.isTokenExpired) return;
-
           this.$message({
             duration: 3000,
             message: `TokenExpired`,
             type: 'success'
           });
         });
-      },
-      onSwitch () {
-        this.isShowSwitch = true
-      },
-      closeSwitch () {
-        this.isShowSwitch = false
       }
     }
   }

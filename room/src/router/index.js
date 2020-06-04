@@ -29,7 +29,6 @@ const routes = [
   {path: '/im-perf', component: im_perf, name: "im-perf" },
   {path: '/signal-test', component: signal_test, name: "signal-test" },
   {path: '/signal', component: signal, name: "signal" },
-  {path: '/', redirect: '/rts-test'},
   {path: '/rts-test', component: rts_test, name: "rts-test" },
   {path: '/table', component: table, name: "table" },
 ];

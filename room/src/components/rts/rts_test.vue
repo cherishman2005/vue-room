@@ -2,208 +2,6 @@
   <div class="dashboard-container">
     <h2 style="text-align:left;">RTS调测系统（Real-Time Signal Service Tutorial）</h2>
 
-    <!--  控制监听事件提示语句显示 默认全部开启 -->
-    <p class="text-unit">开关</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="onSwitch" style="border-radius: 4px">switch</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-
-    <el-dialog align="left" title="开关" :visible="isShowSwitch" @close="closeSwitch" customClass="customWidth">
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">ConnectionStateChanged</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isConnectionStateChanged">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">MessageFromUser</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isMessageFromUser">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">MemberJoined</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isMemberJoined">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">MemberLeft</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isMemberLeft">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">MemberCountUpdated</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isMemberCountUpdated">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">RoomMessage</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isRoomMessage">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">MemberAttributesSet</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isMemberAttributesSet">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">MemberAttributesDeleted</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isMemberAttributesDeleted">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">MemberAttributesCleared</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isMemberAttributesCleared">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">MemberAttributesAddedOrUpdated</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isMemberAttributesAddedOrUpdated">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">RoomAttributesSet</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isRoomAttributesSet">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">RoomAttributesDeleted</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isRoomAttributesDeleted">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">RoomAttributesCleared</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isRoomAttributesCleared">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">RoomAttributesAddedOrUpdated</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isRoomAttributesAddedOrUpdated">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">RoomMemberOffline</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isRoomMemberOffline">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content name">TokenExpired</div>
-        </el-col>
-        <el-col :span="12">
-          <el-radio-group v-model="switches.isTokenExpired">
-            <el-radio :label="true">开</el-radio>
-            <el-radio :label="false">关</el-radio>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-
-    </el-dialog>
-
-
     <!-- 登录/登出 -->
     <p class="text-unit">登录/登出</p>
     <el-row type="flex" class="row-bg">
@@ -244,9 +42,9 @@
     </div>
 
     <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
-      <refresh-token
-        :hummer="hummer"
-        :uid="uid"
+      <refresh-token 
+        :hummer="hummer" 
+        :uid="uid" 
         @onRefreshToken=refreshToken
       >
       </refresh-token>
@@ -353,7 +151,7 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="setUserAttributesVisible" @close="closeSetUserAttributesModel">
-      <editable-table
+      <editable-table 
       :tableData="setUserAttributesReq.attributes" @onGetPlainObject="onSetUserAttributes"></editable-table>
     </el-dialog>
 
@@ -406,7 +204,7 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="addOrUpdateUserAttributesVisible" @close="closeAddOrUpdateUserAttributesModel">
-      <editable-table
+      <editable-table 
       :tableData="addOrUpdateUserAttributesReq.attributes" @onGetPlainObject="onAddOrUpdateUserAttributes"></editable-table>
     </el-dialog>
 
@@ -490,11 +288,11 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getRoomMemberCountRes}}</p>
     </div>
-
+    
     <p class="text-unit">设置房间属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
+        <el-form :inline="true" size="small">     
           <el-form-item>
             <el-button @click="showSetRoomAttributesModel" style="border-radius:4px">attribtes</el-button>
           </el-form-item>
@@ -509,14 +307,14 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="setRoomAttributesVisible" @close="closeSetRoomAttributesModel">
-      <editable-table
+      <editable-table 
       :tableData="setRoomAttributesReq.attributes" @onGetPlainObject="onSetRoomAttributes"></editable-table>
     </el-dialog>
 
     <p class="text-unit">删除房间某些属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
+        <el-form :inline="true" size="small">   
           <el-form-item label="keys">
             <el-input v-model="deleteRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
@@ -562,7 +360,7 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="addOrUpdateRoomAttributesVisible" @close="closeAddOrUpdateRoomAttributesModel">
-      <editable-table
+      <editable-table 
       :tableData="addOrUpdateRoomAttributesReq.attributes" @onGetPlainObject="onAddOrUpdateRoomAttributes"></editable-table>
     </el-dialog>
 
@@ -627,7 +425,7 @@
     <el-dialog align="left" title="AppExtras" :visible="createAppExtrasVisible" @close="closeCreateAppExtrasModel">
       <editable-table :tableData="appExtras" @onGetPlainObject=getAppExtras></editable-table>
     </el-dialog>
-
+    
     <p class="text-unit">批量查询登录在线状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px; text-align:left;" >
@@ -789,25 +587,6 @@
         },
         queryUsersOnlineStatusRes: '',
         loginRes: '',
-        isShowSwitch: false,
-        switches: {
-          isConnectionStateChanged: true,
-          isMessageFromUser: true,
-          isMemberJoined: true,
-          isMemberLeft: true,
-          isMemberCountUpdated: true,
-          isRoomMessage: true,
-          isMemberAttributesSet: true,
-          isMemberAttributesDeleted: true,
-          isMemberAttributesCleared: true,
-          isMemberAttributesAddedOrUpdated: true,
-          isRoomAttributesSet: true,
-          isRoomAttributesDeleted: true,
-          isRoomAttributesCleared: true,
-          isRoomAttributesAddedOrUpdated: true,
-          isRoomMemberOffline: true,
-          isTokenExpired: true
-        }
       }
     },
     components: {
@@ -902,12 +681,12 @@
       async login() {
         if (!this.hummer)
           return;
-
+        
         try {
           this.loginRes = '';
           let res = await this.hummer.login({
-            region: this.userRegion,
-            uid: this.uid,
+            region: this.userRegion, 
+            uid: this.uid, 
             token: this.token
           });
 
@@ -921,7 +700,7 @@
       async logout() {
         if (!this.hummer)
           return;
-
+        
         try {
           this.loginRes = '';
           const res = await this.hummer.logout();
@@ -950,7 +729,7 @@
           console.log("client is ready");
           return;
         }
-
+        
         // 初始化RTS
         this.client = this.hummer.createRTSInstance();
 
@@ -996,7 +775,7 @@
           let extra = {"Name": "阿武"};
           let req = { extra };
           console.log("join: req=" + JSON.stringify(req));
-
+          
           this.joinOrLeaveRes = '';
           const res = await this.rtsRoom.room.join(req);
           console.log("自己进入房间join res:", res);
@@ -1027,15 +806,15 @@
       async sendMessage() {
         if (!this.rtsRoom)
           return;
-
+        
         try {
           let content = this.sendMessageReq.content;
           //let appExtras = {nickname: "awu", rtc: 'sfu/mcu'};
-
+          
           this.sendMessageRes = '';
           const res = await this.rtsRoom.room.sendMessage({
-            type: "100",
-            content: Hummer.Utify.encodeStringToUtf8Bytes(content),
+            type: "100", 
+            content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
             appExtras: this.roomAppExtras
           });
           console.log("sendMessage res=" + JSON.stringify(res));
@@ -1057,13 +836,13 @@
 
         try {
           let attributes = this.setUserAttributesReq.attributes || {};
-
+    
           /*
           let key = this.setUserAttributesReq.key;
           let prop = this.setUserAttributesReq.prop;
           attributes[key] = prop;
           */
-
+          
           let req = { attributes };
           this.setUserAttributesRes = '';
           const res = await this.rtsRoom.room.setUserAttributes(req);
@@ -1123,13 +902,13 @@
 
         try {
           let attributes = this.addOrUpdateUserAttributesReq.attributes || {};
-
+    
           /*
           let key = this.addOrUpdateUserAttributesReq.key;
           let prop = this.addOrUpdateUserAttributesReq.prop;
           attributes[key] = prop;
           */
-
+          
           let req = { attributes };
           this.addOrUpdateUserAttributesRes = '';
           const res = await this.rtsRoom.room.addOrUpdateUserAttributes(req);
@@ -1235,12 +1014,12 @@
             "Bulletin": "bull",
             "Extention": "ex"
           };
-
+    
           let key = this.setRoomAttributesReq.key;
           let prop = this.setRoomAttributesReq.prop;
           attributes[key] = prop;
           */
-
+          
           let attributes = this.setRoomAttributesReq.attributes || {};
           let req = { attributes };
           console.log('setRoomAttributes: req=', req);
@@ -1340,7 +1119,7 @@
       async getRoomAttributesByKeys() {
         if (!this.rtsRoom)
           return;
-
+        
         try {
           let keys_str = this.getRoomAttributesByKeysReq.keys;
           let keys = [];
@@ -1373,11 +1152,11 @@
           let content = this.sendMessageToUserReq.content;
           let receiver = this.sendMessageToUserReq.receiver;
           //let appExtras = {nickname: "awu", rtc: 'p2p'}
-
+          
           this.sendMessageToUserRes = '';
           const res = await this.client.sendMessageToUser({
-            receiver: receiver,
-            type: "100",
+            receiver: receiver, 
+            type: "100", 
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: this.appExtras
           });
@@ -1423,7 +1202,7 @@
           this.result = JSON.stringify(res);
         } catch(e) {
           console.error("getInstanceInfo err:", e);
-          this.result = JSON.stringify(e);
+          this.result = JSON.stringify(e); 
         }
       },
       clearMqData() {
@@ -1438,8 +1217,6 @@
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
           console.log(`rts-demo 接收消息${eventName}: ` + JSON.stringify(data));
           this.mq_data.push(data);
-
-          if (!this.switches.isMessageFromUser) return;
 
           this.$message({
             duration: 3000,
@@ -1460,9 +1237,6 @@
         roomEvents.forEach(eventName => {
           rtsRoom.room.on(eventName, (data) => {
             console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
-
-            if (!this.switches[`is${eventName}`]) return;
-
             this.$message({
               duration: 3000,
               message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
@@ -1478,8 +1252,6 @@
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
           console.log(`rts-demo 接收组播消息${eventName}: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
           this.mq_room_data.push(data);
-
-          if (!this.switches[`is${eventName}`]) return;
 
           this.$message({
             duration: 3000,
@@ -1500,9 +1272,6 @@
         roomEvents.forEach(eventName => {
           rtsRoom.room.on(eventName, (data) => {
             console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
-
-            if (!this.switches[`is${eventName}`]) return;
-
             this.$message({
               duration: 3000,
               message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
@@ -1521,9 +1290,6 @@
         roomEvents.forEach(eventName => {
           rtsRoom.room.on(eventName, (data) => {
             console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data));
-
-            if (!this.switches[`is${eventName}`]) return;
-
             this.$message({
               duration: 3000,
               message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]: ` + JSON.stringify(data),
@@ -1536,9 +1302,6 @@
         const eventName = "RoomMemberOffline";
         rtsRoom.room.on(eventName, () => {
           console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`);
-
-          if (!this.switches.isRoomMemberOffline) return;
-
           this.$message({
             duration: 3000,
             message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`,
@@ -1550,9 +1313,6 @@
         const eventName = "ConnectionStateChanged";
         this.hummer.on(eventName, (data) => {
           console.log(`rts-demo === ${eventName} ===:` + JSON.stringify(data));
-
-          if (!this.switches.isConnectionStateChanged) return;
-
           this.$message({
             duration: 3000,
             message: `${eventName}: ` + JSON.stringify(data),
@@ -1566,21 +1326,12 @@
         const eventName = "TokenExpired";
         this.hummer.on(eventName, () => {
           console.log(`rts-demo === ${eventName} ===`);
-
-          if (!this.switches.isTokenExpired) return;
-
           this.$message({
             duration: 3000,
             message: `${eventName}`,
             type: 'success'
           });
         });
-      },
-      onSwitch () {
-        this.isShowSwitch = true
-      },
-      closeSwitch () {
-        this.isShowSwitch = false
       }
     }
   }

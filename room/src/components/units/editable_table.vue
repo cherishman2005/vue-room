@@ -124,6 +124,7 @@
                 this.$store.commit('updateSetGroupAttributesVisible', false);
                 this.$store.commit('updateUpdateGroupAttributesVisible', false);
                 this.$store.commit('updateSetGroupUserAttributesVisible', false);
+                this.$store.commit('updateJoinChatRoomPropsVisible', false);
                 this.$emit('close')
             },
             createPlainObject() {
