@@ -137,6 +137,18 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px; text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="enableNotification">
+            <template>
+              <el-select v-model="setUserAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+                <el-option
+                  v-for="item in enableOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-button @click="showSetUserAttributesModel" style="border-radius:4px">attribtes</el-button>
           </el-form-item>
@@ -159,6 +171,18 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
+          <el-form-item label="enableNotification">
+            <template>
+              <el-select v-model="deleteUserAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+                <el-option
+                  v-for="item in enableOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item label="keys">
             <el-input v-model="deleteUserAttributesReq.keys"></el-input>
           </el-form-item>
@@ -176,6 +200,18 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
+          <el-form-item label="enableNotification">
+            <template>
+              <el-select v-model="clearUserAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+                <el-option
+                  v-for="item in enableOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="clearUserAttributes" style="border-radius: 4px">clearUserAttributes</el-button>
           </el-form-item>
@@ -190,11 +226,23 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
+          <el-form-item label="enableNotification">
+            <template>
+              <el-select v-model="addOrUpdateUserAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+                <el-option
+                  v-for="item in enableOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-button @click="showAddOrUpdateUserAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <el-form-item class="search">
-            <el-button type="primary" @click="addOrUpdateUserAttributes" style="border-radius: 4px">addOrUpdateUserAttributes</el-button>
+            <el-button type="primary" @click="addOrUpdateUserAttributes" style="border-radius:4px">addOrUpdateUserAttributes</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -292,7 +340,19 @@
     <p class="text-unit">设置房间属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">     
+        <el-form :inline="true" size="small">
+          <el-form-item label="enableNotification">
+            <template>
+              <el-select v-model="setRoomAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+                <el-option
+                  v-for="item in enableOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-button @click="showSetRoomAttributesModel" style="border-radius:4px">attribtes</el-button>
           </el-form-item>
@@ -314,7 +374,20 @@
     <p class="text-unit">删除房间某些属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">   
+        <el-form :inline="true" size="small">
+          <el-form-item label="enableNotification">
+            <template>
+              <el-select v-model="deleteRoomAttributesByKeysReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+                <el-option
+                  v-for="item in enableOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+          <el-form-item>
           <el-form-item label="keys">
             <el-input v-model="deleteRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
@@ -332,6 +405,18 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
+          <el-form-item label="enableNotification">
+            <template>
+              <el-select v-model="clearRoomAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+                <el-option
+                  v-for="item in enableOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="clearRoomAttributes" style="border-radius:4px">clearRoomAttributes</el-button>
           </el-form-item>
@@ -346,6 +431,18 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
+          <el-form-item label="enableNotification">
+            <template>
+              <el-select v-model="addOrUpdateRoomAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+                <el-option
+                  v-for="item in enableOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-button @click="showAddOrUpdateRoomAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
@@ -444,6 +541,7 @@
     </div>
 
     <!-- 辅助工具 -->
+    <!--
     <el-divider></el-divider>
 
     <p class="text-unit">获取实例信息</p>
@@ -462,6 +560,7 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="true">{{result}}</p>
     </div>
+    -->
 
   </div>
 </template>
@@ -505,13 +604,23 @@
         roomAppExtras: {},
         mq_data: [],
         mq_room_data: [],
+        enableOptions: [{
+          value: true,
+          label: 'true'
+        }, {
+          value: false,
+          label: 'false'
+        }, {
+          value: undefined,
+          label: 'undefined'
+        }],
         reliable: [{
-            value: 'yes',
-            label: 'yes'
-          }, {
-            value: 'no',
-            label: 'no'
-          }],
+          value: 'yes',
+          label: 'yes'
+        }, {
+          value: 'no',
+          label: 'no'
+        }],
         result: '',
         userRegion: 'cn',
         joinOrLeaveRes: '',
@@ -519,18 +628,23 @@
           //key: TEST_ROLE_KEY,
           //prop: 'teacher',
           attribtes: {},
+          options: {},
         },
         setUserAttributesRes: '',
         deleteUserAttributesReq: {
           keys: TEST_ROLE_KEY,
-          roomId: TEST_ROOM_ID,
+          options: {},
         },
         deleteUserAttributesRes: '',
+        clearUserAttributesReq: {
+          options: {},
+        },
         clearUserAttributesRes: '',
         addOrUpdateUserAttributesReq: {
           //key: TEST_ROLE_KEY,
           //prop: 'student',
           attribtes: {},
+          options: {},
         },
         addOrUpdateUserAttributesRes: '',
         getMembersReq: {
@@ -564,17 +678,23 @@
           //key: TEST_ROOM_NAME_KEY,
           //prop: 'nginx大讲堂',
           attributes: {},
+          options: {},
         },
         setRoomAttributesRes: '',
         deleteRoomAttributesByKeysReq: {
           keys: TEST_ROOM_NAME_KEY,
+          options: {},
         },
         deleteRoomAttributesByKeysRes: '',
+        clearRoomAttributesReq: {
+          options: {},
+        },
         clearRoomAttributesRes: '',
         addOrUpdateRoomAttributesReq: {
           //key: TEST_ROOM_NAME_KEY,
           //prop: 'nginx大讲堂',
           attributes: {},
+          options: {},
         },
         addOrUpdateRoomAttributesRes: '',
         getRoomAttributesRes: '',
@@ -820,7 +940,7 @@
           console.log("sendMessage res=" + JSON.stringify(res));
           this.sendMessageRes = JSON.stringify(res);
 
-          console.log("消息队列mq_room_data: " + JSON.stringify(this.mq_room_data));
+          //console.log("消息队列mq_room_data: " + JSON.stringify(this.mq_room_data));
         } catch(e) {
           console.error("sendMessage err:", e);
           this.sendMessageRes = JSON.stringify(e);
@@ -835,15 +955,23 @@
           return;
 
         try {
-          let attributes = this.setUserAttributesReq.attributes || {};
-    
           /*
           let key = this.setUserAttributesReq.key;
           let prop = this.setUserAttributesReq.prop;
           attributes[key] = prop;
           */
+
+          let enableNotification = this.setUserAttributesReq.options.enableNotification;
+          let attributes = this.setUserAttributesReq.attributes || {};
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
+
+          console.log('rts-demo setUserAttributes: req=' + JSON.stringify(req));
           
-          let req = { attributes };
           this.setUserAttributesRes = '';
           const res = await this.rtsRoom.room.setUserAttributes(req);
           console.log("setUserAttributes Res: ", res);
@@ -867,7 +995,16 @@
             keys.push(k);
           }
 
-          let req = { keys };
+          let enableNotification = this.deleteUserAttributesReq.options.enableNotification;
+          let req;
+          if (enableNotification === undefined) {
+            req = { keys };
+          } else {
+            req = { keys, options: { enableNotification: enableNotification } };
+          }
+          
+          console.log('rts-demo deleteUserAttributesByKeys: req=' + JSON.stringify(req));
+          
           this.deleteUserAttributesRes = '';
 
           const res = await this.rtsRoom.room.deleteUserAttributesByKeys(req);
@@ -883,8 +1020,20 @@
           return;
 
         try {
+
+          let enableNotification = this.clearUserAttributesReq.options.enableNotification;
+          let attributes = this.clearUserAttributesReq.attributes || {};
+          let req;
+          if (enableNotification === undefined) {
+            req = {};
+          } else {
+            req = {options: { enableNotification: enableNotification } };
+          }
+
+          console.log('rts-demo clearUserAttributes: req=' + JSON.stringify(req));
+          
           this.clearUserAttributesRes = '';
-          const res = await this.rtsRoom.room.clearUserAttributes();
+          const res = await this.rtsRoom.room.clearUserAttributes(req);
           console.log("clearUserAttributes res=", res);
           this.clearUserAttributesRes = JSON.stringify(res);
         } catch(e) {
@@ -901,15 +1050,23 @@
           return;
 
         try {
-          let attributes = this.addOrUpdateUserAttributesReq.attributes || {};
-    
           /*
           let key = this.addOrUpdateUserAttributesReq.key;
           let prop = this.addOrUpdateUserAttributesReq.prop;
           attributes[key] = prop;
           */
+
+          let enableNotification = this.addOrUpdateUserAttributesReq.options.enableNotification;
+          let attributes = this.addOrUpdateUserAttributesReq.attributes || {};
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
           
-          let req = { attributes };
+          console.log('rts-demo addOrUpdateUserAttributes: req=' + JSON.stringify(req));
+
           this.addOrUpdateUserAttributesRes = '';
           const res = await this.rtsRoom.room.addOrUpdateUserAttributes(req);
           console.log("addOrUpdateUserAttributes res=", res);
@@ -1019,10 +1176,16 @@
           let prop = this.setRoomAttributesReq.prop;
           attributes[key] = prop;
           */
-          
+
+          let enableNotification = this.setRoomAttributesReq.options.enableNotification;
           let attributes = this.setRoomAttributesReq.attributes || {};
-          let req = { attributes };
-          console.log('setRoomAttributes: req=', req);
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
+          console.log('rts-demo setRoomAttributes: req=' + JSON.stringify(req));
 
           this.setRoomAttributesRes = '';
           const res = await this.rtsRoom.room.setRoomAttributes(req);
@@ -1046,9 +1209,16 @@
           for (let k of elements) {
             keys.push(k);
           }
+          
+          let enableNotification = this.deleteRoomAttributesByKeysReq.options.enableNotification;
+          let req;
+          if (enableNotification === undefined) {
+            req = { keys };
+          } else {
+            req = { keys, options: { enableNotification: enableNotification } };
+          }
 
-          let req = { keys };
-          console.log('deleteRoomAttributesByKeys: req=', req);
+          console.log('rts-demo deleteRoomAttributesByKeys: req=' + JSON.stringify(req));
 
           this.deleteRoomAttributesByKeysRes = '';
           const res = await this.rtsRoom.room.deleteRoomAttributesByKeys(req);
@@ -1064,8 +1234,19 @@
           return;
 
         try {
+
+          let enableNotification = this.clearRoomAttributesReq.options.enableNotification;
+          let attributes = this.clearRoomAttributesReq.attributes || {};
+          let req;
+          if (enableNotification === undefined) {
+            //req = {};
+          } else {
+            req = { options: { enableNotification: enableNotification } };
+          }
+          console.log('rts-demo clearRoomAttributes: req=' + JSON.stringify(req));
+
           this.clearRoomAttributesRes = '';
-          const res = await this.rtsRoom.room.clearRoomAttributes();
+          const res = await this.rtsRoom.room.clearRoomAttributes(req);
           console.log("clearRoomAttributes res=", res);
           this.clearRoomAttributesRes = JSON.stringify(res);
         } catch(e) {
@@ -1089,9 +1270,16 @@
           attributes[key] = prop;
           */
 
+          let enableNotification = this.addOrUpdateRoomAttributesReq.options.enableNotification;
           let attributes = this.addOrUpdateRoomAttributesReq.attributes || {};
-          let req = { attributes };
-          console.log('addOrUpdateRoomAttributes: req=', req);
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
+
+          console.log('rts-demo addOrUpdateRoomAttributes: req=' + JSON.stringify(req));
 
           this.addOrUpdateRoomAttributesRes = '';
           const res = await this.rtsRoom.room.addOrUpdateRoomAttributes(req);
@@ -1163,7 +1351,6 @@
           console.log("sendMessageToUser res=" + JSON.stringify(res));
           this.sendMessageToUserRes = JSON.stringify(res);
 
-          console.log("消息队列mq_data: " + JSON.stringify(this.mq_data));
         } catch(e) {
           console.error("sendMessageToUser err:", e);
           this.sendMessageToUserRes = JSON.stringify(e);
@@ -1216,7 +1403,7 @@
         this.client.on(eventName, (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
           console.log(`rts-demo 接收消息${eventName}: ` + JSON.stringify(data));
-          this.mq_data.push(data);
+          //this.mq_data.push(data);
 
           this.$message({
             duration: 3000,
@@ -1224,7 +1411,7 @@
             type: 'success'
           });
 
-          console.log("MQ队列mq_data: " + JSON.stringify(this.mq_data));
+          //console.log("MQ队列mq_data: " + JSON.stringify(this.mq_data));
         });
       },
 
@@ -1251,7 +1438,7 @@
         rtsRoom.room.on(eventName, (data) => {
           data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
           console.log(`rts-demo 接收组播消息${eventName}: [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data));
-          this.mq_room_data.push(data);
+          //this.mq_room_data.push(data);
 
           this.$message({
             duration: 3000,
@@ -1259,7 +1446,7 @@
             type: 'success'
           });
 
-          console.log("组播MQ队列mq_room_data: " + JSON.stringify(this.mq_room_data));
+          //console.log("组播MQ队列mq_room_data: " + JSON.stringify(this.mq_room_data));
         });
       },
       onMemberAttributesUpdated(rtsRoom) {
