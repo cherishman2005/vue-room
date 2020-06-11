@@ -992,7 +992,9 @@
 
           let elements = keys_str.split(",");
           for (let k of elements) {
-            keys.push(k);
+            if (k.length > 0) {
+              keys.push(k);
+            }
           }
 
           let enableNotification = this.deleteUserAttributesReq.options.enableNotification;
@@ -1207,7 +1209,9 @@
 
           let elements = keys_str.split(",");
           for (let k of elements) {
-            keys.push(k);
+            if (k.length > 0) {
+              keys.push(k);
+            }
           }
           
           let enableNotification = this.deleteRoomAttributesByKeysReq.options.enableNotification;
