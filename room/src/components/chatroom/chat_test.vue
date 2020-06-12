@@ -26,7 +26,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{loginRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{loginRes}}</p>
     </div>
 
     <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
@@ -103,7 +103,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{joinOrLeaveRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{joinOrLeaveRes}}</p>
     </div>
 
     <el-dialog align="left" title="joinProps" :visible="joinChatRoomPropsVisible" @close="closeJoinChatRoomPropsModel">
@@ -125,7 +125,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{updateChatRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{updateChatRoomAttributesRes}}</p>
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="updateGroupAttributesVisible" @close="closeUpdateGroupAttributesModel">
@@ -144,7 +144,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getChatRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getChatRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">解散聊天室</p>
@@ -169,7 +169,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{dismissChatRoomRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{dismissChatRoomRes}}</p>
     </div>
 
     <p class="text-unit">剔除用户</p>
@@ -192,7 +192,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{kickOffUserRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{kickOffUserRes}}</p>
     </div>
 
     <p class="text-unit">发送广播消息</p>
@@ -212,7 +212,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendGroupMessageRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{sendGroupMessageRes}}</p>
     </div>
 
     <el-dialog
@@ -247,7 +247,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendSingleUserMessageRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{sendSingleUserMessageRes}}</p>
     </div>
 
     <el-dialog
@@ -287,7 +287,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{sendTextChatRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{sendTextChatRes}}</p>
     </div>
 
     <el-dialog
@@ -328,7 +328,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getChatRoomManagerRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getChatRoomManagerRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室用户数</p>
@@ -357,7 +357,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getUserCountRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getUserCountRes}}</p>
     </div>
 
     <p class="text-unit">获取聊天室用户列表</p>
@@ -377,7 +377,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getUserListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getUserListRes}}</p>
     </div>
 
     <p class="text-unit">禁言/解禁</p>
@@ -403,7 +403,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{muteUserRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{muteUserRes}}</p>
     </div>
 
     <p class="text-unit">获取禁言用户列表</p>
@@ -417,7 +417,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{getMutedUserListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getMutedUserListRes}}</p>
     </div>
 
     <p class="text-unit">设置用户属性</p>
@@ -434,7 +434,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%;height: 46px; text-align:left;" >{{setUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{setUserAttributesRes}}</p>
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="setGroupUserAttributesVisible" @close="closeSetGroupUserAttributesModel">
@@ -453,7 +453,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%;height:46px; text-align:left;">{{getUserAttributesListRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getUserAttributesListRes}}</p>
     </div>
 
     <p class="text-unit">HummerSDK 当前所处的状态</p>
@@ -467,7 +467,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{state}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{state}}</p>
     </div>
 
     <p class="text-unit">获取实例信息</p>
@@ -481,7 +481,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getInstanceInfoRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getInstanceInfoRes}}</p>
     </div>
 
   </div>
@@ -1359,5 +1359,13 @@
     //margin: 10px 25px;
     text-align: left;
     //white-space: pre;
+  }
+  .rsp-text {
+    width:100%;
+    height:46px;
+    text-align:left;
+    word-wrap:break-word;
+    overflow-y:auto;
+    _overflow-y:visible;
   }
 </style>

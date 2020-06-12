@@ -38,7 +38,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{loginRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{loginRes}}</p>
     </div>
 
     <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
@@ -106,7 +106,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{joinOrLeaveRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{joinOrLeaveRes}}</p>
     </div>
 
     <p class="text-unit">A给房间发消息</p>
@@ -126,7 +126,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{sendMessageRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{sendMessageRes}}</p>
     </div>
 
     <el-dialog align="left" title="AppExtras" :visible="createRoomAppExtrasVisible" @close="closeCreateRoomAppExtrasModel">
@@ -159,7 +159,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{setUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{setUserAttributesRes}}</p>
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="setUserAttributesVisible" @close="closeSetUserAttributesModel">
@@ -193,7 +193,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{deleteUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{deleteUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">清空用户属性</p>
@@ -219,7 +219,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{clearUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{clearUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">添加或更新本地用户的属性</p>
@@ -248,7 +248,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >{{addOrUpdateUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{addOrUpdateUserAttributesRes}}</p>
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="addOrUpdateUserAttributesVisible" @close="closeAddOrUpdateUserAttributesModel">
@@ -274,7 +274,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getUserAttributesByKeysRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getUserAttributesByKeysRes}}</p>
     </div>
 
     <p class="text-unit">查询某指定用户的全部属性</p>
@@ -291,7 +291,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getUserAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getUserAttributesRes}}</p>
     </div>
 
     <p class="text-unit">查询房间用户列表</p>
@@ -305,7 +305,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;">{{getMembersRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getMembersRes}}</p>
     </div>
 
     <p class="text-unit">查询单个或多个房间的成员人数</p>
@@ -334,7 +334,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getRoomMemberCountRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getRoomMemberCountRes}}</p>
     </div>
     
     <p class="text-unit">设置房间属性</p>
@@ -363,7 +363,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{setRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{setRoomAttributesRes}}</p>
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="setRoomAttributesVisible" @close="closeSetRoomAttributesModel">
@@ -398,7 +398,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{deleteRoomAttributesByKeysRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{deleteRoomAttributesByKeysRes}}</p>
     </div>
 
     <p class="text-unit">清空房间属性</p>
@@ -424,7 +424,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{clearRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{clearRoomAttributesRes}}</p>
     </div>
 
     <p class="text-unit">增加或更新房间某些属性</p>
@@ -453,7 +453,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;" >{{addOrUpdateRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{addOrUpdateRoomAttributesRes}}</p>
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="addOrUpdateRoomAttributesVisible" @close="closeAddOrUpdateRoomAttributesModel">
@@ -476,7 +476,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getRoomAttributesByKeysRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getRoomAttributesByKeysRes}}</p>
     </div>
 
     <p class="text-unit">查询某指定房间的全部属性</p>
@@ -490,7 +490,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{getRoomAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{getRoomAttributesRes}}</p>
     </div>
 
     <!-- P2P消息 -->
@@ -516,7 +516,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{sendMessageToUserRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{sendMessageToUserRes}}</p>
     </div>
 
     <el-dialog align="left" title="AppExtras" :visible="createAppExtrasVisible" @close="closeCreateAppExtrasModel">
@@ -537,7 +537,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{queryUsersOnlineStatusRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{queryUsersOnlineStatusRes}}</p>
     </div>
 
     <!-- 辅助工具 -->
@@ -558,7 +558,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true">{{result}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{result}}</p>
     </div>
     -->
 
@@ -1563,8 +1563,11 @@
     //white-space: pre;
   }
   .rsp-text {
-    width: 80%;
-    height: 46px;
-    text-align: left;
+    width:100%;
+    height:46px;
+    text-align:left;
+    word-wrap:break-word;
+    overflow-y:auto;
+    _overflow-y:visible;
   }
 </style>
