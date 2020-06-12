@@ -5,7 +5,3 @@ channel, chatroom, im vue-demo
 
 rts
 >https://hummer-test.sunclouds.com/rts-test/rts-test
-
-
-chatroom
->https://hummer-test.sunclouds.com/rts-test/chat-test
