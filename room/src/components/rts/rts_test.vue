@@ -42,9 +42,9 @@
     </div>
 
     <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
-      <refresh-token 
-        :hummer="hummer" 
-        :uid="uid" 
+      <refresh-token
+        :hummer="hummer"
+        :uid="uid"
         @onRefreshToken=refreshToken
       >
       </refresh-token>
@@ -163,7 +163,7 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="setUserAttributesVisible" @close="closeSetUserAttributesModel">
-      <editable-table 
+      <editable-table
       :tableData="setUserAttributesReq.attributes" @onGetPlainObject="onSetUserAttributes"></editable-table>
     </el-dialog>
 
@@ -252,7 +252,7 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="addOrUpdateUserAttributesVisible" @close="closeAddOrUpdateUserAttributesModel">
-      <editable-table 
+      <editable-table
       :tableData="addOrUpdateUserAttributesReq.attributes" @onGetPlainObject="onAddOrUpdateUserAttributes"></editable-table>
     </el-dialog>
 
@@ -336,7 +336,7 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="false">{{getRoomMemberCountRes}}</p>
     </div>
-    
+
     <p class="text-unit">设置房间属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
@@ -367,7 +367,7 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="setRoomAttributesVisible" @close="closeSetRoomAttributesModel">
-      <editable-table 
+      <editable-table
       :tableData="setRoomAttributesReq.attributes" @onGetPlainObject="onSetRoomAttributes"></editable-table>
     </el-dialog>
 
@@ -387,7 +387,6 @@
               </el-select>
             </template>
           </el-form-item>
-          <el-form-item>
           <el-form-item label="keys">
             <el-input v-model="deleteRoomAttributesByKeysReq.keys"></el-input>
           </el-form-item>
@@ -457,7 +456,7 @@
     </div>
 
     <el-dialog align="left" title="atrributes" :visible="addOrUpdateRoomAttributesVisible" @close="closeAddOrUpdateRoomAttributesModel">
-      <editable-table 
+      <editable-table
       :tableData="addOrUpdateRoomAttributesReq.attributes" @onGetPlainObject="onAddOrUpdateRoomAttributes"></editable-table>
     </el-dialog>
 
@@ -522,7 +521,7 @@
     <el-dialog align="left" title="AppExtras" :visible="createAppExtrasVisible" @close="closeCreateAppExtrasModel">
       <editable-table :tableData="appExtras" @onGetPlainObject=getAppExtras></editable-table>
     </el-dialog>
-    
+
     <p class="text-unit">批量查询登录在线状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px; text-align:left;" >
@@ -801,12 +800,12 @@
       async login() {
         if (!this.hummer)
           return;
-        
+
         try {
           this.loginRes = '';
           let res = await this.hummer.login({
-            region: this.userRegion, 
-            uid: this.uid, 
+            region: this.userRegion,
+            uid: this.uid,
             token: this.token
           });
 
@@ -820,7 +819,7 @@
       async logout() {
         if (!this.hummer)
           return;
-        
+
         try {
           this.loginRes = '';
           const res = await this.hummer.logout();
@@ -849,7 +848,7 @@
           console.log("client is ready");
           return;
         }
-        
+
         // 初始化RTS
         this.client = this.hummer.createRTSInstance();
 
@@ -895,7 +894,7 @@
           let extra = {"Name": "阿武"};
           let req = { extra };
           console.log("join: req=" + JSON.stringify(req));
-          
+
           this.joinOrLeaveRes = '';
           const res = await this.rtsRoom.room.join(req);
           console.log("自己进入房间join res:", res);
@@ -926,15 +925,15 @@
       async sendMessage() {
         if (!this.rtsRoom)
           return;
-        
+
         try {
           let content = this.sendMessageReq.content;
           //let appExtras = {nickname: "awu", rtc: 'sfu/mcu'};
-          
+
           this.sendMessageRes = '';
           const res = await this.rtsRoom.room.sendMessage({
-            type: "100", 
-            content: Hummer.Utify.encodeStringToUtf8Bytes(content), 
+            type: "100",
+            content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: this.roomAppExtras
           });
           console.log("sendMessage res=" + JSON.stringify(res));
@@ -971,7 +970,7 @@
           }
 
           console.log('rts-demo setUserAttributes: req=' + JSON.stringify(req));
-          
+
           this.setUserAttributesRes = '';
           const res = await this.rtsRoom.room.setUserAttributes(req);
           console.log("setUserAttributes Res: ", res);
@@ -1004,9 +1003,9 @@
           } else {
             req = { keys, options: { enableNotification: enableNotification } };
           }
-          
+
           console.log('rts-demo deleteUserAttributesByKeys: req=' + JSON.stringify(req));
-          
+
           this.deleteUserAttributesRes = '';
 
           const res = await this.rtsRoom.room.deleteUserAttributesByKeys(req);
@@ -1033,7 +1032,7 @@
           }
 
           console.log('rts-demo clearUserAttributes: req=' + JSON.stringify(req));
-          
+
           this.clearUserAttributesRes = '';
           const res = await this.rtsRoom.room.clearUserAttributes(req);
           console.log("clearUserAttributes res=", res);
@@ -1066,7 +1065,7 @@
           } else {
             req = { attributes, options: { enableNotification: enableNotification } };
           }
-          
+
           console.log('rts-demo addOrUpdateUserAttributes: req=' + JSON.stringify(req));
 
           this.addOrUpdateUserAttributesRes = '';
@@ -1173,7 +1172,7 @@
             "Bulletin": "bull",
             "Extention": "ex"
           };
-    
+
           let key = this.setRoomAttributesReq.key;
           let prop = this.setRoomAttributesReq.prop;
           attributes[key] = prop;
@@ -1213,7 +1212,7 @@
               keys.push(k);
             }
           }
-          
+
           let enableNotification = this.deleteRoomAttributesByKeysReq.options.enableNotification;
           let req;
           if (enableNotification === undefined) {
@@ -1311,7 +1310,7 @@
       async getRoomAttributesByKeys() {
         if (!this.rtsRoom)
           return;
-        
+
         try {
           let keys_str = this.getRoomAttributesByKeysReq.keys;
           let keys = [];
@@ -1344,11 +1343,11 @@
           let content = this.sendMessageToUserReq.content;
           let receiver = this.sendMessageToUserReq.receiver;
           //let appExtras = {nickname: "awu", rtc: 'p2p'}
-          
+
           this.sendMessageToUserRes = '';
           const res = await this.client.sendMessageToUser({
-            receiver: receiver, 
-            type: "100", 
+            receiver: receiver,
+            type: "100",
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: this.appExtras
           });
@@ -1393,7 +1392,7 @@
           this.result = JSON.stringify(res);
         } catch(e) {
           console.error("getInstanceInfo err:", e);
-          this.result = JSON.stringify(e); 
+          this.result = JSON.stringify(e);
         }
       },
       clearMqData() {
