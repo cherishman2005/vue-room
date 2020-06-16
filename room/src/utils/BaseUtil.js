@@ -48,3 +48,14 @@ const DEMO_TAG = "rts-demo"
 export function log4test(info) {
   console.log(`${DEMO_TAG}: ${info}`)
 }
+
+export function generateDataInKB(unit) {
+  let contentList = []
+  let size = (unit * 1024) / 4
+  for (let i = 0; i < size; i++) {
+    // 4个字节，utf16
+    contentList.push("测试")
+  };
+  let value = contentList.join("")
+  return value
+}

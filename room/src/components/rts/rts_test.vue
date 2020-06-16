@@ -98,14 +98,14 @@
       <el-button type="primary" @click="removeRoomEventMonitor">- 移除房间事件监听</el-button>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{monitorRoomEventRes}}</p>
+      <p class="rsp-text" style="height: 20px" type="textarea" contenteditable="false">{{monitorRoomEventRes}}</p>
     </div>
     <el-row type="flex" class="row-bg">
       <el-button type="primary" @click="addRoomNumberEventMonitor">+ 添加成员事件监听</el-button>
       <el-button type="primary" @click="removeRoomNumberEventMonitor">- 移除成员事件监听</el-button>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{monitorRoomNumberEventRes}}</p>
+      <p class="rsp-text" style="height: 20px" type="textarea" contenteditable="false">{{monitorRoomNumberEventRes}}</p>
     </div>
 
     <p class="text-unit">加入/退出Room</p>
@@ -516,7 +516,7 @@
       <el-button @click="removeP2PEventMonitor" type="primary">- 移除Peer事件监听</el-button>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{p2pEventMonitorRes}}</p>
+      <p class="rsp-text" style="height: 20px" type="textarea" contenteditable="false">{{p2pEventMonitorRes}}</p>
     </div>
 
     <p class="text-unit">A给B发送消息</p>
@@ -563,6 +563,36 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{queryUsersOnlineStatusRes}}</p>
     </div>
 
+    <el-divider content-position="left">特殊案例</el-divider>
+    <p class="text-unit">房间消息</p>
+    <el-row type="flex" class="row-bg">
+      <el-button @click="send32KMessage" type="primary">发32K内容的房间消息</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{send32KMessageRes}}</p>
+    </div>
+
+    <el-row type="flex" class="row-bg">
+      <el-button @click="sendMessageWith1KExtras" type="primary">发1K扩展字段的房间消息</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{sendMessageWith1KBExtrasRes}}</p>
+    </div>
+
+    <p class="text-unit">P2P消息</p>
+    <el-row type="flex" class="row-bg">
+      <el-button @click="send32KBMessageToUser" type="primary">发32K内容的P2P消息</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{send32KBMessageToUserRes}}</p>
+    </div>
+
+    <el-row type="flex" class="row-bg">
+      <el-button @click="sendMessageWith1KBExtraToUser" type="primary">发1K扩展字段的P2P消息</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{sendMessageWith1KBExtraToUserRes}}</p>
+    </div>
     <!-- 辅助工具 -->
     <!--
     <el-divider></el-divider>
@@ -590,7 +620,7 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { getStorage, setStorage , log4test} from '@/utils/BaseUtil';
+  import { getStorage, setStorage , log4test, generateDataInKB} from '@/utils/BaseUtil';
   import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateRoom from './create_room.vue';
@@ -714,6 +744,8 @@
           content: 'js_sdk sendMessage',
         },
         sendMessageRes: "",
+        send32KMessageRes: "",
+        sendMessageWith1KBExtrasRes: "",
         sendMessageToUserReq: {
           content: 'js_sdk sendMessageToUser',
           receiver: UID,
@@ -722,6 +754,8 @@
         monitorRoomNumberEventRes: "",
         p2pEventMonitorRes: "",
         sendMessageToUserRes: "",
+        send32KBMessageToUserRes: "",
+        sendMessageWith1KBExtraToUserRes: "",
         getRoomMemberCountReq: {
           region: 'cn',
           roomIds: TEST_ROOM_ID
@@ -1002,6 +1036,43 @@
       onSetUserAttributes(data) {
         console.log('onSetUserAttributes attributes=', data);
         this.setUserAttributesReq.attributes = data;
+      },
+      async send32KMessage() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          let content = generateDataInKB(32)
+          this.send32KMessageRes = '';
+          const res = await this.rtsRoom.room.sendMessage({
+            type: "100",
+            content: Hummer.Utify.encodeStringToUtf8Bytes(content),
+            appExtras: {}
+          });
+          log4test("send32KMessage res=" + JSON.stringify(res));
+          this.send32KMessageRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("send32KMessage err:", e);
+          this.send32KMessageRes = JSON.stringify(e);
+        }
+      },
+      async sendMessageWith1KExtras() {
+        if (!this.rtsRoom)
+          return;
+        try {
+          let content = "房间消息"
+          this.sendMessageWith1KBExtrasRes = '';
+          const res = await this.rtsRoom.room.sendMessage({
+            type: "100",
+            content: Hummer.Utify.encodeStringToUtf8Bytes(content),
+            appExtras: {key1 : generateDataInKB(1)}
+          });
+          log4test("sendMessage with 1K extras" + JSON.stringify(res))
+          this.sendMessageWith1KBExtrasRes = JSON.stringify(res)
+        } catch(e) {
+          log4test("sendMessage with 1k extras, err:", e);
+          this.sendMessageWith1KBExtrasRes = JSON.stringify(e)
+        }
       },
       async setUserAttributes() {
         if (!this.rtsRoom)
@@ -1411,6 +1482,50 @@
         } catch(e) {
           console.error("sendMessageToUser err:", e);
           this.sendMessageToUserRes = JSON.stringify(e);
+        }
+      },
+      async send32KBMessageToUser() {
+        if (!this.client)
+          return;
+
+        try {
+          let content = generateDataInKB(32)
+          let receiver = this.sendMessageToUserReq.receiver;
+          this.send32KBMessageToUser = '';
+          const res = await this.client.sendMessageToUser({
+            receiver: receiver,
+            type: "100",
+            content: Hummer.Utify.encodeStringToUtf8Bytes(content),
+            appExtras: {}
+          });
+          log4test("send 32 KB MessageToUser res=" + JSON.stringify(res));
+          this.send32KBMessageToUserRes = JSON.stringify(res);
+
+        } catch(e) {
+          log4test("send 32 KB MessageToUser err:", e);
+          this.send32KBMessageToUserRes = JSON.stringify(e);
+        }
+      },
+      async sendMessageWith1KBExtraToUser() {
+        if (!this.client)
+          return;
+
+        try {
+          let content = "测试"
+          let receiver = this.sendMessageToUserReq.receiver;
+          this.sendMessageWith1KBExtraToUser = '';
+          const res = await this.client.sendMessageToUser({
+            receiver: receiver,
+            type: "100",
+            content: Hummer.Utify.encodeStringToUtf8Bytes(content),
+            appExtras: {key1 : generateDataInKB(1)}
+          });
+          log4test("sendMessageWith1KBExtraToUser res=" + JSON.stringify(res));
+          this.sendMessageWith1KBExtraToUserRes = JSON.stringify(res);
+
+        } catch(e) {
+          log4test("sendMessageWith1KBExtraToUser err:", e);
+          this.sendMessageWith1KBExtraToUserRes = JSON.stringify(e);
         }
       },
       async queryUsersOnlineStatus() {
