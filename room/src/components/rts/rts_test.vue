@@ -92,6 +92,22 @@
       <create-room :client="client" @onGetRoom=getRoom></create-room>
     </el-dialog>
 
+    <p class="text-unit">房间事件监听设置</p>
+    <el-row type="flex" class="row-bg">
+      <el-button type="primary" @click="addRoomEventMonitor">+ 添加房间事件监听</el-button>
+      <el-button type="primary" @click="removeRoomEventMonitor">- 移除房间事件监听</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{monitorRoomEventRes}}</p>
+    </div>
+    <el-row type="flex" class="row-bg">
+      <el-button type="primary" @click="addRoomNumberEventMonitor">+ 添加成员事件监听</el-button>
+      <el-button type="primary" @click="removeRoomNumberEventMonitor">- 移除成员事件监听</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{monitorRoomNumberEventRes}}</p>
+    </div>
+
     <p class="text-unit">加入/退出Room</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px; text-align:left;" >
@@ -494,6 +510,14 @@
 
     <!-- P2P消息 -->
     <el-divider content-position="left">P2P消息</el-divider>
+    <p class="text-unit">事件监听设置</p>
+    <el-row type="flex" class="row-bg">
+      <el-button @click="addP2PEventMonitor" type="primary">+ 添加Peer事件监听</el-button>
+      <el-button @click="removeP2PEventMonitor" type="primary">- 移除Peer事件监听</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{p2pEventMonitorRes}}</p>
+    </div>
 
     <p class="text-unit">A给B发送消息</p>
     <el-row type="flex" class="row-bg">
@@ -566,7 +590,7 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { getStorage, setStorage } from '@/utils/BaseUtil';
+  import { getStorage, setStorage , log4test} from '@/utils/BaseUtil';
   import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateRoom from './create_room.vue';
@@ -582,6 +606,32 @@
   const TEST_ROOM_ID = 'test123456';
   const TEST_ROLE_KEY = 'room_role_name';
   const TEST_ROOM_NAME_KEY = 'room_name';
+
+  const SYMBOL_P2P_EV = Symbol("p2pEvent");
+  const SYMBOL_ROOM_EV = Symbol("roomEvent");
+  const SYMBOL_ROOM_NUMBER_EV = Symbol("roomNumberEvent");
+
+  const EVENT_MESSAGE_FROM_USER = "MessageFromUser"
+
+  //房间事件
+  const EVENT_ROOM = [
+    ["RoomMessage", Symbol("RoomMessage")],
+    ["RoomAttributesSet", Symbol("RoomAttributesSet")],
+    ["RoomAttributesDeleted", Symbol("RoomAttributesDeleted")],
+    ["RoomAttributesCleared", Symbol("RoomAttributesCleared")],
+    ["RoomAttributesAddedOrUpdated", Symbol("RoomAttributesAddedOrUpdated")]
+  ]
+  //房间成员事件
+  const EVENT_ROOM_NUMBER = [
+    ["MemberJoined", Symbol("MemberJoined")],
+    ["MemberLeft", Symbol("MemberLeft")],
+    ["MemberCountUpdated", Symbol("MemberCountUpdated")],
+    ["MemberAttributesSet", Symbol("MemberAttributesSet")],
+    ["MemberAttributesDeleted", Symbol("MemberAttributesDeleted")],
+    ["MemberAttributesCleared", Symbol("MemberAttributesCleared")],
+    ["MemberAttributesAddedOrUpdated", Symbol("MemberAttributesAddedOrUpdated")],
+    ["RoomMemberOffline", Symbol("RoomMemberOffline")],
+  ]
 
   export default {
     name : 'rts-test',
@@ -667,6 +717,9 @@
           content: 'js_sdk sendMessageToUser',
           receiver: UID,
         },
+        monitorRoomEventRes: "",
+        monitorRoomNumberEventRes: "",
+        p2pEventMonitorRes: "",
         sendMessageToUserRes: "",
         getRoomMemberCountReq: {
           region: 'cn',
@@ -853,7 +906,7 @@
         this.client = this.hummer.createRTSInstance();
 
         // 接收Peer消息
-        this.onReceiveMessage();
+        // this.onReceiveMessage();
       },
       getRoom(data) {
         console.log('getRoom data=', data);
@@ -877,14 +930,14 @@
         console.log('rooms=', this.rooms);
 
         let rtsRoom = this.rooms[this.regionRoomId];
-        this.subscribeRoomEvents(rtsRoom);
-        this.onReceiveRoomMessage(rtsRoom);
-        // 用户属性变更
-        this.onMemberAttributesUpdated(rtsRoom);
-        // 房间属性变更
-        this.onRoomAttributesUpdated(rtsRoom);
-
-        this.onRoomMemberOffline(rtsRoom);
+        // this.subscribeRoomEvents(rtsRoom);
+        // this.onReceiveRoomMessage(rtsRoom);
+        // // 用户属性变更
+        // this.onMemberAttributesUpdated(rtsRoom);
+        // // 房间属性变更
+        // this.onRoomAttributesUpdated(rtsRoom);
+        //
+        // this.onRoomMemberOffline(rtsRoom);
       },
       async join() {
         if (!this.rtsRoom)
@@ -1417,7 +1470,92 @@
           //console.log("MQ队列mq_data: " + JSON.stringify(this.mq_data));
         });
       },
-
+      /* 添加P2P消息的监听 */
+      addP2PEventMonitor() {
+        if (!this.client) {
+          this.p2pEventMonitorRes = "rts client还没有初始化"
+          return
+        }
+        if (!this.client[SYMBOL_P2P_EV]) {
+          this.client[SYMBOL_P2P_EV] = (data) => {
+            data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
+            log4test(`接收消息:${EVENT_MESSAGE_FROM_USER}:` + JSON.stringify(data));
+            this.$message({
+              duration: 3000,
+              message: `${EVENT_MESSAGE_FROM_USER}: ` + JSON.stringify(data),
+              type: 'success'
+            });
+          }
+        }
+        this.client.on(EVENT_MESSAGE_FROM_USER, this.client[SYMBOL_P2P_EV])
+        this.p2pEventMonitorRes = "开始监听P2P消息"
+      },
+      /* 移除P2P消息的监听 */
+      removeP2PEventMonitor() {
+        if (!this.client) return
+        if (!this.client[SYMBOL_P2P_EV]) return
+        this.client.off(EVENT_MESSAGE_FROM_USER, this.client[SYMBOL_P2P_EV])
+        this.client[SYMBOL_P2P_EV] = null
+        this.p2pEventMonitorRes = "移除P2P消息的监听"
+      },
+      addRoomEventMonitor() {
+        if (!this.rtsRoom) return
+        let room = this.rtsRoom.room
+        this.addEventMonitorImpl(room, EVENT_ROOM)
+        this.monitorRoomEventRes = `添加房间事件监听, [${room.region}:${room.roomId}]`
+      },
+      removeRoomEventMonitor() {
+        if (!this.rtsRoom) return
+        let room = this.rtsRoom.room
+        this.removeEventMonitorImpl(room, EVENT_ROOM)
+        this.monitorRoomEventRes = `移除房间事件监听, [${room.region}:${room.roomId}]`
+      },
+      addRoomNumberEventMonitor() {
+        if (!this.rtsRoom) return
+        let room = this.rtsRoom.room
+        this.addEventMonitorImpl(room, EVENT_ROOM_NUMBER)
+        this.monitorRoomNumberEventRes = `添加房间成员事件监听, [${room.region}:${room.roomId}]`
+      },
+      removeRoomNumberEventMonitor() {
+        if (!this.rtsRoom) return
+        let room = this.rtsRoom.room
+        this.removeEventMonitorImpl(this.rtsRoom.room, EVENT_ROOM_NUMBER)
+        this.monitorRoomNumberEventRes = `移除房间成员事件监听, [${room.region}:${room.roomId}]`
+      },
+      addEventMonitorImpl(rtsRoom, eventInfo) {
+        eventInfo.forEach((event) => {
+          let eventName = event[0]
+          let eventId = event[1]
+          if (rtsRoom[eventId]) {
+            return
+          }
+          log4test(`监听消息: ${eventName}, [${rtsRoom.region}:${rtsRoom.roomId}]`);
+          let eventListener = (data) => {
+            if ("RoomMessage" === eventName) {
+              data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
+            }
+            log4test(`接收消息: ${eventName}, [${rtsRoom.region}:${rtsRoom.roomId}], data: ` + JSON.stringify(data));
+            this.$message({
+              duration: 3000,
+              message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
+              type: 'success'
+            });
+          }
+          rtsRoom[eventId] = eventListener
+          rtsRoom.on(eventName, eventListener)
+        })
+      },
+      removeEventMonitorImpl(rtsRoom, eventInfo) {
+        eventInfo.forEach((event) => {
+          let eventName = event[0]
+          let eventId = event[1]
+          if (rtsRoom[eventId]) {
+            log4test(`移除消息: ${eventName}, [${rtsRoom.region}:${rtsRoom.roomId}]`);
+            rtsRoom.off(eventName, rtsRoom[eventId])
+            rtsRoom[eventId] = null
+          }
+        })
+      },
       subscribeRoomEvents(rtsRoom) {
         const roomEvents = [
           "MemberJoined",
@@ -1562,6 +1700,8 @@
     //white-space: pre;
   }
   .rsp-text {
+    font-style: italic;
+    font-size: 13px;
     width:100%;
     height:46px;
     text-align:left;
