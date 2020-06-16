@@ -155,7 +155,7 @@
         <el-form :inline="true"  size="small">
           <el-form-item label="enableNotification">
             <template>
-              <el-select v-model="setUserAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+              <el-select v-model="setUserAttributesReq.options.enableNotification" placeholder="false" style="width:120px;">
                 <el-option
                   v-for="item in enableOptions"
                   :key="item.value"
@@ -189,7 +189,7 @@
         <el-form :inline="true" size="small">
           <el-form-item label="enableNotification">
             <template>
-              <el-select v-model="deleteUserAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+              <el-select v-model="deleteUserAttributesReq.options.enableNotification" placeholder="false" style="width:120px;">
                 <el-option
                   v-for="item in enableOptions"
                   :key="item.value"
@@ -218,7 +218,7 @@
         <el-form :inline="true" size="small">
           <el-form-item label="enableNotification">
             <template>
-              <el-select v-model="clearUserAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+              <el-select v-model="clearUserAttributesReq.options.enableNotification" placeholder="false" style="width:120px;">
                 <el-option
                   v-for="item in enableOptions"
                   :key="item.value"
@@ -244,7 +244,7 @@
         <el-form :inline="true" size="small">
           <el-form-item label="enableNotification">
             <template>
-              <el-select v-model="addOrUpdateUserAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+              <el-select v-model="addOrUpdateUserAttributesReq.options.enableNotification" placeholder="false" style="width:120px;">
                 <el-option
                   v-for="item in enableOptions"
                   :key="item.value"
@@ -359,7 +359,7 @@
         <el-form :inline="true" size="small">
           <el-form-item label="enableNotification">
             <template>
-              <el-select v-model="setRoomAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+              <el-select v-model="setRoomAttributesReq.options.enableNotification" placeholder="false" style="width:120px;">
                 <el-option
                   v-for="item in enableOptions"
                   :key="item.value"
@@ -393,7 +393,7 @@
         <el-form :inline="true" size="small">
           <el-form-item label="enableNotification">
             <template>
-              <el-select v-model="deleteRoomAttributesByKeysReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+              <el-select v-model="deleteRoomAttributesByKeysReq.options.enableNotification" placeholder="false" style="width:120px;">
                 <el-option
                   v-for="item in enableOptions"
                   :key="item.value"
@@ -422,7 +422,7 @@
         <el-form :inline="true"  size="small">
           <el-form-item label="enableNotification">
             <template>
-              <el-select v-model="clearRoomAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+              <el-select v-model="clearRoomAttributesReq.options.enableNotification" placeholder="false" style="width:120px;">
                 <el-option
                   v-for="item in enableOptions"
                   :key="item.value"
@@ -448,7 +448,7 @@
         <el-form :inline="true" size="small">
           <el-form-item label="enableNotification">
             <template>
-              <el-select v-model="addOrUpdateRoomAttributesReq.options.enableNotification" placeholder="enableNotification" style="width:120px;">
+              <el-select v-model="addOrUpdateRoomAttributesReq.options.enableNotification" placeholder="false" style="width:120px;">
                 <el-option
                   v-for="item in enableOptions"
                   :key="item.value"
@@ -654,15 +654,16 @@
         mq_data: [],
         mq_room_data: [],
         enableOptions: [{
-          value: true,
-          label: 'true'
-        }, {
           value: false,
           label: 'false'
         }, {
-          value: undefined,
-          label: 'undefined'
+          value: true,
+          label: 'true'
         }],
+        // }, {
+        //   value: undefined,
+        //   label: '不设置'
+        // }],
         reliable: [{
           value: 'yes',
           label: 'yes'
