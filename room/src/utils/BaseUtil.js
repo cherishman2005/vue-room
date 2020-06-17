@@ -45,8 +45,8 @@ export function removeStorage() {
 
 const DEMO_TAG = "rts-demo"
 // 通过rts-demo，给测试看的日志/回调日志
-export function log4test(info) {
-  console.log(`${DEMO_TAG}: ${info}`)
+export function log4test(info, ...args) {
+  console.log(`${DEMO_TAG}: ${info} ` + JSON.stringify(args))
 }
 
 export function generateDataInKB(unit) {

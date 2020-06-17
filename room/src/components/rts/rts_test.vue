@@ -593,6 +593,21 @@
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{sendMessageWith1KBExtraToUserRes}}</p>
     </div>
+
+    <p class="text-unit">属性设置</p>
+    <el-row type="flex" class="row-bg">
+      <el-button @click="set8KBRoomAttributes" type="primary">设置8K的房间属性</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set8KBRoomAttributesRes}}</p>
+    </div>
+
+    <el-row type="flex" class="row-bg">
+      <el-button @click="set8KBUserAttributes" type="primary">设置8K的用户属性</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set8KBUserAttributesRes}}</p>
+    </div>
     <!-- 辅助工具 -->
     <!--
     <el-divider></el-divider>
@@ -711,6 +726,7 @@
           options: {},
         },
         setUserAttributesRes: '',
+        set8KBUserAttributesRes: "",
         deleteUserAttributesReq: {
           keys: TEST_ROLE_KEY,
           options: {},
@@ -768,6 +784,7 @@
           options: {},
         },
         setRoomAttributesRes: '',
+        set8KBRoomAttributesRes: "",
         deleteRoomAttributesByKeysReq: {
           keys: TEST_ROOM_NAME_KEY,
           options: {},
@@ -985,10 +1002,10 @@
 
           this.joinOrLeaveRes = '';
           const res = await this.rtsRoom.room.join(req);
-          console.log("自己进入房间join res:", res);
+          log4test("自己进入房间join res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         } catch(e) {
-          console.error("join err:", e);
+          log4test("join err:", e);
           this.joinOrLeaveRes = JSON.stringify(e);
         }
       },
@@ -999,10 +1016,10 @@
         try {
           this.joinOrLeaveRes = '';
           const res = await this.rtsRoom.room.leave();
-          console.log("自己离开房间leave: res=", res);
+          log4test("自己离开房间leave: res=", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         } catch(e) {
-          console.error("leave err:", e);
+          log4test("leave err:", e);
           this.joinOrLeaveRes = JSON.stringify(e);
         }
       },
@@ -1094,15 +1111,38 @@
             req = { attributes, options: { enableNotification: enableNotification } };
           }
 
-          console.log('rts-demo setUserAttributes: req=' + JSON.stringify(req));
+          log4test('setUserAttributes: req=' + JSON.stringify(req));
 
           this.setUserAttributesRes = '';
           const res = await this.rtsRoom.room.setUserAttributes(req);
-          console.log("setUserAttributes Res: ", res);
+          log4test("setUserAttributes Res: ", res);
           this.setUserAttributesRes = JSON.stringify(res);
         } catch(e) {
-          console.error("setUserAttributes err:", e);
+          log4test("setUserAttributes err:", e);
           this.setUserAttributesRes = JSON.stringify(e);
+        }
+      },
+      async set8KBUserAttributes() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          let enableNotification = this.setUserAttributesReq.options.enableNotification;
+          let attributes = {"key1": generateDataInKB(8)}
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
+          log4test("set 8KB UserAttributes")
+          this.set8KBUserAttributesRes = '';
+          const res = await this.rtsRoom.room.setUserAttributes(req)
+          log4test("set 8KB UserAttributes, Res= ", res);
+          this.set8KBUserAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("set 8KB UserAttributes, err=", e);
+          this.set8KBUserAttributesRes = JSON.stringify(e);
         }
       },
       async deleteUserAttributesByKeys() {
@@ -1129,15 +1169,15 @@
             req = { keys, options: { enableNotification: enableNotification } };
           }
 
-          console.log('rts-demo deleteUserAttributesByKeys: req=' + JSON.stringify(req));
+          log4test('deleteUserAttributesByKeys: req=' + JSON.stringify(req));
 
           this.deleteUserAttributesRes = '';
 
           const res = await this.rtsRoom.room.deleteUserAttributesByKeys(req);
-          console.log("deleteUserAttributesByKeys res=", res);
+          log4test("deleteUserAttributesByKeys res=", res);
           this.deleteUserAttributesRes = JSON.stringify(res);
         } catch(e) {
-          console.error("deleteUserAttributesByKeys err:", e);
+          log4test("deleteUserAttributesByKeys err:", e);
           this.deleteUserAttributesRes = JSON.stringify(e);
         }
       },
@@ -1156,14 +1196,14 @@
             req = {options: { enableNotification: enableNotification } };
           }
 
-          console.log('rts-demo clearUserAttributes: req=' + JSON.stringify(req));
+          log4test('clearUserAttributes: req=' + JSON.stringify(req));
 
           this.clearUserAttributesRes = '';
           const res = await this.rtsRoom.room.clearUserAttributes(req);
-          console.log("clearUserAttributes res=", res);
+          log4test("clearUserAttributes res=", res);
           this.clearUserAttributesRes = JSON.stringify(res);
         } catch(e) {
-          console.error("clearUserAttributes err:", e);
+          log4test("clearUserAttributes err:", e);
           this.clearUserAttributesRes = JSON.stringify(e);
         }
       },
@@ -1191,14 +1231,14 @@
             req = { attributes, options: { enableNotification: enableNotification } };
           }
 
-          console.log('rts-demo addOrUpdateUserAttributes: req=' + JSON.stringify(req));
+          log4test('addOrUpdateUserAttributes: req=' + JSON.stringify(req));
 
           this.addOrUpdateUserAttributesRes = '';
           const res = await this.rtsRoom.room.addOrUpdateUserAttributes(req);
-          console.log("addOrUpdateUserAttributes res=", res);
+          log4test("addOrUpdateUserAttributes res=", res);
           this.addOrUpdateUserAttributesRes = JSON.stringify(res);
         } catch(e) {
-          console.error("addOrUpdateUserAttributes err:", e);
+          log4test("addOrUpdateUserAttributes err:", e);
           this.addOrUpdateUserAttributesRes = JSON.stringify(e);
         }
       },
@@ -1311,15 +1351,38 @@
           } else {
             req = { attributes, options: { enableNotification: enableNotification } };
           }
-          console.log('rts-demo setRoomAttributes: req=' + JSON.stringify(req));
+          log4test('setRoomAttributes: req=' + JSON.stringify(req));
 
           this.setRoomAttributesRes = '';
           const res = await this.rtsRoom.room.setRoomAttributes(req);
-          console.log("setRoomAttributes res=", res);
+          log4test("setRoomAttributes res=" , res);
           this.setRoomAttributesRes = JSON.stringify(res);
         } catch(e) {
-          console.error("setRoomAttributes err:", e);
+          log4test("setRoomAttributes err:" , e);
           this.setRoomAttributesRes = JSON.stringify(e);
+        }
+      },
+      async set8KBRoomAttributes() {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          let enableNotification = this.setRoomAttributesReq.options.enableNotification;
+          let attributes = {"key1": generateDataInKB(8)}
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
+          log4test("set 8KB RoomAttributes");
+          this.set8KBRoomAttributesRes = '';
+          const res = await this.rtsRoom.room.setRoomAttributes(req);
+          log4test("set 8KB RoomAttributes, res=", res);
+          this.set8KBRoomAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("set 8KB RoomAttributes, err=", e);
+          this.set8KBRoomAttributesRes = JSON.stringify(e);
         }
       },
       async deleteRoomAttributesByKeys() {
@@ -1346,14 +1409,14 @@
             req = { keys, options: { enableNotification: enableNotification } };
           }
 
-          console.log('rts-demo deleteRoomAttributesByKeys: req=' + JSON.stringify(req));
+          log4test('deleteRoomAttributesByKeys: req=' + JSON.stringify(req));
 
           this.deleteRoomAttributesByKeysRes = '';
           const res = await this.rtsRoom.room.deleteRoomAttributesByKeys(req);
-          console.log("deleteRoomAttributesByKeys res=", res);
+          log4test("deleteRoomAttributesByKeys res=", res);
           this.deleteRoomAttributesByKeysRes = JSON.stringify(res);
         } catch(e) {
-          console.error("deleteRoomAttributesByKeys err:", e);
+          log4test("deleteRoomAttributesByKeys err:", e);
           this.deleteRoomAttributesByKeysRes = JSON.stringify(e);
         }
       },
@@ -1371,14 +1434,14 @@
           } else {
             req = { options: { enableNotification: enableNotification } };
           }
-          console.log('rts-demo clearRoomAttributes: req=' + JSON.stringify(req));
+          log4test('clearRoomAttributes: req=' + JSON.stringify(req));
 
           this.clearRoomAttributesRes = '';
           const res = await this.rtsRoom.room.clearRoomAttributes(req);
-          console.log("clearRoomAttributes res=", res);
+          log4test("clearRoomAttributes res=", res);
           this.clearRoomAttributesRes = JSON.stringify(res);
         } catch(e) {
-          console.error("clearRoomAttributes err:", e);
+          log4test("clearRoomAttributes err:", e);
           this.clearRoomAttributesRes = JSON.stringify(e);
         }
       },
@@ -1407,14 +1470,14 @@
             req = { attributes, options: { enableNotification: enableNotification } };
           }
 
-          console.log('rts-demo addOrUpdateRoomAttributes: req=' + JSON.stringify(req));
+          log4test('addOrUpdateRoomAttributes: req=' + JSON.stringify(req));
 
           this.addOrUpdateRoomAttributesRes = '';
           const res = await this.rtsRoom.room.addOrUpdateRoomAttributes(req);
-          console.log("addOrUpdateRoomAttributes res=", res);
+          log4test("addOrUpdateRoomAttributes res=", res);
           this.addOrUpdateRoomAttributesRes = JSON.stringify(res);
         } catch(e) {
-          console.error("addOrUpdateRoomAttributes err:", e);
+          log4test("addOrUpdateRoomAttributes err:", e);
           this.addOrUpdateRoomAttributesRes = JSON.stringify(e);
         }
       },
@@ -1476,11 +1539,11 @@
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: this.appExtras
           });
-          console.log("sendMessageToUser res=" + JSON.stringify(res));
+          log4test("sendMessageToUser res=" + JSON.stringify(res));
           this.sendMessageToUserRes = JSON.stringify(res);
 
         } catch(e) {
-          console.error("sendMessageToUser err:", e);
+          log4test("sendMessageToUser err:", e);
           this.sendMessageToUserRes = JSON.stringify(e);
         }
       },
@@ -1520,7 +1583,7 @@
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: {key1 : generateDataInKB(1)}
           });
-          log4test("sendMessageWith1KBExtraToUser res=" + JSON.stringify(res));
+          log4test("sendMessageWith1KBExtraToUser res= " + JSON.stringify(res));
           this.sendMessageWith1KBExtraToUserRes = JSON.stringify(res);
 
         } catch(e) {
@@ -1593,6 +1656,7 @@
           return
         }
         if (!this.client[SYMBOL_P2P_EV]) {
+          log4test("开始监听P2P消息")
           this.client[SYMBOL_P2P_EV] = (data) => {
             data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
             log4test(`接收消息:${EVENT_MESSAGE_FROM_USER}:` + JSON.stringify(data));
@@ -1610,6 +1674,7 @@
       removeP2PEventMonitor() {
         if (!this.client) return
         if (!this.client[SYMBOL_P2P_EV]) return
+        log4test("移除监听P2P消息")
         this.client.off(EVENT_MESSAGE_FROM_USER, this.client[SYMBOL_P2P_EV])
         this.client[SYMBOL_P2P_EV] = null
         this.p2pEventMonitorRes = "移除P2P消息的监听"
