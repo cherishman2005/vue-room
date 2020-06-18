@@ -1086,7 +1086,7 @@
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: {}
           });
-          log4test("send32KMessage res=" + JSON.stringify(res));
+          log4test("send32KMessage res=" ,res);
           this.send32KMessageRes = JSON.stringify(res);
         } catch(e) {
           log4test("send32KMessage err:", e);
@@ -1104,7 +1104,7 @@
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: {key1 : generateDataInKB(1)}
           });
-          log4test("sendMessage with 1K extras" + JSON.stringify(res))
+          log4test("sendMessage with 1K extras" ,res)
           this.sendMessageWith1KBExtrasRes = JSON.stringify(res)
         } catch(e) {
           log4test("sendMessage with 1k extras, err:", e);
@@ -1131,7 +1131,7 @@
             req = { attributes, options: { enableNotification: enableNotification } };
           }
 
-          log4test('setUserAttributes: req=' + JSON.stringify(req));
+          log4test('setUserAttributes: req=', req);
 
           this.setUserAttributesRes = '';
           const res = await this.rtsRoom.room.setUserAttributes(req);
@@ -1189,7 +1189,7 @@
             req = { keys, options: { enableNotification: enableNotification } };
           }
 
-          log4test('deleteUserAttributesByKeys: req=' + JSON.stringify(req));
+          log4test('deleteUserAttributesByKeys: req=', req);
 
           this.deleteUserAttributesRes = '';
 
@@ -1216,7 +1216,7 @@
             req = {options: { enableNotification: enableNotification } };
           }
 
-          log4test('clearUserAttributes: req=' + JSON.stringify(req));
+          log4test('clearUserAttributes: req=', req);
 
           this.clearUserAttributesRes = '';
           const res = await this.rtsRoom.room.clearUserAttributes(req);
@@ -1251,7 +1251,7 @@
             req = { attributes, options: { enableNotification: enableNotification } };
           }
 
-          log4test('addOrUpdateUserAttributes: req=' + JSON.stringify(req));
+          log4test('addOrUpdateUserAttributes: req=', req);
 
           this.addOrUpdateUserAttributesRes = '';
           const res = await this.rtsRoom.room.addOrUpdateUserAttributes(req);
@@ -1371,7 +1371,7 @@
           } else {
             req = { attributes, options: { enableNotification: enableNotification } };
           }
-          log4test('setRoomAttributes: req=' + JSON.stringify(req));
+          log4test('setRoomAttributes: req=', req);
 
           this.setRoomAttributesRes = '';
           const res = await this.rtsRoom.room.setRoomAttributes(req);
@@ -1429,7 +1429,7 @@
             req = { keys, options: { enableNotification: enableNotification } };
           }
 
-          log4test('deleteRoomAttributesByKeys: req=' + JSON.stringify(req));
+          log4test('deleteRoomAttributesByKeys: req=', req);
 
           this.deleteRoomAttributesByKeysRes = '';
           const res = await this.rtsRoom.room.deleteRoomAttributesByKeys(req);
@@ -1454,7 +1454,7 @@
           } else {
             req = { options: { enableNotification: enableNotification } };
           }
-          log4test('clearRoomAttributes: req=' + JSON.stringify(req));
+          log4test('clearRoomAttributes: req=', req);
 
           this.clearRoomAttributesRes = '';
           const res = await this.rtsRoom.room.clearRoomAttributes(req);
@@ -1490,7 +1490,7 @@
             req = { attributes, options: { enableNotification: enableNotification } };
           }
 
-          log4test('addOrUpdateRoomAttributes: req=' + JSON.stringify(req));
+          log4test('addOrUpdateRoomAttributes: req=', req);
 
           this.addOrUpdateRoomAttributesRes = '';
           const res = await this.rtsRoom.room.addOrUpdateRoomAttributes(req);
@@ -1559,7 +1559,7 @@
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: this.appExtras
           });
-          log4test("sendMessageToUser res=" + JSON.stringify(res));
+          log4test("sendMessageToUser res=", res);
           this.sendMessageToUserRes = JSON.stringify(res);
 
         } catch(e) {
@@ -1581,7 +1581,7 @@
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: {}
           });
-          log4test("send 32 KB MessageToUser res=" + JSON.stringify(res));
+          log4test("send 32 KB MessageToUser res=", res);
           this.send32KBMessageToUserRes = JSON.stringify(res);
 
         } catch(e) {
@@ -1603,7 +1603,7 @@
             content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: {key1 : generateDataInKB(1)}
           });
-          log4test("sendMessageWith1KBExtraToUser res= " + JSON.stringify(res));
+          log4test("sendMessageWith1KBExtraToUser res= ", res);
           this.sendMessageWith1KBExtraToUserRes = JSON.stringify(res);
 
         } catch(e) {
