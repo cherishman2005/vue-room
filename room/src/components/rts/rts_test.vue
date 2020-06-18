@@ -1679,7 +1679,7 @@
           log4test("开始监听P2P消息")
           this.client[SYMBOL_P2P_EV] = (data) => {
             data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
-            log4test(`接收消息:${EVENT_MESSAGE_FROM_USER}:` + JSON.stringify(data));
+            log4test(`接收消息:${EVENT_MESSAGE_FROM_USER}:` ,data);
             this.$message({
               duration: 3000,
               message: `${EVENT_MESSAGE_FROM_USER}: ` + JSON.stringify(data),
@@ -1735,7 +1735,7 @@
             if ("RoomMessage" === eventName) {
               data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
             }
-            log4test(`接收消息: ${eventName}, [${rtsRoom.region}:${rtsRoom.roomId}], data: ` + JSON.stringify(data));
+            log4test(`接收消息: ${eventName}, [${rtsRoom.region}:${rtsRoom.roomId}], data:`, data);
             this.$message({
               duration: 3000,
               message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]:` + JSON.stringify(data),
