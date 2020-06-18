@@ -80,6 +80,9 @@
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
+                  <span style="float: left">{{ item.label }}</span>
+                  <span v-if="item.hasJoin" style="float: right; color: #00FF7F; font-size: 13px">已加入</span>
+                  <span v-else style="float: right; color: #8492a6; font-size: 13px">未加入</span>
                 </el-option>
               </el-select>
             </template>
@@ -960,6 +963,21 @@
         // 接收Peer消息
         // this.onReceiveMessage();
       },
+      updateRoomJoinStatus(join) {
+        if (!this.rtsRoom)
+          return;
+        let region = this.rtsRoom.region;
+        let roomId = this.rtsRoom.roomId;
+        let regionRoomId = getRegionRoomId(region, roomId);
+        if (this.rooms[this.regionRoomId]) {
+          let target = this.regionRoomIds.find( (value, index, arr) => {
+            return value.label === regionRoomId
+          })
+          if (target) {
+            target.hasJoin = join
+          }
+        }
+      },
       getRoom(data) {
         console.log('getRoom data=', data);
 
@@ -977,7 +995,7 @@
         }
 
         this.rooms[this.regionRoomId] = data;
-        this.regionRoomIds.push({value: this.regionRoomId, label: this.regionRoomId});
+        this.regionRoomIds.push({value: this.regionRoomId, label: this.regionRoomId, hasJoin: false});
 
         console.log('rooms=', this.rooms);
 
@@ -1004,6 +1022,7 @@
           const res = await this.rtsRoom.room.join(req);
           log4test("自己进入房间join res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
+          this.updateRoomJoinStatus(true)
         } catch(e) {
           log4test("join err:", e);
           this.joinOrLeaveRes = JSON.stringify(e);
@@ -1018,6 +1037,7 @@
           const res = await this.rtsRoom.room.leave();
           log4test("自己离开房间leave: res=", res);
           this.joinOrLeaveRes = JSON.stringify(res);
+          this.updateRoomJoinStatus(false)
         } catch(e) {
           log4test("leave err:", e);
           this.joinOrLeaveRes = JSON.stringify(e);
