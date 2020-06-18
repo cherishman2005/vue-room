@@ -1574,7 +1574,7 @@
         try {
           let content = generateDataInKB(32)
           let receiver = this.sendMessageToUserReq.receiver;
-          this.send32KBMessageToUser = '';
+          this.send32KBMessageToUserRes = '';
           const res = await this.client.sendMessageToUser({
             receiver: receiver,
             type: "100",
@@ -1596,7 +1596,7 @@
         try {
           let content = "测试"
           let receiver = this.sendMessageToUserReq.receiver;
-          this.sendMessageWith1KBExtraToUser = '';
+          this.sendMessageWith1KBExtraToUserRes = '';
           const res = await this.client.sendMessageToUser({
             receiver: receiver,
             type: "100",
