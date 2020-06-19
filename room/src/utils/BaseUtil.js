@@ -43,6 +43,24 @@ export function removeStorage() {
   return sessionStorage.setItem(key, "");
 }
 
+export function Uint8ArrayToString(fileData) {  
+  let dataString = "";
+  for (let i = 0; i < fileData.length; i++) {
+    dataString += String.fromCharCode(fileData[i]);
+  }
+  return dataString;
+}
+
+export function stringToUint8Array(str) {  
+  let arr = [];
+  for (let i = 0, j = str.length; i < j; ++i) {
+    arr.push(str.charCodeAt(i));
+  }
+  
+  let tmpUint8Array = new Uint8Array(arr);
+  return tmpUint8Array;
+}
+
 const DEMO_TAG = "rts-demo"
 // 通过rts-demo，给测试看的日志/回调日志
 export function log4test(info, ...args) {

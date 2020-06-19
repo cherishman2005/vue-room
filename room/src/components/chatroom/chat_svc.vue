@@ -1404,9 +1404,9 @@
           return;
 
         try {
-          let svcName = 'svc_cn_chatroom_online_query_d';
-          let fnName = 'GetUserList';
-          let data = '';
+          let svcName = 'monitor_hash_1';
+          let fnName = 'hello';
+          let data = 'hello, nginx-vue';
           let req = {svcName, fnName, data};
           const res = await this.svc.sendData(req);
           console.log("sendData res=" + JSON.stringify(res));
