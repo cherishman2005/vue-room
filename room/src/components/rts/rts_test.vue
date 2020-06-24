@@ -839,14 +839,14 @@
       }
     },
     created() {
-      console.log('Hummer Version=' + Hummer.VERSION);
+      log4test('Hummer Version = ', Hummer.VERSION);
 
       // 初始化Hummer
       this.hummer = Hummer.createHummer({appid: this.appid});
 
       this.hummer.setLogLevel(-1);
 
-      console.log('hummer state=' + this.hummer.getState());
+      log4test('hummer state=', this.hummer.getState());
 
       this.onConnectStatusChange();
       this.onTokenExpired();
@@ -911,16 +911,17 @@
 
         try {
           this.loginRes = '';
-          let res = await this.hummer.login({
+          let req = {
             region: this.userRegion,
             uid: this.uid,
             token: this.token
-          });
-
-          console.log("login Res: " + JSON.stringify(res));
+          }
+          log4test("login req ", req)
+          let res = await this.hummer.login(req);
+          log4test("login res ", res);
           this.loginRes = JSON.stringify(res);
         } catch(e) {
-          console.error("login err:", e);
+          log4test("login err", e);
           this.loginRes = JSON.stringify(e);
         }
       },
@@ -931,14 +932,14 @@
         try {
           this.loginRes = '';
           const res = await this.hummer.logout();
-          console.log("logout Res: " + JSON.stringify(res));
+          log4test("logout res" ,res);
           this.loginRes = JSON.stringify(res);
           if (res.rescode === 0) {
             this.rooms = [];
             this.regionRoomIds = [];
           }
         } catch(e) {
-          console.error("logout err:", e);
+          log4test("logout err:", e);
           this.loginRes = JSON.stringify(e);
         }
       },
@@ -1450,7 +1451,7 @@
           let attributes = this.clearRoomAttributesReq.attributes || {};
           let req;
           if (enableNotification === undefined) {
-            //req = {};
+            req = {};
           } else {
             req = { options: { enableNotification: enableNotification } };
           }
@@ -1848,7 +1849,7 @@
             type: 'success'
           });
 
-          console.log('hummer state=' + this.hummer.getState());
+          log4test('hummer state=', this.hummer.getState());
         });
       },
       onTokenExpired() {
