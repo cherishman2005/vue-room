@@ -1209,7 +1209,6 @@
         try {
 
           let enableNotification = this.clearUserAttributesReq.options.enableNotification;
-          let attributes = this.clearUserAttributesReq.attributes || {};
           let req;
           if (enableNotification === undefined) {
             req = {};
@@ -1448,7 +1447,6 @@
         try {
 
           let enableNotification = this.clearRoomAttributesReq.options.enableNotification;
-          let attributes = this.clearRoomAttributesReq.attributes || {};
           let req;
           if (enableNotification === undefined) {
             req = {};
