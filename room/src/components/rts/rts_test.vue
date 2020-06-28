@@ -969,6 +969,9 @@
           return;
         let region = this.rtsRoom.region;
         let roomId = this.rtsRoom.roomId;
+        this.updateRoomJoinStatusByRegionAndRoomId(region, roomId, join)
+      },
+      updateRoomJoinStatusByRegionAndRoomId(region, roomId, join) {
         let regionRoomId = getRegionRoomId(region, roomId);
         if (this.rooms[this.regionRoomId]) {
           let target = this.regionRoomIds.find( (value, index, arr) => {
@@ -1008,7 +1011,7 @@
         // // 房间属性变更
         // this.onRoomAttributesUpdated(rtsRoom);
         //
-        // this.onRoomMemberOffline(rtsRoom);
+        this.onRoomMemberOffline(rtsRoom);
       },
       async join() {
         if (!this.rtsRoom)
@@ -1833,12 +1836,8 @@
       onRoomMemberOffline(rtsRoom) {
         const eventName = "RoomMemberOffline";
         rtsRoom.room.on(eventName, () => {
-          console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`);
-          this.$message({
-            duration: 3000,
-            message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`,
-            type: 'success'
-          });
+          console.log(`开发日志, 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`);
+          this.updateRoomJoinStatusByRegionAndRoomId(rtsRoom.region, rtsRoom.roomId, false)
         });
       },
       onConnectStatusChange() {
