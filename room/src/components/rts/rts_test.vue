@@ -1023,7 +1023,9 @@
           const res = await this.rtsRoom.room.join(req);
           log4test("自己进入房间join res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
-          this.updateRoomJoinStatus(true)
+          if (res.rescode === 0) {
+            this.updateRoomJoinStatus(true)
+          }
         } catch(e) {
           log4test("join err:", e);
           this.joinOrLeaveRes = JSON.stringify(e);
@@ -1038,7 +1040,9 @@
           const res = await this.rtsRoom.room.leave();
           log4test("自己离开房间leave: res=", res);
           this.joinOrLeaveRes = JSON.stringify(res);
-          this.updateRoomJoinStatus(false)
+          if (res.rescode === 0) {
+            this.updateRoomJoinStatus(false)
+          }
         } catch(e) {
           log4test("leave err:", e);
           this.joinOrLeaveRes = JSON.stringify(e);
