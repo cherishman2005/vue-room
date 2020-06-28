@@ -1013,6 +1013,12 @@
         //
         this.onRoomMemberOffline(rtsRoom);
       },
+      getCurrentRoomTag() {
+        if (!this.rtsRoom) {
+          return ""
+        }
+        return `[${this.rtsRoom.region}]:[${this.rtsRoom.roomId}]`;
+      },
       async join() {
         if (!this.rtsRoom)
           return;
@@ -1024,7 +1030,7 @@
 
           this.joinOrLeaveRes = '';
           const res = await this.rtsRoom.room.join(req);
-          log4test("自己进入房间join res:", res);
+          log4test(`自己进入房间 ${this.getCurrentRoomTag()}, join res = `, res);
           this.joinOrLeaveRes = JSON.stringify(res);
           if (res.rescode === 0) {
             this.updateRoomJoinStatus(true)
@@ -1514,7 +1520,7 @@
         try {
           this.getRoomAttributesRes = '';
           const res = await this.rtsRoom.room.getRoomAttributes();
-          console.log("getRoomAttributes res=", res);
+          log4test(`getRoomAttributes , [${this.rtsRoom.region}]:[${this.rtsRoom.roomId}], res =`, res);
           this.getRoomAttributesRes = JSON.stringify(res);
         } catch(e) {
           console.error("getRoomAttributes err:", e);
@@ -1534,11 +1540,11 @@
           }
 
           let req = { keys };
-          console.log('getRoomAttributesByKeys: req=', req);
+          log4test(`getRoomAttributesByKeys, [${this.rtsRoom.region}]:[${this.rtsRoom.roomId}], req =`, req);
 
           this.getRoomAttributesByKeysRes = '';
           const res = await this.rtsRoom.room.getRoomAttributesByKeys(req);
-          console.log("getRoomAttributesByKeys res=", res);
+          log4test(`getRoomAttributesByKeys, [${this.rtsRoom.region}]:[${this.rtsRoom.roomId}], res = `, res);
           this.getRoomAttributesByKeysRes = JSON.stringify(res);
         } catch(e) {
           console.error("getRoomAttributesByKeys err:", e);
