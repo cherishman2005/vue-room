@@ -43,7 +43,7 @@ export function removeStorage() {
   return sessionStorage.setItem(key, "");
 }
 
-export function Uint8ArrayToString(fileData) {  
+export function Uint8ArrayToString(fileData) {
   let dataString = "";
   for (let i = 0; i < fileData.length; i++) {
     dataString += String.fromCharCode(fileData[i]);
@@ -51,20 +51,35 @@ export function Uint8ArrayToString(fileData) {
   return dataString;
 }
 
-export function stringToUint8Array(str) {  
+export function stringToUint8Array(str) {
   let arr = [];
   for (let i = 0, j = str.length; i < j; ++i) {
     arr.push(str.charCodeAt(i));
   }
-  
+
   let tmpUint8Array = new Uint8Array(arr);
   return tmpUint8Array;
+}
+
+
+export function padMs(ms) {
+  let len = ms.toString().length;
+  switch (len) {
+    case 1:
+      return '00' + ms;
+    case 2:
+      return '0' + ms;
+    default:
+      return  ms.toString();
+  }
 }
 
 const DEMO_TAG = "rts-demo"
 // 通过rts-demo，给测试看的日志/回调日志
 export function log4test(info, ...args) {
-  console.log(`${DEMO_TAG}: ${info} ` + JSON.stringify(args))
+  let date = new Date();
+  let timestamp = date.toLocaleTimeString('en-US', { hour12: false}) + "." + padMs(date.getMilliseconds())
+  console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + JSON.stringify(args))
 }
 
 export function generateDataInKB(unit) {
