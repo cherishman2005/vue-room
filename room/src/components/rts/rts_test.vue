@@ -1698,9 +1698,9 @@
               type: 'success'
             });
           }
+          this.client.on(EVENT_MESSAGE_FROM_USER, this.client[SYMBOL_P2P_EV])
+          this.p2pEventMonitorRes = "开始监听P2P消息"
         }
-        this.client.on(EVENT_MESSAGE_FROM_USER, this.client[SYMBOL_P2P_EV])
-        this.p2pEventMonitorRes = "开始监听P2P消息"
       },
       /* 移除P2P消息的监听 */
       removeP2PEventMonitor() {
