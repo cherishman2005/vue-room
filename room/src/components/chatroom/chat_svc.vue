@@ -1489,6 +1489,8 @@
     //white-space: pre;
   }
   .rsp-text {
+    font-style: italic;
+    font-size: 13px;
     width:100%;
     height:46px;
     text-align:left;

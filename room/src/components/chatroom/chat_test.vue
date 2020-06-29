@@ -638,68 +638,6 @@
     mounted() {
     },
     methods: {
-      showRefreshTokenModel() {
-        this.$store.commit('updateRefreshTokenModelVisible', true);
-      },
-      closeRefreshTokenModel() {
-        this.$store.commit('updateRefreshTokenModelVisible', false)
-      },
-      showCreateGroupModel() {
-        this.$store.commit('updateCreateGroupModelVisible', true);
-      },
-      closeCreateGroupModel() {
-        this.$store.commit('updateCreateGroupModelVisible', false)
-      },
-      showSetGroupAttributesModel() {
-        this.$store.commit('updateSetGroupAttributesVisible', true);
-      },
-      closeSetGroupAttributesModel() {
-        this.$store.commit('updateSetGroupAttributesVisible', false)
-      },
-   
-      showJoinChatRoomPropsModel() {
-        this.$store.commit('updateJoinChatRoomPropsVisible', true);
-      },
-      closeJoinChatRoomPropsModel() {
-        this.$store.commit('updateJoinChatRoomPropsVisible', false)
-      },
-
-      showUpdateGroupAttributesModel() {
-        this.$store.commit('updateUpdateGroupAttributesVisible', true);
-      },
-      closeUpdateGroupAttributesModel() {
-        this.$store.commit('updateUpdateGroupAttributesVisible', false)
-      },
-      showSetGroupUserAttributesModel() {
-        this.$store.commit('updateSetGroupUserAttributesVisible', true);
-      },
-      closeSetGroupUserAttributesModel() {
-        this.$store.commit('updateSetGroupUserAttributesVisible', false)
-      },
-      showSendTextExtAttributesModel() {
-        this.$store.commit('updateSendTextExtAttributesVisible', true);
-      },
-      closeSendTextExtAttributesModel() {
-        this.$store.commit('updateSendTextExtAttributesVisible', false);
-      },
-      showSendSingleUserAttributesModel () {
-        this.$store.commit('updateSendSingleUserAttributesVisible', true);
-      },
-      closeSendSingleUserAttributesModel () {
-        this.$store.commit('updateSendSingleUserAttributesVisible', false);
-      },
-      showSendGroupMessageAttributesModel () {
-        this.$store.commit('updateSendGroupMessageAttributesVisible', true);
-      },
-      closeSendGroupMessageAttributesModel () {
-        this.$store.commit('updateSendGroupMessageAttributesVisible', false);
-      },
-      showSendTextChatAttributesModel () {
-        this.$store.commit('updateSendTextChatAttributesVisible', true);
-      },
-      closeSendTextChatAttributesModel () {
-        this.$store.commit('updateSendTextChatAttributesVisible', false);
-      },
       onSendTextChatAttributes (data) {
         console.log('onSendTextChatAttributes attributes=', data)
         this.sendTextChatAttributes = data
@@ -1324,7 +1262,67 @@
             type: 'success'
           });
         });
-      }
+      },
+      showRefreshTokenModel() {
+        this.$store.commit('updateRefreshTokenModelVisible', true);
+      },
+      closeRefreshTokenModel() {
+        this.$store.commit('updateRefreshTokenModelVisible', false)
+      },
+      showCreateGroupModel() {
+        this.$store.commit('updateCreateGroupModelVisible', true);
+      },
+      closeCreateGroupModel() {
+        this.$store.commit('updateCreateGroupModelVisible', false)
+      },
+      showSetGroupAttributesModel() {
+        this.$store.commit('updateSetGroupAttributesVisible', true);
+      },
+      closeSetGroupAttributesModel() {
+        this.$store.commit('updateSetGroupAttributesVisible', false)
+      },
+      showJoinChatRoomPropsModel() {
+        this.$store.commit('updateJoinChatRoomPropsVisible', true);
+      },
+      closeJoinChatRoomPropsModel() {
+        this.$store.commit('updateJoinChatRoomPropsVisible', false)
+      },
+      showUpdateGroupAttributesModel() {
+        this.$store.commit('updateUpdateGroupAttributesVisible', true);
+      },
+      closeUpdateGroupAttributesModel() {
+        this.$store.commit('updateUpdateGroupAttributesVisible', false)
+      },
+      showSetGroupUserAttributesModel() {
+        this.$store.commit('updateSetGroupUserAttributesVisible', true);
+      },
+      closeSetGroupUserAttributesModel() {
+        this.$store.commit('updateSetGroupUserAttributesVisible', false)
+      },
+      showSendTextExtAttributesModel() {
+        this.$store.commit('updateSendTextExtAttributesVisible', true);
+      },
+      closeSendTextExtAttributesModel() {
+        this.$store.commit('updateSendTextExtAttributesVisible', false);
+      },
+      showSendSingleUserAttributesModel () {
+        this.$store.commit('updateSendSingleUserAttributesVisible', true);
+      },
+      closeSendSingleUserAttributesModel () {
+        this.$store.commit('updateSendSingleUserAttributesVisible', false);
+      },
+      showSendGroupMessageAttributesModel () {
+        this.$store.commit('updateSendGroupMessageAttributesVisible', true);
+      },
+      closeSendGroupMessageAttributesModel () {
+        this.$store.commit('updateSendGroupMessageAttributesVisible', false);
+      },
+      showSendTextChatAttributesModel () {
+        this.$store.commit('updateSendTextChatAttributesVisible', true);
+      },
+      closeSendTextChatAttributesModel () {
+        this.$store.commit('updateSendTextChatAttributesVisible', false);
+      },
     }
   }
 </script>
@@ -1361,6 +1359,8 @@
     //white-space: pre;
   }
   .rsp-text {
+    font-style: italic;
+    font-size: 13px;
     width:100%;
     height:46px;
     text-align:left;

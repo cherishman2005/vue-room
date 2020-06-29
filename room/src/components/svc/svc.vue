@@ -26,7 +26,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{loginRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{loginRes}}</p>
     </div>
 
     <el-dialog align="left" title="刷新token" :visible="refreshTokenModelVisible" @close="closeRefreshTokenModel" customClass="customWidth">
@@ -69,7 +69,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width: 80%;height: 46px; text-align:left;" >sub:{{subscribeBcGroupRes}} unsub:{{unSubscribeBcGroupRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">sub:{{subscribeBcGroupRes}} unsub:{{unSubscribeBcGroupRes}}</p>
     </div>
 
     <p class="text-unit">发送上行消息</p>
@@ -83,7 +83,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="true" style="width:80%; height:46px; text-align:left;">{{sendDataRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{sendDataRes}}</p>
     </div>
 
   </div>
@@ -95,7 +95,6 @@
   import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import EditableTable from '@/components/units/editable_table.vue';
-  //import Hummer from 'hummer-chatroom-sdk'
 
   const UID = getStorage('uid');
   const ROOMID = Number(getStorage('roomid'));
@@ -347,6 +346,8 @@
     //white-space: pre;
   }
   .rsp-text {
+    font-style: italic;
+    font-size: 13px;
     width:100%;
     height:46px;
     text-align:left;
