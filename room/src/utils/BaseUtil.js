@@ -92,3 +92,11 @@ export function generateDataInKB(unit) {
   let value = contentList.join("")
   return value
 }
+
+export function generateAttributes(size, postfix = "") {
+  let res = {}
+  for(let i = 0; i< size; i++) {
+    res[`key${i}`] = `value${i}_${postfix}`
+  }
+  return res
+}

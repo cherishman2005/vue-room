@@ -611,6 +611,39 @@
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set8KBUserAttributesRes}}</p>
     </div>
+
+    <el-row type="flex" class="row-bg">
+      <el-button @click="set32RoomAttributes" type="primary">设置32个房间属性</el-button>
+      <el-button @click="set33RoomAttributes" type="primary">设置33个房间属性</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set32RoomAttributesRes}}</p>
+    </div>
+
+    <el-row type="flex" class="row-bg">
+      <el-button @click="update32RoomAttributes" type="primary">增加或更新32个房间属性</el-button>
+      <el-button @click="update33RoomAttributes" type="primary">增加或更新33个房间属性</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{update32RoomAttributesRes}}</p>
+    </div>
+
+    <el-row type="flex" class="row-bg">
+      <el-button @click="set32UserAttributes" type="primary">设置32个用户属性</el-button>
+      <el-button @click="set33UserAttributes" type="primary">设置33个用户属性</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set32UserAttributesRes}}</p>
+    </div>
+
+    <el-row type="flex" class="row-bg">
+      <el-button @click="update32UserAttributes" type="primary">增加或更新32个用户属性</el-button>
+      <el-button @click="update33UserAttributes" type="primary">增加或更新33个用户属性</el-button>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{update32UserAttributesRes}}</p>
+    </div>
+
     <!-- 辅助工具 -->
     <!--
     <el-divider></el-divider>
@@ -638,7 +671,7 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { getStorage, setStorage , log4test, generateDataInKB} from '@/utils/BaseUtil';
+  import { getStorage, setStorage , log4test, generateDataInKB, generateAttributes} from '@/utils/BaseUtil';
   import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateRoom from './create_room.vue';
@@ -788,6 +821,11 @@
         },
         setRoomAttributesRes: '',
         set8KBRoomAttributesRes: "",
+        set32RoomAttributesRes: "",
+        update32RoomAttributesRes: "",
+        set32UserAttributesRes: "",
+        set33RoomAttributesRes: "",
+        update32UserAttributesRes: "",
         deleteRoomAttributesByKeysReq: {
           keys: TEST_ROOM_NAME_KEY,
           options: {},
@@ -1125,6 +1163,38 @@
           this.sendMessageWith1KBExtrasRes = JSON.stringify(e)
         }
       },
+      set32UserAttributes() {
+        this.setMultiUserAttributes(32)
+      },
+      set33UserAttributes() {
+        this.setMultiUserAttributes(33)
+      },
+      async setMultiUserAttributes(size) {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+
+          let enableNotification = this.setUserAttributesReq.options.enableNotification;
+          let attributes = generateAttributes(size, "set")
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
+
+          log4test('setUserAttributes: req=', req);
+
+          this.set32UserAttributesRes = '';
+          const res = await this.rtsRoom.room.setUserAttributes(req);
+          log4test("setUserAttributes Res: ", res);
+          this.set32UserAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("setUserAttributes err:", e);
+          this.set32UserAttributesRes = JSON.stringify(e);
+        }
+      },
       async setUserAttributes() {
         if (!this.rtsRoom)
           return;
@@ -1243,6 +1313,38 @@
       onAddOrUpdateUserAttributes(data) {
         console.log('onAddOrUpdateUserAttributes attributes=', data);
         this.addOrUpdateUserAttributesReq.attributes = data;
+      },
+      update32UserAttributes() {
+        this.updateMultiUserAttributes(32)
+      },
+      update33UserAttributes() {
+        this.updateMultiUserAttributes(33)
+      },
+      async updateMultiUserAttributes(size) {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+
+          let enableNotification = this.addOrUpdateUserAttributesReq.options.enableNotification;
+          let attributes = generateAttributes(size, "update")
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
+
+          log4test('addOrUpdateUserAttributes: req=', req);
+
+          this.update32UserAttributesRes = '';
+          const res = await this.rtsRoom.room.addOrUpdateUserAttributes(req);
+          log4test("addOrUpdateUserAttributes res=", res);
+          this.update32UserAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("addOrUpdateUserAttributes err:", e);
+          this.update32UserAttributesRes = JSON.stringify(e);
+        }
       },
       async addOrUpdateUserAttributes() {
         if (!this.rtsRoom)
@@ -1395,6 +1497,35 @@
           this.setRoomAttributesRes = JSON.stringify(e);
         }
       },
+      set32RoomAttributes() {
+        this.setMultiRoomAttributes(32)
+      },
+      set33RoomAttributes() {
+        this.setMultiRoomAttributes(33)
+      },
+      async setMultiRoomAttributes(size) {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          let enableNotification = this.setRoomAttributesReq.options.enableNotification;
+          let attributes = generateAttributes(size, "set")
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
+          log4test(`set RoomAttributes, req = `, req)
+          this.set32RoomAttributesRes = '';
+          const res = await this.rtsRoom.room.setRoomAttributes(req);
+          log4test(`set RoomAttributes, res=`, res);
+          this.set32RoomAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("set RoomAttributes, err=", e);
+          this.set32RoomAttributesRes = JSON.stringify(e);
+        }
+      },
       async set8KBRoomAttributes() {
         if (!this.rtsRoom)
           return;
@@ -1480,6 +1611,37 @@
       onAddOrUpdateRoomAttributes(data) {
         console.log('onAddOrUpdateRoomAttributes attributes=', data);
         this.addOrUpdateRoomAttributesReq.attributes = data;
+      },
+      update32RoomAttributes() {
+        this.updateMultiRoomAttributes(32)
+      },
+      update33RoomAttributes() {
+        this.updateMultiRoomAttributes(33)
+      },
+      async updateMultiRoomAttributes(size) {
+        if (!this.rtsRoom)
+          return;
+
+        try {
+          let enableNotification = this.addOrUpdateRoomAttributesReq.options.enableNotification;
+          let attributes = generateAttributes(size, "update")
+          let req;
+          if (enableNotification === undefined) {
+            req = { attributes };
+          } else {
+            req = { attributes, options: { enableNotification: enableNotification } };
+          }
+
+          log4test('addOrUpdateRoomAttributes: req=', req);
+
+          this.update32RoomAttributesRes = '';
+          const res = await this.rtsRoom.room.addOrUpdateRoomAttributes(req);
+          log4test("addOrUpdateRoomAttributes res=", res);
+          this.update32RoomAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("addOrUpdateRoomAttributes err:", e);
+          this.update32RoomAttributesRes = JSON.stringify(e);
+        }
       },
       async addOrUpdateRoomAttributes() {
         if (!this.rtsRoom)
