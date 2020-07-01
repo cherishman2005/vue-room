@@ -16,7 +16,6 @@ const signal = resolve => require(['@/components/signal/signal.vue'], resolve)
 
 const rts_test = resolve => require(['@/components/rts/rts_test.vue'], resolve)
 
-const table = resolve => require(['@/components/rts/table.vue'], resolve)
 
 Vue.use(Router);
 const routes = [
@@ -32,7 +31,6 @@ const routes = [
   {path: '/signal-test', component: signal_test, name: "signal-test" },
   {path: '/signal', component: signal, name: "signal" },
   {path: '/rts-test', component: rts_test, name: "rts-test" },
-  {path: '/table', component: table, name: "table" },
 ];
 
 const router = new Router({
