@@ -1107,18 +1107,20 @@
           let content = this.sendMessageReq.content;
           //let appExtras = {nickname: "awu", rtc: 'sfu/mcu'};
 
-          this.sendMessageRes = '';
-          const res = await this.rtsRoom.room.sendMessage({
+          let req = {
             type: "100",
-            content: Hummer.Utify.encodeStringToUtf8Bytes(content),
+              content: Hummer.Utify.encodeStringToUtf8Bytes(content),
             appExtras: this.roomAppExtras
-          });
-          console.log("sendMessage res=" + JSON.stringify(res));
+          }
+          log4test("sendMessage req=", content);
+          this.sendMessageRes = '';
+          const res = await this.rtsRoom.room.sendMessage(req);
+          log4test("sendMessage res=" + JSON.stringify(res));
           this.sendMessageRes = JSON.stringify(res);
 
           //console.log("消息队列mq_room_data: " + JSON.stringify(this.mq_room_data));
         } catch(e) {
-          console.error("sendMessage err:", e);
+          log4test("sendMessage err:", e);
           this.sendMessageRes = JSON.stringify(e);
         }
       },
@@ -1400,11 +1402,12 @@
           let req = { uid };
 
           this.getUserAttributesRes = '';
+          log4test("getUserAttributes req=", req);
           const res = await this.rtsRoom.room.getUserAttributes(req);
-          console.log("getUserAttributes res=", res);
+          log4test("getUserAttributes res=", res);
           this.getUserAttributesRes = JSON.stringify(res);
         } catch(e) {
-          console.error("getUserAttributes err:", e);
+          log4test("getUserAttributes err:", e);
           this.getUserAttributesRes = JSON.stringify(e);
         }
       },
