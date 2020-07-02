@@ -58,7 +58,7 @@
             <el-input v-model="roomid" style="width:150px;"></el-input>
           </el-form-item>
           <el-form-item class="search">
-            <el-button @click="showSetGroupAttributesModel" style="border-radius:4px">attribtes</el-button>
+            <el-button @click="showSetGroupAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <!--
           <el-form-item class="search">
@@ -116,7 +116,7 @@
       <el-col :span="24"  style="height:35px; text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button @click="showUpdateGroupAttributesModel" style="border-radius:4px">attribtes</el-button>
+            <el-button @click="showUpdateGroupAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="updateChatRoomAttributes" style="border-radius:4px">updateChatRoomAttributes</el-button>
@@ -425,7 +425,7 @@
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item>
-            <el-button @click="showSetGroupUserAttributesModel" style="border-radius:4px">attribtes</el-button>
+            <el-button @click="showSetGroupUserAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
