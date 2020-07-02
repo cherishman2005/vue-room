@@ -147,7 +147,7 @@
             readTableData() {
                 //根据实际情况，自己改下啊
                 this.key_value.data.map(i => {
-                    //i.id = generateId.get();//模拟后台插入成功后有了id
+                    i.id = generateId.get();//模拟后台插入成功后有了id
                     i.isSet = false;//给后台返回数据添加`isSet`标识
                     return i;
                 });
@@ -160,7 +160,8 @@
                         return false;
                     }
                 }
-                if (!this.key_value.sel.id) this.key_value.data.splice(index, 1);
+                // if (!this.key_value.sel.id) this.key_value.data.splice(index, 1);
+                this.key_value.data.splice(index, 1);
                 console.log('key_value =', this.key_value);
             },
             //添加
