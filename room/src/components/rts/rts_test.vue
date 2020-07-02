@@ -80,9 +80,11 @@
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
-                  <span style="float: left">{{ item.label }}</span>
+                  <span style="float: left;" >{{ item.label.substr(0, Math.min(item.label.length, 30))}}</span>
+                  <el-tooltip class="item" effect="light" :content="item.label" placement="right-end">
                   <span v-if="item.hasJoin" style="float: right; color: #00FF7F; font-size: 13px">已加入</span>
-                  <span v-else style="float: right; color: #8492a6; font-size: 13px">未加入</span>
+                  <span v-else style="float: right; color: #8492a6; font-size: 13px; margin-left: 5px">未加入</span>
+                  </el-tooltip>
                 </el-option>
               </el-select>
             </template>
