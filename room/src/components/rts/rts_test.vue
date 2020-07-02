@@ -181,7 +181,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{setUserAttributesRes}}</p>
     </div>
 
-    <el-dialog align="left" title="atrributes" :visible="setUserAttributesVisible" @close="closeSetUserAttributesModel">
+    <el-dialog align="left" title="attributes" :visible="setUserAttributesVisible" @close="closeSetUserAttributesModel">
       <editable-table
       :tableData="setUserAttributesReq.attributes" @onGetPlainObject="onSetUserAttributes"></editable-table>
     </el-dialog>
@@ -270,7 +270,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{addOrUpdateUserAttributesRes}}</p>
     </div>
 
-    <el-dialog align="left" title="atrributes" :visible="addOrUpdateUserAttributesVisible" @close="closeAddOrUpdateUserAttributesModel">
+    <el-dialog align="left" title="attributes" :visible="addOrUpdateUserAttributesVisible" @close="closeAddOrUpdateUserAttributesModel">
       <editable-table
       :tableData="addOrUpdateUserAttributesReq.attributes" @onGetPlainObject="onAddOrUpdateUserAttributes"></editable-table>
     </el-dialog>
@@ -385,7 +385,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{setRoomAttributesRes}}</p>
     </div>
 
-    <el-dialog align="left" title="atrributes" :visible="setRoomAttributesVisible" @close="closeSetRoomAttributesModel">
+    <el-dialog align="left" title="attributes" :visible="setRoomAttributesVisible" @close="closeSetRoomAttributesModel">
       <editable-table
       :tableData="setRoomAttributesReq.attributes" @onGetPlainObject="onSetRoomAttributes"></editable-table>
     </el-dialog>
@@ -474,7 +474,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{addOrUpdateRoomAttributesRes}}</p>
     </div>
 
-    <el-dialog align="left" title="atrributes" :visible="addOrUpdateRoomAttributesVisible" @close="closeAddOrUpdateRoomAttributesModel">
+    <el-dialog align="left" title="attributes" :visible="addOrUpdateRoomAttributesVisible" @close="closeAddOrUpdateRoomAttributesModel">
       <editable-table
       :tableData="addOrUpdateRoomAttributesReq.attributes" @onGetPlainObject="onAddOrUpdateRoomAttributes"></editable-table>
     </el-dialog>
