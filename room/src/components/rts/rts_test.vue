@@ -169,7 +169,7 @@
             </template>
           </el-form-item>
           <el-form-item>
-            <el-button @click="showSetUserAttributesModel" style="border-radius:4px">attribtes</el-button>
+            <el-button @click="showSetUserAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="setUserAttributes" style="border-radius:4px">setUserAttributes</el-button>
@@ -373,7 +373,7 @@
             </template>
           </el-form-item>
           <el-form-item>
-            <el-button @click="showSetRoomAttributesModel" style="border-radius:4px">attribtes</el-button>
+            <el-button @click="showSetRoomAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="setRoomAttributes" style="border-radius: 4px">setRoomAttributes</el-button>
@@ -611,39 +611,6 @@
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set8KBUserAttributesRes}}</p>
     </div>
-
-    <el-row type="flex" class="row-bg">
-      <el-button @click="set32RoomAttributes" type="primary">设置32个房间属性</el-button>
-      <el-button @click="set33RoomAttributes" type="primary">设置33个房间属性</el-button>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set32RoomAttributesRes}}</p>
-    </div>
-
-    <el-row type="flex" class="row-bg">
-      <el-button @click="update32RoomAttributes" type="primary">增加或更新32个房间属性</el-button>
-      <el-button @click="update33RoomAttributes" type="primary">增加或更新33个房间属性</el-button>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{update32RoomAttributesRes}}</p>
-    </div>
-
-    <el-row type="flex" class="row-bg">
-      <el-button @click="set32UserAttributes" type="primary">设置32个用户属性</el-button>
-      <el-button @click="set33UserAttributes" type="primary">设置33个用户属性</el-button>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set32UserAttributesRes}}</p>
-    </div>
-
-    <el-row type="flex" class="row-bg">
-      <el-button @click="update32UserAttributes" type="primary">增加或更新32个用户属性</el-button>
-      <el-button @click="update33UserAttributes" type="primary">增加或更新33个用户属性</el-button>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{update32UserAttributesRes}}</p>
-    </div>
-
     <!-- 辅助工具 -->
     <!--
     <el-divider></el-divider>
@@ -671,7 +638,7 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { getStorage, setStorage , log4test, generateDataInKB, generateAttributes} from '@/utils/BaseUtil';
+  import { getStorage, setStorage , log4test, generateDataInKB} from '@/utils/BaseUtil';
   import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateRoom from './create_room.vue';
@@ -821,11 +788,6 @@
         },
         setRoomAttributesRes: '',
         set8KBRoomAttributesRes: "",
-        set32RoomAttributesRes: "",
-        update32RoomAttributesRes: "",
-        set32UserAttributesRes: "",
-        set33RoomAttributesRes: "",
-        update32UserAttributesRes: "",
         deleteRoomAttributesByKeysReq: {
           keys: TEST_ROOM_NAME_KEY,
           options: {},
@@ -877,14 +839,14 @@
       }
     },
     created() {
-      log4test('Hummer Version = ', Hummer.VERSION);
+      console.log('Hummer Version=' + Hummer.VERSION);
 
       // 初始化Hummer
       this.hummer = Hummer.createHummer({appid: this.appid});
 
       this.hummer.setLogLevel(-1);
 
-      log4test('hummer state=', this.hummer.getState());
+      console.log('hummer state=' + this.hummer.getState());
 
       this.onConnectStatusChange();
       this.onTokenExpired();
@@ -949,17 +911,18 @@
 
         try {
           this.loginRes = '';
-          let req = {
+
+          log4test("login: res=", res);
+          let res = await this.hummer.login({
             region: this.userRegion,
             uid: this.uid,
             token: this.token
-          }
-          log4test("login req ", req)
-          let res = await this.hummer.login(req);
-          log4test("login res ", res);
+          });
+
+          console.log("login Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
         } catch(e) {
-          log4test("login err", e);
+          console.error("login err:", e);
           this.loginRes = JSON.stringify(e);
         }
       },
@@ -970,14 +933,14 @@
         try {
           this.loginRes = '';
           const res = await this.hummer.logout();
-          log4test("logout res" ,res);
+          console.log("logout Res: " + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
           if (res.rescode === 0) {
             this.rooms = [];
             this.regionRoomIds = [];
           }
         } catch(e) {
-          log4test("logout err:", e);
+          console.error("logout err:", e);
           this.loginRes = JSON.stringify(e);
         }
       },
@@ -1007,9 +970,6 @@
           return;
         let region = this.rtsRoom.region;
         let roomId = this.rtsRoom.roomId;
-        this.updateRoomJoinStatusByRegionAndRoomId(region, roomId, join)
-      },
-      updateRoomJoinStatusByRegionAndRoomId(region, roomId, join) {
         let regionRoomId = getRegionRoomId(region, roomId);
         if (this.rooms[this.regionRoomId]) {
           let target = this.regionRoomIds.find( (value, index, arr) => {
@@ -1049,13 +1009,7 @@
         // // 房间属性变更
         // this.onRoomAttributesUpdated(rtsRoom);
         //
-        this.onRoomMemberOffline(rtsRoom);
-      },
-      getCurrentRoomTag() {
-        if (!this.rtsRoom) {
-          return ""
-        }
-        return `[${this.rtsRoom.region}]:[${this.rtsRoom.roomId}]`;
+        // this.onRoomMemberOffline(rtsRoom);
       },
       async join() {
         if (!this.rtsRoom)
@@ -1068,11 +1022,9 @@
 
           this.joinOrLeaveRes = '';
           const res = await this.rtsRoom.room.join(req);
-          log4test(`自己进入房间 ${this.getCurrentRoomTag()}, join res = `, res);
+          log4test("自己进入房间join res:", res);
           this.joinOrLeaveRes = JSON.stringify(res);
-          if (res.rescode === 0) {
-            this.updateRoomJoinStatus(true)
-          }
+          this.updateRoomJoinStatus(true)
         } catch(e) {
           log4test("join err:", e);
           this.joinOrLeaveRes = JSON.stringify(e);
@@ -1087,9 +1039,7 @@
           const res = await this.rtsRoom.room.leave();
           log4test("自己离开房间leave: res=", res);
           this.joinOrLeaveRes = JSON.stringify(res);
-          if (res.rescode === 0) {
-            this.updateRoomJoinStatus(false)
-          }
+          this.updateRoomJoinStatus(false)
         } catch(e) {
           log4test("leave err:", e);
           this.joinOrLeaveRes = JSON.stringify(e);
@@ -1161,38 +1111,6 @@
         } catch(e) {
           log4test("sendMessage with 1k extras, err:", e);
           this.sendMessageWith1KBExtrasRes = JSON.stringify(e)
-        }
-      },
-      set32UserAttributes() {
-        this.setMultiUserAttributes(32)
-      },
-      set33UserAttributes() {
-        this.setMultiUserAttributes(33)
-      },
-      async setMultiUserAttributes(size) {
-        if (!this.rtsRoom)
-          return;
-
-        try {
-
-          let enableNotification = this.setUserAttributesReq.options.enableNotification;
-          let attributes = generateAttributes(size, "set")
-          let req;
-          if (enableNotification === undefined) {
-            req = { attributes };
-          } else {
-            req = { attributes, options: { enableNotification: enableNotification } };
-          }
-
-          log4test('setUserAttributes: req=', req);
-
-          this.set32UserAttributesRes = '';
-          const res = await this.rtsRoom.room.setUserAttributes(req);
-          log4test("setUserAttributes Res: ", res);
-          this.set32UserAttributesRes = JSON.stringify(res);
-        } catch(e) {
-          log4test("setUserAttributes err:", e);
-          this.set32UserAttributesRes = JSON.stringify(e);
         }
       },
       async setUserAttributes() {
@@ -1292,6 +1210,7 @@
         try {
 
           let enableNotification = this.clearUserAttributesReq.options.enableNotification;
+          let attributes = this.clearUserAttributesReq.attributes || {};
           let req;
           if (enableNotification === undefined) {
             req = {};
@@ -1313,38 +1232,6 @@
       onAddOrUpdateUserAttributes(data) {
         console.log('onAddOrUpdateUserAttributes attributes=', data);
         this.addOrUpdateUserAttributesReq.attributes = data;
-      },
-      update32UserAttributes() {
-        this.updateMultiUserAttributes(32)
-      },
-      update33UserAttributes() {
-        this.updateMultiUserAttributes(33)
-      },
-      async updateMultiUserAttributes(size) {
-        if (!this.rtsRoom)
-          return;
-
-        try {
-
-          let enableNotification = this.addOrUpdateUserAttributesReq.options.enableNotification;
-          let attributes = generateAttributes(size, "update")
-          let req;
-          if (enableNotification === undefined) {
-            req = { attributes };
-          } else {
-            req = { attributes, options: { enableNotification: enableNotification } };
-          }
-
-          log4test('addOrUpdateUserAttributes: req=', req);
-
-          this.update32UserAttributesRes = '';
-          const res = await this.rtsRoom.room.addOrUpdateUserAttributes(req);
-          log4test("addOrUpdateUserAttributes res=", res);
-          this.update32UserAttributesRes = JSON.stringify(res);
-        } catch(e) {
-          log4test("addOrUpdateUserAttributes err:", e);
-          this.update32UserAttributesRes = JSON.stringify(e);
-        }
       },
       async addOrUpdateUserAttributes() {
         if (!this.rtsRoom)
@@ -1497,35 +1384,6 @@
           this.setRoomAttributesRes = JSON.stringify(e);
         }
       },
-      set32RoomAttributes() {
-        this.setMultiRoomAttributes(32)
-      },
-      set33RoomAttributes() {
-        this.setMultiRoomAttributes(33)
-      },
-      async setMultiRoomAttributes(size) {
-        if (!this.rtsRoom)
-          return;
-
-        try {
-          let enableNotification = this.setRoomAttributesReq.options.enableNotification;
-          let attributes = generateAttributes(size, "set")
-          let req;
-          if (enableNotification === undefined) {
-            req = { attributes };
-          } else {
-            req = { attributes, options: { enableNotification: enableNotification } };
-          }
-          log4test(`set RoomAttributes, req = `, req)
-          this.set32RoomAttributesRes = '';
-          const res = await this.rtsRoom.room.setRoomAttributes(req);
-          log4test(`set RoomAttributes, res=`, res);
-          this.set32RoomAttributesRes = JSON.stringify(res);
-        } catch(e) {
-          log4test("set RoomAttributes, err=", e);
-          this.set32RoomAttributesRes = JSON.stringify(e);
-        }
-      },
       async set8KBRoomAttributes() {
         if (!this.rtsRoom)
           return;
@@ -1591,9 +1449,10 @@
         try {
 
           let enableNotification = this.clearRoomAttributesReq.options.enableNotification;
+          let attributes = this.clearRoomAttributesReq.attributes || {};
           let req;
           if (enableNotification === undefined) {
-            req = {};
+            //req = {};
           } else {
             req = { options: { enableNotification: enableNotification } };
           }
@@ -1611,37 +1470,6 @@
       onAddOrUpdateRoomAttributes(data) {
         console.log('onAddOrUpdateRoomAttributes attributes=', data);
         this.addOrUpdateRoomAttributesReq.attributes = data;
-      },
-      update32RoomAttributes() {
-        this.updateMultiRoomAttributes(32)
-      },
-      update33RoomAttributes() {
-        this.updateMultiRoomAttributes(33)
-      },
-      async updateMultiRoomAttributes(size) {
-        if (!this.rtsRoom)
-          return;
-
-        try {
-          let enableNotification = this.addOrUpdateRoomAttributesReq.options.enableNotification;
-          let attributes = generateAttributes(size, "update")
-          let req;
-          if (enableNotification === undefined) {
-            req = { attributes };
-          } else {
-            req = { attributes, options: { enableNotification: enableNotification } };
-          }
-
-          log4test('addOrUpdateRoomAttributes: req=', req);
-
-          this.update32RoomAttributesRes = '';
-          const res = await this.rtsRoom.room.addOrUpdateRoomAttributes(req);
-          log4test("addOrUpdateRoomAttributes res=", res);
-          this.update32RoomAttributesRes = JSON.stringify(res);
-        } catch(e) {
-          log4test("addOrUpdateRoomAttributes err:", e);
-          this.update32RoomAttributesRes = JSON.stringify(e);
-        }
       },
       async addOrUpdateRoomAttributes() {
         if (!this.rtsRoom)
@@ -1682,7 +1510,7 @@
         try {
           this.getRoomAttributesRes = '';
           const res = await this.rtsRoom.room.getRoomAttributes();
-          log4test(`getRoomAttributes , [${this.rtsRoom.region}]:[${this.rtsRoom.roomId}], res =`, res);
+          console.log("getRoomAttributes res=", res);
           this.getRoomAttributesRes = JSON.stringify(res);
         } catch(e) {
           console.error("getRoomAttributes err:", e);
@@ -1702,11 +1530,11 @@
           }
 
           let req = { keys };
-          log4test(`getRoomAttributesByKeys, [${this.rtsRoom.region}]:[${this.rtsRoom.roomId}], req =`, req);
+          console.log('getRoomAttributesByKeys: req=', req);
 
           this.getRoomAttributesByKeysRes = '';
           const res = await this.rtsRoom.room.getRoomAttributesByKeys(req);
-          log4test(`getRoomAttributesByKeys, [${this.rtsRoom.region}]:[${this.rtsRoom.roomId}], res = `, res);
+          console.log("getRoomAttributesByKeys res=", res);
           this.getRoomAttributesByKeysRes = JSON.stringify(res);
         } catch(e) {
           console.error("getRoomAttributesByKeys err:", e);
@@ -1860,9 +1688,9 @@
               type: 'success'
             });
           }
-          this.client.on(EVENT_MESSAGE_FROM_USER, this.client[SYMBOL_P2P_EV])
-          this.p2pEventMonitorRes = "开始监听P2P消息"
         }
+        this.client.on(EVENT_MESSAGE_FROM_USER, this.client[SYMBOL_P2P_EV])
+        this.p2pEventMonitorRes = "开始监听P2P消息"
       },
       /* 移除P2P消息的监听 */
       removeP2PEventMonitor() {
@@ -2004,8 +1832,12 @@
       onRoomMemberOffline(rtsRoom) {
         const eventName = "RoomMemberOffline";
         rtsRoom.room.on(eventName, () => {
-          console.log(`开发日志, 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`);
-          this.updateRoomJoinStatusByRegionAndRoomId(rtsRoom.region, rtsRoom.roomId, false)
+          console.log(`rts-demo 接收消息${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`);
+          this.$message({
+            duration: 3000,
+            message: `${eventName} [${rtsRoom.region}:${rtsRoom.roomId}]`,
+            type: 'success'
+          });
         });
       },
       onConnectStatusChange() {
@@ -2018,7 +1850,7 @@
             type: 'success'
           });
 
-          log4test('hummer state=', this.hummer.getState());
+          console.log('hummer state=' + this.hummer.getState());
         });
       },
       onTokenExpired() {
