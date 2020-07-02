@@ -1,7 +1,3 @@
 # vue-room
-channel, chatroom, im vue-demo
+rts, chatroom, vue-demo
 
-线上demo:
-
-rts
->https://hummer-test.sunclouds.com/rts-test/rts-test
