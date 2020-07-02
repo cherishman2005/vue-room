@@ -169,7 +169,7 @@
             </template>
           </el-form-item>
           <el-form-item>
-            <el-button @click="showSetUserAttributesModel" style="border-radius:4px">attribtes</el-button>
+            <el-button @click="showSetUserAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary"  @click="setUserAttributes" style="border-radius:4px">setUserAttributes</el-button>
@@ -373,7 +373,7 @@
             </template>
           </el-form-item>
           <el-form-item>
-            <el-button @click="showSetRoomAttributesModel" style="border-radius:4px">attribtes</el-button>
+            <el-button @click="showSetRoomAttributesModel" style="border-radius:4px">attributes</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="setRoomAttributes" style="border-radius: 4px">setRoomAttributes</el-button>
@@ -758,7 +758,7 @@
         setUserAttributesReq: {
           //key: TEST_ROLE_KEY,
           //prop: 'teacher',
-          attribtes: {},
+          attributes: {},
           options: {},
         },
         setUserAttributesRes: '',
@@ -775,7 +775,7 @@
         addOrUpdateUserAttributesReq: {
           //key: TEST_ROLE_KEY,
           //prop: 'student',
-          attribtes: {},
+          attributes: {},
           options: {},
         },
         addOrUpdateUserAttributesRes: '',
