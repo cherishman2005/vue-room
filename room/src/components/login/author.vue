@@ -22,7 +22,7 @@
           <el-button type="text" @click="showSelectTokenModel">{{tokenTypeLabel}}</el-button>
         </el-form-item>
         <el-form-item class="search">
-          <el-button type="primary"  @click="login" style="border-radius: 4px">登录</el-button>
+          <el-button type="primary"  @click="login" style="border-radius: 4px">确认</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -42,6 +42,7 @@
   import { getBeforeLoginUrl, removeBeforeLoginUrl } from '@/utils/auth'
   import { getStorage, setStorage } from '@/utils/BaseUtil'
   import SelectToken from './select_token.vue'
+  import {log4test} from "../../utils/BaseUtil";
 
   const TOKEN_TYPES = {
     APPID_MODE: 1,
@@ -79,7 +80,7 @@
     },
     watch: {
     },
-    filters:{   
+    filters:{
     },
     created() {
     },
@@ -94,7 +95,7 @@
           removeBeforeLoginUrl();
       } else {
         this.reportType = 0;
-        this.getUserToken(this.uid);
+        this.getUserToken();
       }
     },
     beforeDestroy() {
@@ -115,6 +116,14 @@
       },
       login() {
         let redirect;
+        if (!this.uid) {
+          this.$message({
+            duration: 3000,
+            message: "请输入uid......",
+            type: 'error'
+          });
+          return
+        }
 
         switch(this.tokenType) {
           case TOKEN_TYPES.APPID_MODE:
@@ -146,25 +155,28 @@
         }
       },
       getUserToken() {
+        if (!this.uid) {
+          return;
+        }
         const appid = this.appid;
+        log4test("请求token", `appId =  ${appid}, uid = ${this.uid}`);
         this.$axios.get(authURL + '/user/token?uid=' + this.uid+'&appid=' + appid)
           .then(res => {
             if (res.status === 200) {
-              console.log("res.data: " + JSON.stringify(res.data));
+              log4test("token res =  " , res.data);
               let body = res.data;
               if (body.uid && body.token) {
-                setStorage("appid", appid);
-                setStorage("uid", body.uid.toString());
                 setStorage("token", body.token);
-
-                let redirect = getBeforeLoginUrl() || '/';
-                this.$router.push({ path: redirect });
-                removeBeforeLoginUrl();
               }
             }
+            setStorage("appid", appid);
+            setStorage("uid", this.uid);
+            let redirect = getBeforeLoginUrl() || '/';
+            this.$router.push({ path: redirect });
+            removeBeforeLoginUrl();
           })
           .catch(error => {
-            console.log("error: " + JSON.stringify(error));
+            log4test("error: ", error);
           });
       },
       selectBlur(e) {
