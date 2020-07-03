@@ -697,6 +697,8 @@
 
   const EVENT_MESSAGE_FROM_USER = "MessageFromUser"
 
+  const CODE_INVALID_APPID = 2018
+
   //房间事件
   const EVENT_ROOM = [
     ["RoomMessage", Symbol("RoomMessage")],
@@ -726,6 +728,7 @@
         rooms: [],
         appid: Number(APPID),
         uid: UID,
+        isInValidAppId: false,
         token: TOKEN,
         region: REGION || 'cn',
         regions: getRegions(),
@@ -924,6 +927,9 @@
         this.$store.commit('updateRefreshTokenModelVisible', false)
       },
       showCreateRoomModel() {
+        if (this.isInValidAppId) {
+          return
+        }
         // if (!this.enableOperator()) return
         this.$store.commit('updateCreateRoomModelVisible', true);
       },
@@ -980,6 +986,8 @@
           }
           log4test("login req ", req)
           let res = await this.hummer.login(req);
+          this.isInValidAppId = res.rescode === CODE_INVALID_APPID
+          console.log("isInValidUID = " + this.isInValidAppId)
           log4test("login res ", res);
           this.loginRes = JSON.stringify(res);
         } catch(e) {
@@ -1019,7 +1027,10 @@
           log4test("client is ready");
           return;
         }
-
+        if (this.isInValidAppId) {
+          console.log("无效 appId");
+          return
+        }
         // 初始化RTS
         this.client = this.hummer.createRTSInstance();
 
