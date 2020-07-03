@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
     <h2 style="text-align:left;">RTS调测系统（Real-Time Signal Service Tutorial）</h2>
+    <p class="text-unit" style="color: #ef4f4f">RTS SDK是基于面对对象的实现，所以需要初始化rts实例，以及创建房间实例后才能调用相关的接口！</p>
 
     <!-- 登录/登出 -->
     <p class="text-unit">登录/登出</p>
@@ -51,12 +52,12 @@
     </el-dialog>
 
     <!-- 初始化RoomService -->
-    <p class="text-unit">初始化RTS</p>
+    <p class="text-unit" style="color: #ef4f4f">第一步：初始化RTS</p>
     <el-row type="flex">
       <el-col :span="24"  style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="initRTS" style="border-radius: 4px">initRTS</el-button>
+            <el-button type="primary" @click="initRTS" style="border-radius: 4px">第一步 : initRTS</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -65,7 +66,7 @@
     <!-- 房间消息 -->
     <el-divider content-position="left">房间消息</el-divider>
 
-    <p class="text-unit">创建房间实例</p>
+    <p class="text-unit" style="color: #ef4f4f">第二步: 创建房间实例</p>
     <el-row type="flex">
       <el-col :span="24" style="height:35px;text-align:left;">
         <el-form :inline="true"  size="small">
@@ -896,6 +897,26 @@
     mounted() {
     },
     methods: {
+      enableOperator() {
+        let enable = true
+        let msg = ""
+        if (!this.client) {
+          enable = false
+          msg = "需要初始化sdk,点击 'initRTS'按钮初始化"
+        } else if (!this.rtsRoom) {
+          enable = true
+          msg = "需要创建一个房间实例，点击'createRoom按钮创建'"
+        }
+
+        if (!enable) {
+          this.$message({
+            duration: 3000,
+            message: msg,
+            type: 'error'
+          });
+        }
+        return enable
+      },
       showRefreshTokenModel() {
         this.$store.commit('updateRefreshTokenModelVisible', true);
       },
@@ -903,6 +924,7 @@
         this.$store.commit('updateRefreshTokenModelVisible', false)
       },
       showCreateRoomModel() {
+        // if (!this.enableOperator()) return
         this.$store.commit('updateCreateRoomModelVisible', true);
       },
       closeCreateRoomModel() {
@@ -985,16 +1007,16 @@
       },
       refreshToken(data) {
         this.loginRes = JSON.stringify(data);
-        console.log('refreshToken res=', data);
+        log4test('refreshToken res=', data);
       },
       initRTS() {
         if (!this.hummer) {
-          console.log("hummer is null");
+          log4test("hummer is null");
           return;
         }
 
         if (this.client) {
-          console.log("client is ready");
+          log4test("client is ready");
           return;
         }
 
@@ -1117,7 +1139,7 @@
           log4test("sendMessage req=", content);
           this.sendMessageRes = '';
           const res = await this.rtsRoom.room.sendMessage(req);
-          log4test("sendMessage res=" + JSON.stringify(res));
+          log4test("sendMessage res=", res);
           this.sendMessageRes = JSON.stringify(res);
 
           //console.log("消息队列mq_room_data: " + JSON.stringify(this.mq_room_data));
@@ -1387,11 +1409,12 @@
 
         try {
           this.getMembersRes = '';
+          log4test("getMembers");
           const res = await this.rtsRoom.room.getMembers();
-          console.log("getMembers res=", res);
+          log4test("getMembers res=", res);
           this.getMembersRes = JSON.stringify(res);
         } catch(e) {
-          console.error("getMembers err:", e);
+          log4test("getMembers err:", e);
           this.getMembersRes = JSON.stringify(e);
         }
       },
@@ -1428,11 +1451,12 @@
           let req = { uid, keys };
 
           this.getUserAttributesByKeysRes = '';
+          log4test("getUserAttributesByKeys req=", req);
           const res = await this.rtsRoom.room.getUserAttributesByKeys(req);
-          console.log("getUserAttributesByKeys res=", res);
+          log4test("getUserAttributesByKeys res=", res);
           this.getUserAttributesByKeysRes = JSON.stringify(res);
         } catch(e) {
-          console.error("getUserAttributesByKeys err:", e);
+          log4test("getUserAttributesByKeys err:", e);
           this.getUserAttributesByKeysRes = JSON.stringify(e);
         }
       },
@@ -1451,12 +1475,13 @@
             roomIds.push(k);
           }
           this.getRoomMemberCountRes = '';
-
-          const res = await this.client.getRoomMemberCount({region, roomIds});
-          console.log("getRoomMemberCount res=", res);
+          let req = {region, roomIds}
+          log4test("getRoomMemberCount req=", req);
+          const res = await this.client.getRoomMemberCount(req);
+          log4test("getRoomMemberCount res=", res);
           this.getRoomMemberCountRes = JSON.stringify(res);
         } catch(e) {
-          console.error("getRoomMemberCount err:", e);
+          log4test("getRoomMemberCount err:", e);
           this.getRoomMemberCountRes = JSON.stringify(e);
         }
       },
@@ -1803,12 +1828,12 @@
             uids.push(k);
           }
           this.queryUsersOnlineStatusRes = '';
-
+          log4test("queryUsersOnlineStatus");
           const res = await this.client.queryUsersOnlineStatus({ uids: uids });
-          console.log("queryUsersOnlineStatus res=", res);
+          log4test("queryUsersOnlineStatus res=", res);
           this.queryUsersOnlineStatusRes = JSON.stringify(res);
         } catch(e) {
-          console.error("queryUsersOnlineStatus err:", e);
+          log4test("queryUsersOnlineStatus err:", e);
           this.queryUsersOnlineStatusRes = JSON.stringify(e);
         }
       },

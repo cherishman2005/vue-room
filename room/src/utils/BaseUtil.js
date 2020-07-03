@@ -76,10 +76,10 @@ export function padMs(ms) {
 
 const DEMO_TAG = "rts-demo"
 // 通过rts-demo，给测试看的日志/回调日志
-export function log4test(info, ...args) {
+export function log4test(info, ext) {
   let date = new Date();
   let timestamp = date.toLocaleTimeString('en-US', { hour12: false}) + "." + padMs(date.getMilliseconds())
-  console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + JSON.stringify(args))
+  console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + (ext ? JSON.stringify(ext) : ""))
 }
 
 export function generateDataInKB(unit) {
