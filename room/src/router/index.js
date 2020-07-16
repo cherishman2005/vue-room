@@ -7,6 +7,7 @@ const chat = resolve => require(['@/components/chatroom/chat.vue'], resolve)
 const chat_test = resolve => require(['@/components/chatroom/chat_test.vue'], resolve)
 const chat_svc = resolve => require(['@/components/chatroom/chat_svc.vue'], resolve)
 const svc = resolve => require(['@/components/svc/svc.vue'], resolve)
+const svc_test = resolve => require(['@/components/svc/svc_test.vue'], resolve)
 const im = resolve => require(['@/components/im/im.vue'], resolve)
 const im_test = resolve => require(['@/components/im/im_test.vue'], resolve)
 const im_perf = resolve => require(['@/components/im/im_perf.vue'], resolve)
@@ -25,6 +26,7 @@ const routes = [
   {path: '/chat-test', component: chat_test, name: "chat-test" },
   {path: '/chat-svc', component: chat_svc, name: "chat-svc" },
   {path: '/svc', component: svc, name: "svc" },
+  {path: '/svc-test', component: svc_test, name: "svc-test" },
   {path: '/im', component: im, name: "im" },
   {path: '/im-test', component: im_test, name: "im-test" },
   {path: '/im-perf', component: im_perf, name: "im-perf" },
