@@ -1,4 +1,4 @@
-export const authURL = 'https://service-test.sunclouds.com';
+export const authURL = 'https://service-test.yy.com';
 export const baseURL = "";
 export const redirectURL = "/rts-test";
 
