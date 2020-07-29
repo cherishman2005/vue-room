@@ -458,6 +458,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{getUserAttributesListRes}}</p>
     </div>
 
+    <!--
     <p class="text-unit">HummerSDK 当前所处的状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
@@ -485,6 +486,7 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="false">{{getInstanceInfoRes}}</p>
     </div>
+    -->
 
   </div>
 </template>
@@ -706,7 +708,7 @@
               this.roomid = res.roomid;
             }
           } catch(e) {
-            log4test('createChatRoom err=', e);
+            log4test('createChatRoom res=', e);
           }
 
         }).catch(err => {
@@ -730,7 +732,7 @@
           log4test("login res=", res);
           this.loginRes = JSON.stringify(res);
         } catch (e) {
-          log4test("login err=", e);
+          log4test("login res=", e);
           this.loginRes = JSON.stringify(e);
         }
       },
@@ -738,22 +740,23 @@
         if (!this.hummer)
           return;
 
-        this.loginRes = '';
-        this.hummer.logout().then(res => {
-          log4test("logout Res=" + JSON.stringify(res));
+        try {
+          this.loginRes = '';
+          const res = await this.hummer.logout();
+          log4test("logout res=" + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
           if (res.rescode === 0) {
             this.chatrooms = [];
             this.regionChatroomIds = [];
           }
-        }).catch(err => {
-          log4test("logout err=", err);
-          this.loginRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          log4test("logout res=", e);
+          this.loginRes = JSON.stringify(e);
+        }
       },
       refreshToken(data) {
         this.loginRes = JSON.stringify(data);
-        console.log('refreshToken res=', data);
+        log4test('refreshToken res=', data);
       },
       initChatRoom() {
         if (!this.hummer) {
@@ -814,73 +817,71 @@
         console.log('onJoinChatRoomProps joinProps=', data);
         this.joinProps = data;
       },
-      joinChatRoom() {
+      async joinChatRoom() {
         if (!this.chatClient)
           return;
 
         console.log('regionChatroomId=', this.regionChatroomId, ' chatroom=', this.chatClient);
 
-        let joinProps = this.joinProps;    //{"H5_sdk": 'js_sdk'};
-        let req = { joinProps }
+        try {
+          let joinProps = this.joinProps;
+          let req = { joinProps }
+          log4test("joinChatRoom req=", req);
 
-        this.joinOrLeaveRes = '';
-        this.chatClient.chatroom.joinChatRoom(req).then(res => {
-          console.log("joinChatRoom Res: " + JSON.stringify(res));
+          this.joinOrLeaveRes = '';
+          const res = await this.chatClient.chatroom.joinChatRoom(req);
+          log4test("joinChatRoom res=" + JSON.stringify(res));
           this.joinOrLeaveRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("joinChatRoom", err);
-          this.joinOrLeaveRes = JSON.stringify(err);
-        })
+        } catch(e) {
+          log4test("joinChatRoom res=", e);
+          this.joinOrLeaveRes = JSON.stringify(e);
+        }
       },
-      leaveChatRoom() {
+      async leaveChatRoom() {
         if (!this.chatClient)
           return;
 
-        this.joinOrLeaveRes = '';
-        this.chatClient.chatroom.leaveChatRoom().then((res) => {
-          console.log("leaveChatRoom Res: " + JSON.stringify(res));
+        try {
+          this.joinOrLeaveRes = '';
+          const res = await this.chatClient.chatroom.leaveChatRoom();
+          console.log("leaveChatRoom res=" + JSON.stringify(res));
           this.joinOrLeaveRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("leaveChatRoom", err);
-          this.joinOrLeaveRes = JSON.stringify(err);
-        })
+        } catch(e) {
+          console.error("leaveChatRoom res=", e);
+          this.joinOrLeaveRes = JSON.stringify(e);
+        }
+
       },
       onUpdateChatRoomAttributes(data) {
         console.log('onUpdateChatRoomAttributes attributes=', data);
         this.groupAttributes = data;
       },
-      updateChatRoomAttributes() {
+      async updateChatRoomAttributes() {
         if (!this.chatClient)
           return;
 
-        /*
-        let attributes = {
-          "Name": "nginx大讲堂",
-          "Description": "全栈技术",
-          "Bulletin": "bull",
-          "AppExtra": "ex",
-        };
-        */
-        let attributes = this.groupAttributes || {};
+        try {
+          let attributes = this.groupAttributes || {};
+          let req = { attributes };
+          log4test("updateChatRoomAttributes req=" + JSON.stringify(req));
 
-        let req = { attributes };
-
-        this.updateChatRoomAttributesRes = '';
-        this.chatClient.chatroom.updateChatRoomAttributes(req).then((res) => {
+          this.updateChatRoomAttributesRes = '';
+          const res = await this.chatClient.chatroom.updateChatRoomAttributes(req);
           this.updateChatRoomAttributesRes = JSON.stringify(res);
-          console.log("updateChatRoomAttributes Res: " + JSON.stringify(res));
-        }).catch(err => {
-          console.log(err)
-          this.updateChatRoomAttributesRes = JSON.stringify(err);
-        })
+          log4test("updateChatRoomAttributes res=" + JSON.stringify(res));
+        } catch(e) {
+          log4test("updateChatRoomAttributes res=", e);
+          this.updateChatRoomAttributesRes = JSON.stringify(e);
+        }
       },
-      dismissChatRoom() {
+      async dismissChatRoom() {
         if (!this.chatClient)
           return;
 
-        this.dismissChatRoomRes = '';
-        this.chatClient.chatroom.dismissChatRoom().then((res) => {
-          console.log("dismissChatRoom Res: ", res);
+        try {
+          this.dismissChatRoomRes = '';
+          const res = await this.chatClient.chatroom.dismissChatRoom();
+          log4test("dismissChatRoom res=" + JSON.stringify(res));
           this.dismissChatRoomRes = JSON.stringify(res);
           if (res.rescode == 0) {
             delete this.chatClient;
@@ -888,83 +889,95 @@
             this.roomid = 0;
             setStorage("roomid", this.roomid);
           }
-        }).catch(err => {
-          console.log(err);
-          this.dismissChatRoomRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          log4test("dismissChatRoom res=", e);
+          this.dismissChatRoomRes = JSON.stringify(e);
+        }
       },
-      kickOffUser() {
+      async kickOffUser() {
         if (!this.chatClient)
           return;
 
-        let uid = this.kickOffUserReq.uid;
-        let secs = this.kickOffUserReq.secs;
-        let reason = this.kickOffUserReq.reason;
+        try {
+          let uid = this.kickOffUserReq.uid;
+          let secs = this.kickOffUserReq.secs;
+          let reason = this.kickOffUserReq.reason;
 
-        let req = { uid, secs, reason };
-        this.kickOffUserRes = '';
-        this.chatClient.chatroom.kickOffUser(req).then(res => {
+          let req = { uid, secs, reason };
+          log4test("kickOffUser req=" + JSON.stringify(req));
+
+          this.kickOffUserRes = '';
+          const res = await this.chatClient.chatroom.kickOffUser(req);
+          log4test("kickOffUser res=" + JSON.stringify(res));
           this.kickOffUserRes = JSON.stringify(res);
-          console.log("kickOffUser res: " + JSON.stringify(res));
-        }).catch((err) => {
-          console.log(err)
+        } catch(e) {
+          log4test("kickOffUser res=", e);
           this.kickOffUserRes = JSON.stringify(err);
-        })
+        }
+
+
       },
-      sendGroupMessage() {
+      async sendGroupMessage() {
         if (!this.chatClient)
           return;
 
-        let content = this.sendGroupMessageReq.content;
-        let kvExtra = this.sendGroupMessageAttributes;
-        let req = { content, kvExtra };
-        this.sendGroupMessageRes = '';
-        this.chatClient.chatroom.sendGroupMessage(req).then(res => {
-          console.log("sendGroupMessage res: " + JSON.stringify(res));
+        try {
+          let content = this.sendGroupMessageReq.content;
+          let kvExtra = this.sendGroupMessageAttributes;
+          let req = { content, kvExtra };
+          log4test("sendGroupMessage req=" + JSON.stringify(req));
+
+          this.sendGroupMessageRes = '';
+          const res = await this.chatClient.chatroom.sendGroupMessage(req);
+          log4test("sendGroupMessage res=" + JSON.stringify(res));
           this.sendGroupMessageRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err)
-          this.sendGroupMessageRes = JSON.stringify(err);
-        })
+        } catch(e) {
+          log4test("sendGroupMessage res=", e);
+          this.sendGroupMessageRes = JSON.stringify(e);
+        }
       },
-      sendSingleUserMessage() {
+      async sendSingleUserMessage() {
         if (!this.chatClient)
           return;
 
-        let content = this.sendSingleUserMessageReq.content;
-        let receiver = this.sendSingleUserMessageReq.receiver;
-        let kvExtra = this.sendSingleUserAttributes;
+        try {
+          let content = this.sendSingleUserMessageReq.content;
+          let receiver = this.sendSingleUserMessageReq.receiver;
+          let kvExtra = this.sendSingleUserAttributes;
 
-        let req = { content, receiver, kvExtra };
-        this.sendSingleUserMessageRes = '';
-        this.chatClient.chatroom.sendSingleUserMessage(req).then(res => {
-          console.log("sendSingleUserMessage res: " +  JSON.stringify(res));
+          let req = { content, receiver, kvExtra };
+          log4test("sendSingleUserMessage req=" +  JSON.stringify(req));
+
+          this.sendSingleUserMessageRes = '';
+          const res = await this.chatClient.chatroom.sendSingleUserMessage(req);
+          log4test("sendSingleUserMessage res=" +  JSON.stringify(res));
           this.sendSingleUserMessageRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err)
-          this.sendSingleUserMessageRes = JSON.stringify(err);
-        })
+        } catch(e) {
+          log4test("sendSingleUserMessage res=", e);
+          this.sendSingleUserMessageRes = JSON.stringify(e);
+        }
       },
-      sendTextChat() {
+      async sendTextChat() {
         if (!this.chatClient)
           return;
 
-        let chat = this.sendTextChatReq.chat;
-        //let chatProps = this.sendTextChatAttributes;
-        let extra = this.sendTextChatReq.extra;
-        let kvExtra = this.sendTextExtAttributes;
+        try {
+          let chat = this.sendTextChatReq.chat;
+          //let chatProps = this.sendTextChatAttributes;
+          let extra = this.sendTextChatReq.extra;
+          let kvExtra = this.sendTextExtAttributes;
 
-        let req = { chat, extra, kvExtra }
+          let req = { chat, extra, kvExtra }
+          log4test('sendTextChat req=', req);
 
-        this.sendTextChatRes = '';
-        console.log(1111, req)
-        this.chatClient.chatroom.sendTextChat(req).then(res => {
-          console.log("sendTextChat res: " + JSON.stringify(res));
+          this.sendTextChatRes = '';
+          const res = await this.chatClient.chatroom.sendTextChat(req);
+          log4test("sendTextChat res=" + JSON.stringify(res));
           this.sendTextChatRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err)
-          this.sendTextChatRes = JSON.stringify(err);
-        })
+        } catch(e) {
+          log4test("sendTextChat res=", e);
+          this.sendTextChatRes = JSON.stringify(e);
+        }
       },
       async muteUser() {
         if (!this.chatClient)
@@ -976,12 +989,13 @@
           let reason = this.muteUserReq.reason;
 
           let req = { uid, secs, reason };
+          log4test("muteUser req=", req);
           this.muteUserRes = '';
           const res = await this.chatClient.chatroom.muteUser(req);
           this.muteUserRes = JSON.stringify(res);
-          console.log("muteUser res=" + JSON.stringify(res));
+          log4test("muteUser res=" + JSON.stringify(res));
         } catch (e) {
-          console.log("muteUser err=", e);
+          log4test("muteUser res=", e);
           this.muteUserRes = JSON.stringify(e);
         };
       },
@@ -995,61 +1009,68 @@
           let reason = this.muteUserReq.reason;
 
           let req = { uid, secs, reason };
+          log4test("unMuteUser req=" + JSON.stringify(req));
+
           this.muteUserRes = '';
           const res = await this.chatClient.chatroom.unMuteUser(req);
           this.muteUserRes = JSON.stringify(res);
-          console.log("unMuteUser res=" + JSON.stringify(res));
+          log4test("unMuteUser res=" + JSON.stringify(res));
         } catch (e) {
           console.log("unMuteUser err=", e);
           this.muteUserRes = JSON.stringify(e);
         };
       },
-      getChatRoomAttributes() {
+      async getChatRoomAttributes() {
         if (!this.chatClient)
           return;
-
-        this.getChatRoomAttributesRes = '';
-        this.chatClient.chatroom.getChatRoomAttributes().then((res) => {
-          console.log("getChatRoomAttributes res: " + JSON.stringify(res));
+ 
+        try {
+          this.getChatRoomAttributesRes = '';
+          const res = await this.chatClient.chatroom.getChatRoomAttributes();
+          log4test("getChatRoomAttributes res: " + JSON.stringify(res));
           this.getChatRoomAttributesRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err)
-          this.getChatRoomAttributesRes = JSON.stringify(err);
-        })
+        } catch(e) {
+          log4test("getChatRoomAttributes res=", e);
+          this.getChatRoomAttributesRes = JSON.stringify(e);  
+        }
       },
-      getChatRoomManager() {
+      async getChatRoomManager() {
         if (!this.chatClient)
           return;
 
-        let roler = this.getChatRoomManagerReq.roler;
-        let params = { roler }
+        try {
+          let roler = this.getChatRoomManagerReq.roler;
+          let req = { roler }
+          log4test("getChatRoomManager req=" + JSON.stringify(req));
 
-        this.getChatRoomManagerRes = '';
-        this.chatClient.chatroom.getChatRoomManager(params).then((res) => {
-          console.log("getChatRoomManager Res: " + JSON.stringify(res));
+          this.getChatRoomManagerRes = '';
+          const res = await this.chatClient.chatroom.getChatRoomManager(req);
+          log4test("getChatRoomManager res=" + JSON.stringify(res));
           this.getChatRoomManagerRes = JSON.stringify(res);
-        }).catch((err) => {
-          console.log(err)
-          this.getChatRoomManagerRes = JSON.stringify(err);
-        })
+        } catch(e) {
+          log4test("getChatRoomManager res=", e);
+          this.getChatRoomManagerRes = JSON.stringify(e);
+        }
       },
-      getUserList() {
+      async getUserList() {
         if (!this.chatClient)
           return;
 
-        let num = this.getUserListReq.num;
-        let pos = this.getUserListReq.pos;
+        try {
+          let num = this.getUserListReq.num;
+          let pos = this.getUserListReq.pos;
 
-        let req = { num, pos }
+          let req = { num, pos }
+          log4test("getUserList req=", req);
 
-        this.getUserListRes = '';
-        this.chatClient.chatroom.getUserList(req).then(res => {
-          console.log("getUserList Res: " + JSON.stringify(res));
+          this.getUserListRes = '';
+          const res = await this.chatClient.chatroom.getUserList(req);
+          log4test("getUserList res=" + JSON.stringify(res));
           this.getUserListRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err)
-          this.getUserListRes = JSON.stringify(err);
-        })
+        } catch(e) {
+          log4test("getUserList res=", e);
+          this.getUserListRes = JSON.stringify(e); 
+        }
       },
       async getMutedUserList() {
         if (!this.chatClient)
@@ -1058,10 +1079,10 @@
         this.getMutedUserListRes = '';
         try {
           const res = await this.chatClient.chatroom.getMutedUserList();
-          console.log("getMutedUserList res=" + JSON.stringify(res));
+          log4test("getMutedUserList res=" + JSON.stringify(res));
           this.getMutedUserListRes = JSON.stringify(res);
         } catch(e) {
-          console.error("getMutedUserList err=", e);
+          log4test("getMutedUserList res=", e);
           this.getMutedUserListRes = JSON.stringify(e);
         };
       },
@@ -1069,45 +1090,38 @@
         console.log('onSetChatRoomUserAttributes attributes=', data);
         this.groupUserAttributes = data;
       },
-      setUserAttributes() {
+      async setUserAttributes() {
         if (!this.chatClient)
           return;
 
-        /*
-        let attributes = {
-          "Name": "awu",
-          "Description": "js_sdk测试",
-          "Bulletin": "bull",
-          "Extention": "ex"
-        };
-        let key = this.setUserAttributesReq.key;
-        let prop = this.setUserAttributesReq.prop;
-        attributes[key] = prop;
-        */
-        let attributes = this.groupUserAttributes || {};
+        try {
+          let attributes = this.groupUserAttributes || {};
 
-        let req = { attributes };
-        this.chatClient.chatroom.setUserAttributes(req).then((res) => {
-          console.log("setUserAttributes Res: ", res);
+          let req = { attributes };
+          log4test("setUserAttributes req=", req);
+          const res = await this.chatClient.chatroom.setUserAttributes(req);
+          log4test("setUserAttributes res=", res);
           this.setUserAttributesRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err)
+        } catch(e) {
+          log4test("setUserAttributes res=", res);
           this.setUserAttributesRes = JSON.stringify(err);
-        })
+        }
       },
-      getUserAttributesList() {
+      async getUserAttributesList() {
         if (!this.chatClient)
           return;
 
-        this.chatClient.chatroom.getUserAttributesList().then((res) => {
-          console.log("getUserAttributesList Res: " + JSON.stringify(res));
+        try {
+          this.getUserAttributesListRes = '';
+          const res = await this.chatClient.chatroom.getUserAttributesList();
+          log4test("getUserAttributesList res=" + JSON.stringify(res));
           this.getUserAttributesListRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err)
-          this.getUserAttributesListRes = JSON.stringify(err);
-        })
+        } catch(e) {
+          log4test("getUserAttributesList res=", e);
+          this.getUserAttributesListRes = JSON.stringify(e);
+        }
       },
-      getUserCount() {
+      async getUserCount() {
         if (!this.hummer)
           return;
 
@@ -1127,21 +1141,21 @@
       getState() {
         this.state = '';
         this.state = this.hummer && this.hummer.getState();
-        console.log("getState: " + this.state);
-
+        log4test("getState: " + this.state);
       },
-      getInstanceInfo() {
+      async getInstanceInfo() {
         if (!this.hummer)
           return;
 
-        this.getInstanceInfoRes = '';
-        this.hummer.getInstanceInfo().then(res => {
-          console.log("getInstanceInfo: " + JSON.stringify(res));
+        try {
+          this.getInstanceInfoRes = '';
+          const res = await this.hummer.getInstanceInfo();
+          console.log("getInstanceInfo res=" + JSON.stringify(res));
           this.getInstanceInfoRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err);
-          this.getInstanceInfoRes = JSON.stringify(err);
-        });
+        } catch(e) {
+          log4test('getInstanceInfo res=', e);
+          this.getInstanceInfoRes = JSON.stringify(e);
+        }
       },
 
       /*  消息接收模块 */
