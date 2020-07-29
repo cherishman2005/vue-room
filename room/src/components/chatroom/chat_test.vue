@@ -633,13 +633,15 @@
       }
     },
     created() {
-      console.log('Hummer Version=' + Hummer.VERSION);
+      log4test('Hummer Version = ', Hummer.VERSION);
 
       let token = getStorage("token");
       // 初始化Hummer
       this.hummer = Hummer.createHummer({appid: this.appid});
 
       this.hummer.setLogLevel(-1);
+
+      log4test('hummer state=', this.hummer.getState());
 
       this.onConnectionStateChanged();
       this.onTokenExpired();
@@ -1027,7 +1029,7 @@
         try {
           this.getChatRoomAttributesRes = '';
           const res = await this.chatClient.chatroom.getChatRoomAttributes();
-          log4test("getChatRoomAttributes res: " + JSON.stringify(res));
+          log4test("getChatRoomAttributes res=" + JSON.stringify(res));
           this.getChatRoomAttributesRes = JSON.stringify(res);
         } catch(e) {
           log4test("getChatRoomAttributes res=", e);
@@ -1150,7 +1152,7 @@
         try {
           this.getInstanceInfoRes = '';
           const res = await this.hummer.getInstanceInfo();
-          console.log("getInstanceInfo res=" + JSON.stringify(res));
+          log4test("getInstanceInfo res=" + JSON.stringify(res));
           this.getInstanceInfoRes = JSON.stringify(res);
         } catch(e) {
           log4test('getInstanceInfo res=', e);
@@ -1161,7 +1163,7 @@
       /*  消息接收模块 */
       onSingleUserMessageReceived(client) {
         client.chatroom.on('SingleUserMessage', (data) => {
-          console.log("chatroom-demo 接收消息SingleUserMessage： " + JSON.stringify(data));
+          log4test("接收消息SingleUserMessage： " + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1172,7 +1174,7 @@
       },
       onChatRoomDismissed(client) {
         client.chatroom.on('ChatRoomDismissed', (data) => {
-          console.log("chatroom-demo 接收消息ChatRoomDismissed： " + JSON.stringify(data));
+          log4test("接收消息ChatRoomDismissed： " + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1183,7 +1185,7 @@
       },
       onChatRoomAttributesUpdated(client)  {
         client.chatroom.on('ChatRoomAttributesUpdated', (data) => {
-          console.log("chatroom-demo 接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data));
+          log4test("接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1194,7 +1196,7 @@
       },
       onUserKickedOff(client) {
         client.chatroom.on('UserKickedOff', (data) => {
-          console.log("chatroom-demo 接收消息UserKickedOff：" + JSON.stringify(data));
+          log4test("接收消息UserKickedOff：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1205,7 +1207,7 @@
       },
       onGroupMessageReceived(client) {
         client.chatroom.on('GroupMessage', (data) => {
-          console.log("chatroom-demo 接收消息GroupMessage：" + JSON.stringify(data));
+          log4test("接收消息GroupMessage：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1223,7 +1225,7 @@
 
         eventName.forEach(eventName => {
           client.chatroom.on(eventName, (data) => {
-            console.log(`chatroom-demo 接收消息${eventName}：` + JSON.stringify(data));
+            log4test(`接收消息${eventName}：` + JSON.stringify(data));
 
             this.$message({
               duration: 3000,
@@ -1235,7 +1237,7 @@
       },
       onUserCountUpdated(client) {
         client.chatroom.on('UserCountUpdated', (data) => {
-          console.log("chatroom-demo 接收消息UserCountUpdated：" + JSON.stringify(data));
+          log4test("接收消息UserCountUpdated：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1246,7 +1248,7 @@
       },
       onUserAttributesSet(client) {
         client.chatroom.on('UserAttributesSet', (data) => {
-          console.log("chatroom-demo 接收消息UserAttributesSet：" + JSON.stringify(data));
+          log4test("接收消息UserAttributesSet：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1257,7 +1259,7 @@
       },
       onUserOnlineUpdated(client) {
         client.chatroom.on('UserOnlineUpdated', (data) => {
-          console.log("chatroom-demo 接收消息UserOnlineUpdated：" + JSON.stringify(data));
+          log4test("接收消息UserOnlineUpdated：" + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
@@ -1269,7 +1271,7 @@
       onChatRoomUserOffline(client) {
         const eventName = "ChatRoomUserOffline";
         client.chatroom.on(eventName, () => {
-          console.log(`chatroom-demo 接收消息${eventName}`);
+          log4test(`接收消息${eventName}`);
           this.$message({
             duration: 3000,
             message: `${eventName}`,
@@ -1285,6 +1287,8 @@
             message: `ConnectionStateChanged: ` + JSON.stringify(data),
             type: 'success'
           });
+
+          log4test('hummer state=', this.hummer.getState());
         });
       },
       onTokenExpired() {
