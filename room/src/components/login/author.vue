@@ -159,11 +159,11 @@
           return;
         }
         const appid = this.appid;
-        log4test("请求token", `appId =  ${appid}, uid = ${this.uid}`);
+        console.log("请求token", `appId =  ${appid}, uid = ${this.uid}`);
         this.$axios.get(authURL + '/user/token?uid=' + this.uid+'&appid=' + appid)
           .then(res => {
             if (res.status === 200) {
-              log4test("token res =  " , res.data);
+              console.log("token res =  " , res.data);
               let body = res.data;
               if (body.uid && body.token) {
                 setStorage("token", body.token);
@@ -176,7 +176,7 @@
             removeBeforeLoginUrl();
           })
           .catch(error => {
-            log4test("error: ", error);
+            console.log("error: ", error);
           });
       },
       selectBlur(e) {

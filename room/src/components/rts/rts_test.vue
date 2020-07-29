@@ -984,7 +984,7 @@
             uid: this.uid,
             token: this.token
           }
-          log4test("login req ", req)
+          log4test("login req=", req)
           let res = await this.hummer.login(req);
           this.isInValidAppId = res.rescode === CODE_INVALID_APPID
           console.log("isInValidUID = " + this.isInValidAppId)

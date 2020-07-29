@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
     <h2 style="text-align:left;">聊天室调测系统（ChatRoom Tutorial）</h2>
+    <p class="text-unit" style="color: #ef4f4f">ChatRoom SDK是基于面对对象的实现，所以需要初始化initChatroom实例才能调用相关的接口！</p>
 
     <!-- 登录/登出 -->
     <p class="text-unit">登录/登出</p>
@@ -39,6 +40,7 @@
     </el-dialog>
 
     <!-- 初始化chatroom -->
+    <p class="text-unit" style="color: #ef4f4f">初始化initChatRoom（如果需要创建聊天室，请先调用createChatRoom）</p>
     <el-row type="flex">
       <el-col :span="24" style="height:35px; text-align:left;" >
         <el-form :inline="true" size="small">
@@ -489,12 +491,19 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { getStorage, setStorage } from '@/utils/BaseUtil'
+  import { getStorage, setStorage, padMs } from '@/utils/BaseUtil'
   import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import CreateGroup from './create_group.vue';
   import EditableTable from '@/components/units/editable_table.vue';
   //import Hummer from 'hummer-chatroom-sdk'
+
+  const DEMO_TAG = "chatroom-demo"
+  const log4test = (info, ext) => {
+    let date = new Date();
+    let timestamp = date.toLocaleTimeString('en-US', { hour12: false}) + "." + padMs(date.getMilliseconds())
+    console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + (ext ? JSON.stringify(ext) : ""))
+  }
 
   const UID = getStorage('uid');
   const ROOMID = Number(getStorage('roomid'));
@@ -632,6 +641,7 @@
 
       this.onConnectionStateChanged();
       this.onTokenExpired();
+      this.onForceoutOffline();
     },
     destroyed() {
     },
@@ -684,50 +694,60 @@
           type: 'warning',
           cancelButtonText: '取消',
           confirmButtonText: '确定'
-        }).then(() => {
+        }).then(async() => {
 
-          let region = this.region;
-          let params = {region, attributes};
-          this.hummer.createChatRoom(params).then((res) => {
-            console.log("createChatRoom res: ", res);
+          try {
+            let region = this.region;
+            let req = {region, attributes};
+            log4test('createChatRoom req=', req);
+            const res = await this.hummer.createChatRoom(req);
+            log4test('createChatRoom res=', res);
             if (res.rescode === 0) {
               this.roomid = res.roomid;
             }
-          }).catch(err => {
-            console.log(err)
-          });
+          } catch(e) {
+            log4test('createChatRoom err=', e);
+          }
 
         }).catch(err => {
           console.log(err);
         });
       },
-      login() {
+      async login() {
         if (!this.hummer)
           return;
 
-        this.loginRes = '';
-        this.hummer.login({uid: this.uid, token: this.token}).then(res => {
-          console.log("login res=" + JSON.stringify(res));
+        try {
+          let req = {
+            //region: this.userRegion,
+            uid: this.uid,
+            token: this.token
+          }
+          log4test("login req=", req)
+
+          this.loginRes = '';
+          const res = await this.hummer.login(req);
+          log4test("login res=", res);
           this.loginRes = JSON.stringify(res);
-        }).catch(err => {
-          console.error("login err=", err);
-          this.loginRes = JSON.stringify(err);
-        });
+        } catch (e) {
+          log4test("login err=", e);
+          this.loginRes = JSON.stringify(e);
+        }
       },
-      logout() {
+      async logout() {
         if (!this.hummer)
           return;
 
         this.loginRes = '';
         this.hummer.logout().then(res => {
-          console.log("logout Res: " + JSON.stringify(res));
+          log4test("logout Res=" + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
           if (res.rescode === 0) {
             this.chatrooms = [];
             this.regionChatroomIds = [];
           }
         }).catch(err => {
-          console.error("logout err:", err);
+          log4test("logout err=", err);
           this.loginRes = JSON.stringify(err);
         });
       },
@@ -1245,7 +1265,7 @@
       },
       onConnectionStateChanged() {
         this.hummer.on('ConnectionStateChanged', (data) => {
-          console.log("chatroom-demo === ConnectionStateChanged ===:" + JSON.stringify(data));
+          log4test("=== ConnectionStateChanged ===:" + JSON.stringify(data));
           this.$message({
             duration: 3000,
             message: `ConnectionStateChanged: ` + JSON.stringify(data),
@@ -1255,10 +1275,21 @@
       },
       onTokenExpired() {
         this.hummer.on('TokenExpired', () => {
-          console.log("chatroom-demo === TokenExpired ===");
+          log4test("=== TokenExpired ===:" + JSON.stringify(data));
           this.$message({
             duration: 3000,
             message: `TokenExpired`,
+            type: 'success'
+          });
+        });
+      },
+      onForceoutOffline() {
+        const eventName = "ForceoutOffline";
+        this.hummer.on(eventName, (data) => {
+          log4test(`=== ${eventName} ===:` + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
         });
