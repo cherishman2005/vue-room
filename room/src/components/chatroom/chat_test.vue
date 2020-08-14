@@ -14,6 +14,18 @@
           <el-form-item label="uid">
             <el-input v-model="uid" disabled style="width:150px;"></el-input>
           </el-form-item>
+          <el-form-item label="用户归属地">
+            <template>
+              <el-select v-model="userRegion" placeholder="userRegion" style="width:150px;">
+                <el-option
+                  v-for="item in regions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="login" style="border-radius: 4px">login</el-button>
           </el-form-item>
@@ -523,6 +535,7 @@
         token: TOKEN,
         region: 'cn',
         regions: getRegions(),
+        userRegion: 'cn',
         state: '',
         chatroom: null,
         chatClient: null,
@@ -723,7 +736,7 @@
 
         try {
           let req = {
-            //region: this.userRegion,
+            region: this.userRegion,
             uid: this.uid,
             token: this.token
           }
