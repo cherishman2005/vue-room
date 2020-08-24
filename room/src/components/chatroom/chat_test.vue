@@ -859,10 +859,10 @@
         try {
           this.joinOrLeaveRes = '';
           const res = await this.chatClient.chatroom.leaveChatRoom();
-          console.log("leaveChatRoom res=" + JSON.stringify(res));
+          log4test("leaveChatRoom res=" + JSON.stringify(res));
           this.joinOrLeaveRes = JSON.stringify(res);
         } catch(e) {
-          console.error("leaveChatRoom res=", e);
+          log4test("leaveChatRoom res=", e);
           this.joinOrLeaveRes = JSON.stringify(e);
         }
 
@@ -1305,11 +1305,12 @@
         });
       },
       onTokenExpired() {
-        this.hummer.on('TokenExpired', () => {
-          log4test("=== TokenExpired ===:" + JSON.stringify(data));
+        const eventName = "TokenExpired";
+        this.hummer.on(eventName, () => {
+          log4test(`=== ${eventName} ===`);
           this.$message({
             duration: 3000,
-            message: `TokenExpired`,
+            message: `${eventName}`,
             type: 'success'
           });
         });

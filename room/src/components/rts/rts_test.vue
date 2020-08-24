@@ -2065,7 +2065,7 @@
       onTokenExpired() {
         const eventName = "TokenExpired";
         this.hummer.on(eventName, () => {
-          console.log(`rts-demo === ${eventName} ===`);
+          log4test(`=== ${eventName} ===`);
           this.$message({
             duration: 3000,
             message: `${eventName}`,
