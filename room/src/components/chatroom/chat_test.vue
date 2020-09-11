@@ -927,10 +927,8 @@
           this.kickOffUserRes = JSON.stringify(res);
         } catch(e) {
           log4test("kickOffUser res=", e);
-          this.kickOffUserRes = JSON.stringify(err);
+          this.kickOffUserRes = JSON.stringify(e);
         }
-
-
       },
       async sendGroupMessage() {
         if (!this.chatClient)
@@ -1119,7 +1117,7 @@
           this.setUserAttributesRes = JSON.stringify(res);
         } catch(e) {
           log4test("setUserAttributes res=", res);
-          this.setUserAttributesRes = JSON.stringify(err);
+          this.setUserAttributesRes = JSON.stringify(e);
         }
       },
       async getUserAttributesList() {
@@ -1148,9 +1146,9 @@
         this.hummer.getChatRoomUserCount(req).then((res) => {
           console.log("getChatRoomUserCount Res: " + JSON.stringify(res));
           this.getUserCountRes = JSON.stringify(res);
-        }).catch(err => {
-          console.log(err)
-          this.getUserCountRes = JSON.stringify(err);
+        }).catch(e => {
+          console.log(e)
+          this.getUserCountRes = JSON.stringify(e);
         })
       },
       getState() {
