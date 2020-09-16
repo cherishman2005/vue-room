@@ -470,7 +470,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{getUserAttributesListRes}}</p>
     </div>
 
-    <!--
+
     <p class="text-unit">HummerSDK 当前所处的状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
@@ -485,6 +485,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{state}}</p>
     </div>
 
+    <!--
     <p class="text-unit">获取实例信息</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
@@ -654,7 +655,7 @@
 
       this.hummer.setLogLevel(-1);
 
-      log4test('hummer state=', this.hummer.getState());
+      //log4test('hummer state=', this.hummer.getState());
 
       this.onConnectionStateChanged();
       this.onTokenExpired();
@@ -1153,8 +1154,11 @@
       },
       getState() {
         this.state = '';
-        this.state = this.hummer && this.hummer.getState();
-        log4test("getState: " + this.state);
+        if (this.hummer)
+        {
+          this.state = this.hummer.getState();
+          log4test("getState: " + this.state);
+        }
       },
       async getInstanceInfo() {
         if (!this.hummer)

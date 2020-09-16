@@ -890,7 +890,7 @@
 
       this.hummer.setLogLevel(-1);
 
-      log4test('hummer state=', this.hummer.getState());
+      //log4test('hummer state=', this.hummer.getState());
 
       this.onConnectStatusChange();
       this.onTokenExpired();
