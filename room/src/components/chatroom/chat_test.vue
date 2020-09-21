@@ -35,6 +35,9 @@
           <el-form-item class="search">
             <el-button type="primary" @click="showRefreshTokenModel" style="border-radius: 4px">refreshToken</el-button>
           </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="showRefreshToken1Model" style="border-radius: 4px">refreshToken1</el-button>
+          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
@@ -49,6 +52,15 @@
         @onRefreshToken=refreshToken
       >
       </refresh-token>
+    </el-dialog>
+
+    <el-dialog align="left" title="刷新token1" :visible="refreshToken1ModelVisible" @close="closeRefreshToken1Model" customClass="customWidth">
+      <refresh-token1
+        :hummer="hummer"
+        :uid="uid"
+        @onRefreshToken1=refreshToken1
+      >
+      </refresh-token1>
     </el-dialog>
 
     <!-- 初始化chatroom -->
@@ -509,6 +521,7 @@
   import { getStorage, setStorage, padMs } from '@/utils/BaseUtil'
   import { getRegions, getRegionRoomId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
+  import RefreshToken1 from '@/components/token/refresh_token1.vue';
   import CreateGroup from './create_group.vue';
   import EditableTable from '@/components/units/editable_table.vue';
   //import Hummer from 'hummer-chatroom-sdk'
@@ -625,11 +638,13 @@
     components: {
       CreateGroup,
       RefreshToken,
+      RefreshToken1,
       EditableTable,
     },
     computed: {
       ...mapState({
         refreshTokenModelVisible: state => state.refreshToken.refreshTokenModelVisible,
+        refreshToken1ModelVisible: state => state.refreshToken1.refreshToken1ModelVisible,
         createGroupModelVisible: state => state.group.createGroupModelVisible,
         setGroupAttributesVisible: state => state.setGroupAttributes.setGroupAttributesVisible,
         updateGroupAttributesVisible: state => state.updateGroupAttributes.updateGroupAttributesVisible,
@@ -773,6 +788,10 @@
       refreshToken(data) {
         this.loginRes = JSON.stringify(data);
         log4test('refreshToken res=', data);
+      },
+      refreshToken1(data) {
+        this.loginRes = JSON.stringify(data);
+        log4test('refreshToken1 res=', data);
       },
       initChatRoom() {
         if (!this.hummer) {
@@ -1333,6 +1352,12 @@
       },
       closeRefreshTokenModel() {
         this.$store.commit('updateRefreshTokenModelVisible', false)
+      },
+      showRefreshToken1Model() {
+        this.$store.commit('updateRefreshToken1ModelVisible', true);
+      },
+      closeRefreshToken1Model() {
+        this.$store.commit('updateRefreshToken1ModelVisible', false)
       },
       showCreateGroupModel() {
         this.$store.commit('updateCreateGroupModelVisible', true);

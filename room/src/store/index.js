@@ -10,6 +10,7 @@ import updateGroupAttributes from './modules/updateGroupAttributes'
 import setGroupUserAttributes from './modules/setGroupUserAttributes'
 import token from './modules/token'
 import refreshToken from './modules/refreshToken'
+import refreshToken1 from './modules/refreshToken1'
 import appExtras from './modules/appExtras'
 import roomAppExtras from './modules/roomAppExtras'
 import setUserAttributes from './modules/setUserAttributes'
@@ -40,6 +41,7 @@ const modules = {
   setGroupUserAttributes,
   token,
   refreshToken,
+  refreshToken1,
   appExtras,
   roomAppExtras,
   setUserAttributes,

@@ -894,6 +894,7 @@
 
       this.onConnectStatusChange();
       this.onTokenExpired();
+      this.onTokenWillExpire();
     },
     destroyed() {
     },
@@ -925,53 +926,6 @@
       },
       closeRefreshTokenModel() {
         this.$store.commit('updateRefreshTokenModelVisible', false)
-      },
-      showCreateRoomModel() {
-        if (this.isInValidAppId) {
-          return
-        }
-        // if (!this.enableOperator()) return
-        this.$store.commit('updateCreateRoomModelVisible', true);
-      },
-      closeCreateRoomModel() {
-        this.$store.commit('updateCreateRoomModelVisible', false)
-      },
-      showCreateAppExtrasModel() {
-        this.$store.commit('updateCreateAppExtrasVisible', true);
-      },
-      closeCreateAppExtrasModel() {
-        this.$store.commit('updateCreateAppExtrasVisible', false)
-      },
-      showCreateRoomAppExtrasModel() {
-        this.$store.commit('updateCreateRoomAppExtrasVisible', true);
-      },
-      closeCreateRoomAppExtrasModel() {
-        this.$store.commit('updateCreateRoomAppExtrasVisible', false)
-      },
-      showSetUserAttributesModel() {
-        this.$store.commit('updateSetUserAttributesVisible', true);
-      },
-      closeSetUserAttributesModel() {
-        this.$store.commit('updateSetUserAttributesVisible', false)
-      },
-      showAddOrUpdateUserAttributesModel() {
-        this.$store.commit('updateAddOrUpdateUserAttributesVisible', true);
-      },
-      closeAddOrUpdateUserAttributesModel() {
-        this.$store.commit('updateAddOrUpdateUserAttributesVisible', false)
-      },
-      showSetRoomAttributesModel() {
-        console.log('showSetRoomAttributesModel');
-        this.$store.commit('updateSetRoomAttributesVisible', true);
-      },
-      closeSetRoomAttributesModel() {
-        this.$store.commit('updateSetRoomAttributesVisible', false)
-      },
-      showAddOrUpdateRoomAttributesModel() {
-        this.$store.commit('updateAddOrUpdateRoomAttributesVisible', true);
-      },
-      closeAddOrUpdateRoomAttributesModel() {
-        this.$store.commit('updateAddOrUpdateRoomAttributesVisible', false)
       },
       async login() {
         if (!this.hummer)
@@ -2072,7 +2026,66 @@
             type: 'success'
           });
         });
-      }
+      },
+      onTokenWillExpire() {
+        const eventName = "TokenWillExpire";
+        this.hummer.on(eventName, () => {
+          log4test(`=== ${eventName} ===`);
+          this.$message({
+            duration: 3000,
+            message: `${eventName}`,
+            type: 'success'
+          });
+        });
+      },
+
+      showCreateRoomModel() {
+        if (this.isInValidAppId) {
+          return
+        }
+        // if (!this.enableOperator()) return
+        this.$store.commit('updateCreateRoomModelVisible', true);
+      },
+      closeCreateRoomModel() {
+        this.$store.commit('updateCreateRoomModelVisible', false)
+      },
+      showCreateAppExtrasModel() {
+        this.$store.commit('updateCreateAppExtrasVisible', true);
+      },
+      closeCreateAppExtrasModel() {
+        this.$store.commit('updateCreateAppExtrasVisible', false)
+      },
+      showCreateRoomAppExtrasModel() {
+        this.$store.commit('updateCreateRoomAppExtrasVisible', true);
+      },
+      closeCreateRoomAppExtrasModel() {
+        this.$store.commit('updateCreateRoomAppExtrasVisible', false)
+      },
+      showSetUserAttributesModel() {
+        this.$store.commit('updateSetUserAttributesVisible', true);
+      },
+      closeSetUserAttributesModel() {
+        this.$store.commit('updateSetUserAttributesVisible', false)
+      },
+      showAddOrUpdateUserAttributesModel() {
+        this.$store.commit('updateAddOrUpdateUserAttributesVisible', true);
+      },
+      closeAddOrUpdateUserAttributesModel() {
+        this.$store.commit('updateAddOrUpdateUserAttributesVisible', false)
+      },
+      showSetRoomAttributesModel() {
+        //console.log('showSetRoomAttributesModel');
+        this.$store.commit('updateSetRoomAttributesVisible', true);
+      },
+      closeSetRoomAttributesModel() {
+        this.$store.commit('updateSetRoomAttributesVisible', false)
+      },
+      showAddOrUpdateRoomAttributesModel() {
+        this.$store.commit('updateAddOrUpdateRoomAttributesVisible', true);
+      },
+      closeAddOrUpdateRoomAttributesModel() {
+        this.$store.commit('updateAddOrUpdateRoomAttributesVisible', false)
+      },
     }
   }
 </script>
