@@ -488,7 +488,7 @@
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
-            <el-button type="primary" @click="getState" style="border-radius:4px">getState</el-button>
+            <el-button type="primary" @click="getConnectionState" style="border-radius:4px">getConnectionState</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -670,7 +670,7 @@
 
       this.hummer.setLogLevel(-1);
 
-      //log4test('hummer state=', this.hummer.getState());
+      log4test('getConnectionState=', this.hummer.getConnectionState());
 
       this.onConnectionStateChanged();
       this.onTokenExpired();
@@ -1171,12 +1171,12 @@
           this.getUserCountRes = JSON.stringify(e);
         })
       },
-      getState() {
+      getConnectionState() {
         this.state = '';
         if (this.hummer)
         {
-          this.state = this.hummer.getState();
-          log4test("getState: " + this.state);
+          this.state = this.hummer.getConnectionState();
+          log4test("getConnectionState=" + this.state);
         }
       },
       async getInstanceInfo() {
@@ -1322,7 +1322,7 @@
             type: 'success'
           });
 
-          log4test('hummer state=', this.hummer.getState());
+          log4test('getConnectionState=', this.hummer.getConnectionState());
         });
       },
       onTokenExpired() {
