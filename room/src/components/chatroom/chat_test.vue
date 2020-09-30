@@ -673,7 +673,7 @@
       log4test('getConnectionState=', this.hummer.getConnectionState());
 
       this.onConnectionStateChanged();
-      this.onTokenExpired();
+      this.onTokenExpire();
       this.onForceoutOffline();
     },
     destroyed() {
@@ -713,14 +713,6 @@
           return;
         }
 
-        /*
-        let attributes = {
-          "Name": "Hummer聊天室",
-          "Description": "测试",
-          "Bulletin": "公告",
-          "Extention": "自定义",
-        };
-        */
         let attributes = this.setGroupAttributes;
 
         this.$confirm('创建chatroom聊天室?', '提示', {
@@ -1251,13 +1243,13 @@
         });
       },
       subscribeTextChat(client) {
-        const eventName = [
+        const eventNames = [
           'TextChat',
           'UsersMuted',
           'UsersUnMuted',
         ];
 
-        eventName.forEach(eventName => {
+        eventNames.forEach(eventName => {
           client.chatroom.on(eventName, (data) => {
             log4test(`接收消息${eventName}：` + JSON.stringify(data));
 
@@ -1325,16 +1317,22 @@
           log4test('getConnectionState=', this.hummer.getConnectionState());
         });
       },
-      onTokenExpired() {
-        const eventName = "TokenExpired";
-        this.hummer.on(eventName, () => {
-          log4test(`=== ${eventName} ===`);
-          this.$message({
-            duration: 3000,
-            message: `${eventName}`,
-            type: 'success'
+      onTokenExpire() {
+        const eventNames = [
+          "TokenWillExpire",
+          "TokenExpired"
+        ];
+
+        eventNames.forEach(eventName => {
+          this.hummer.on(eventName, () => {
+            log4test(`=== ${eventName} ===`);
+            this.$message({
+              duration: 3000,
+              message: `${eventName}`,
+              type: 'success'
+            });
           });
-        });
+        })
       },
       onForceoutOffline() {
         const eventName = "ForceoutOffline";
