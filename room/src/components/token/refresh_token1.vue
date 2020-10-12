@@ -88,14 +88,14 @@
           this.refreshToken();
         })
       },
-      closeRefreshTokenModel() {
+      closeRefreshToken1Model() {
         this.$store.commit('updateRefreshToken1ModelVisible', false);
       },
       refreshToken() {
         console.log('refreshToken1');
         if (!this.hummer) {
           console.warn('hummer is null');
-          this.closeRefreshTokenModel();
+          this.closeRefreshToken1Model();
           return;
         }
         
@@ -119,7 +119,7 @@
           this.$emit('onRefreshToken1', err);
         });
 
-        this.closeRefreshTokenModel();
+        this.closeRefreshToken1Model();
       }
     }
   }
