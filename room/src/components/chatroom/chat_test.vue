@@ -198,6 +198,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{dismissChatRoomRes}}</p>
     </div>
 
+    <!--
     <p class="text-unit">剔除用户</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
@@ -220,6 +221,7 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="false">{{kickOffUserRes}}</p>
     </div>
+    -->
 
     <p class="text-unit">发送广播消息</p>
     <el-row type="flex" class="row-bg">
@@ -340,6 +342,7 @@
       </editable-table>
     </el-dialog>
 
+    <!--
     <p class="text-unit">获取聊天室所有管理员</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px; text-align:left;" >
@@ -356,6 +359,7 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="false">{{getChatRoomManagerRes}}</p>
     </div>
+    -->
 
     <p class="text-unit">获取聊天室用户数</p>
     <el-row type="flex" class="row-bg">
@@ -566,7 +570,7 @@
           "Name": "Hummer聊天室",
           "Description": "测试",
           "Bulletin": "公告",
-          "Extention": "自定义",
+          "AppExtra": "自定义",
         },
         groupAttributes: {
           "Name": "nginx大讲堂",
@@ -816,7 +820,6 @@
         }
 
         this.chatrooms[this.regionChatroomId] = {
-
           chatroom: chatroom,
           region: this.region,
           roomid: this.roomid
