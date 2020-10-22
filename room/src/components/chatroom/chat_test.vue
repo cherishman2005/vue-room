@@ -823,14 +823,16 @@
         this.chatrooms[regionChatroomId] = {
           chatroom: chatroom,
           region: region,
-          roomid: roomid
+          roomid: roomid,
         }
 
         this.regionChatroomIds.push({value: regionChatroomId, label: regionChatroomId});
+        
 
         console.log('chatrooms=', this.chatrooms);
 
         let client = this.chatrooms[regionChatroomId];
+
         console.log(`chatroom add Listener: ${regionChatroomId}`);
         this.onSingleUserMessageReceived(client);
         this.onChatRoomDismissed(client);
@@ -842,7 +844,6 @@
         this.onUserOnlineUpdated(client);
         this.onUserAttributesSet(client);
         this.onChatRoomUserOffline(client);
-
 
         setStorage("roomid", roomid);
       },
@@ -1256,11 +1257,10 @@
         ];
 
         eventNames.forEach(eventName => {
-          let that = this;
-          client.chatroom.on(eventName, function(data) {
+          client.chatroom.on(eventName, (data) => {
             log4test(`接收消息${eventName}：` + JSON.stringify(data));
 
-            that.$message({
+            this.$message({
               duration: 3000,
               message: `接收消息${eventName}：` + JSON.stringify(data),
               type: 'success'
