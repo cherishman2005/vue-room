@@ -797,39 +797,41 @@
 
         this.regionChatroomId = getRegionRoomId(this.region, this.roomid);
 
-        if (this.chatClient) {
+        if (this.chatrooms[this.regionChatroomId]) {
           console.log('chatroom exists, and chatrooms=', this.chatrooms);
-          delete this.chatClient;
-          this.chatClient = null;
-          //return;
+          return;
         }
 
-        this.chatClient = this.chatrooms[this.regionChatroomId];
+        // todo:
+        if (Object.keys(this.chatrooms).indexOf(this.regionChatroomId) !== -1) {
+          return;
+        }
+
+        const region = this.region;
+        const roomid = this.roomid;
 
         let chatroom = this.hummer.createChatRoomInstance({
-          region: this.region,
-          roomid: Number(this.roomid)
+          region: region,
+          roomid: Number(roomid)
         });
         if (!chatroom) {
           return;
         }
 
-        // todo:
-        if (Object.keys(this.chatrooms).indexOf(this.regionChatroomId) > -1) {
-          return;
-        }
+        const regionChatroomId = getRegionRoomId(region, roomid);
 
-        this.chatrooms[this.regionChatroomId] = {
+        this.chatrooms[regionChatroomId] = {
           chatroom: chatroom,
-          region: this.region,
-          roomid: this.roomid
+          region: region,
+          roomid: roomid
         }
 
-        this.regionChatroomIds.push({value: this.regionChatroomId, label: this.regionChatroomId});
+        this.regionChatroomIds.push({value: regionChatroomId, label: regionChatroomId});
 
         console.log('chatrooms=', this.chatrooms);
 
-        let client = this.chatrooms[this.regionChatroomId];
+        let client = this.chatrooms[regionChatroomId];
+        console.log(`chatroom add Listener: ${regionChatroomId}`);
         this.onSingleUserMessageReceived(client);
         this.onChatRoomDismissed(client);
         this.onChatRoomAttributesUpdated(client);
@@ -841,7 +843,8 @@
         this.onUserAttributesSet(client);
         this.onChatRoomUserOffline(client);
 
-        setStorage("roomid", this.roomid);
+
+        setStorage("roomid", roomid);
       },
       onJoinChatRoomProps(data) {
         console.log('onJoinChatRoomProps joinProps=', data);
@@ -1253,10 +1256,11 @@
         ];
 
         eventNames.forEach(eventName => {
-          client.chatroom.on(eventName, (data) => {
+          let that = this;
+          client.chatroom.on(eventName, function(data) {
             log4test(`接收消息${eventName}：` + JSON.stringify(data));
 
-            this.$message({
+            that.$message({
               duration: 3000,
               message: `接收消息${eventName}：` + JSON.stringify(data),
               type: 'success'
