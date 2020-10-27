@@ -593,7 +593,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{clearRoomExtraAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">查询房间指定属性名的扩展属性</p>
+    <p class="text-unit">查询房间扩展属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px; text-align:left;" >
         <el-form :inline="true" size="small">
@@ -1517,12 +1517,13 @@
         });
       },
       onUserAttributesSet(client) {
-        client.chatroom.on('UserAttributesSet', (data) => {
-          log4test("接收消息UserAttributesSet：" + JSON.stringify(data));
+        const eventName = "UserAttributesSet";
+        client.chatroom.on(eventName, (data) => {
+          log4test(`接收消息${eventName}：` + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息UserAttributesSet：" + JSON.stringify(data),
+            message: `接收消息${eventName}：` + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1545,25 +1546,27 @@
           log4test(`接收消息${eventName}`);
           this.$message({
             duration: 3000,
-            message: `${eventName}`,
+            message: `接收消息${eventName}`,
             type: 'success'
           });
         });
       },
       subscribeRoomExtraAtrributes(client) {
-        const eventName = [
+        const eventNames = [
           "RoomExtraAttributesSeted",
           "RoomExtraAttributesUpdated",
           "RoomExtraAttributesDeleted",
           "RoomExtraAttributesCleared",
         ];
 
-        client.chatroom.on(eventName, () => {
-          log4test(`接收消息${eventName}`);
-          this.$message({
-            duration: 3000,
-            message: `${eventName}`,
-            type: 'success'
+        eventNames.forEach(eventName => {
+          client.chatroom.on(eventName, (data) => {
+            log4test(`接收消息${eventName}：` + JSON.stringify(data));
+            this.$message({
+              duration: 3000,
+              message: `接收消息${eventName}：` + JSON.stringify(data),
+              type: 'success'
+            });
           });
         });
       },

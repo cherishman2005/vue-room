@@ -22,6 +22,8 @@ import setSendSingleUserAttributes from './modules/setSendSingleUserAttributes'
 import setSendGroupMessageAttributes from './modules/setSendGroupMessageAttributes'
 import setSendTextChatAttributes from './modules/setSendTextChatAttributes'
 import joinChatRoomProps from './modules/joinChatRoomProps'
+import setRoomExtraAttributes from './modules/setRoomExtraAttributes'
+import updateRoomExtraAttributes from './modules/updateRoomExtraAttributes'
 
 Vue.use(Vuex)
 
@@ -52,7 +54,9 @@ const modules = {
   setSendSingleUserAttributes,
   setSendGroupMessageAttributes,
   setSendTextChatAttributes,
-  joinChatRoomProps
+  joinChatRoomProps,
+  setRoomExtraAttributes, // chatroom
+  updateRoomExtraAttributes, // chatroom
 };
 
 var store = new Vuex.Store({
