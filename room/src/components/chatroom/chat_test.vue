@@ -517,7 +517,7 @@
     </div>
     -->
 
-    <p class="text-unit">房间扩展属性</p>
+    <el-divider content-position="left">房间扩展属性</el-divider>
     <p class="text-unit">设置房间扩展属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
@@ -1465,23 +1465,25 @@
         });
       },
       onUserKickedOff(client) {
-        client.chatroom.on('UserKickedOff', (data) => {
-          log4test("接收消息UserKickedOff：" + JSON.stringify(data));
+        const eventName = "UserKickedOff";
+        client.chatroom.on(eventName, (data) => {
+          log4test(`接收消息${eventName}：` + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息UserKickedOff：" + JSON.stringify(data),
+            message: `接收消息${eventName}：` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
       onGroupMessageReceived(client) {
-        client.chatroom.on('GroupMessage', (data) => {
-          log4test("接收消息GroupMessage：" + JSON.stringify(data));
+        const eventName = "GroupMessage";
+        client.chatroom.on(eventName, (data) => {
+          log4test(`接收消息${eventName}：` + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息GroupMessage：" + JSON.stringify(data),
+            message: `接收消息${eventName}：` + JSON.stringify(data),
             type: 'success'
           });
         });
