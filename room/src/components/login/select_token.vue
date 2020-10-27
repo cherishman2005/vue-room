@@ -38,7 +38,7 @@
   const tokenTypes = [
             {label: 'AppId模式', value: TOKEN_TYPES.APPID_MODE},
             {label: 'Token模式', value: TOKEN_TYPES.TOKEN_MODE},
-            {label: '临时Token模式', value: TOKEN_TYPES.TEMP_TOKEN},
+            {label: 'Token模式（输入token）', value: TOKEN_TYPES.TEMP_TOKEN},
           ];
 
   import {
