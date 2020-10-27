@@ -517,6 +517,99 @@
     </div>
     -->
 
+    <p class="text-unit">房间扩展属性</p>
+    <p class="text-unit">设置房间扩展属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item>
+            <el-button @click="showSetRoomExtraAttributesModel" style="border-radius:4px">extraAttributes</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="setRoomExtraAttributes" style="border-radius: 4px">setRoomExtraAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{setRoomExtraAttributesRes}}</p>
+    </div>
+
+    <el-dialog align="left" title="extraAttributes" :visible="setRoomExtraAttributesVisible" @close="closeSetRoomExtraAttributesModel">
+      <editable-table
+      :tableData="setRoomExtraAttributesReq.extraAttributes" @onGetPlainObject="onSetRoomExtraAttributes"></editable-table>
+    </el-dialog>
+
+    <p class="text-unit">更新房间某些扩展属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item>
+            <el-button @click="showUpdateRoomExtraAttributesModel" style="border-radius:4px">extraAttributes</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="updateRoomExtraAttributes" style="border-radius:4px">updateRoomExtraAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{updateRoomExtraAttributesRes}}</p>
+    </div>
+
+    <el-dialog align="left" title="extraAttributes" :visible="updateRoomExtraAttributesVisible" @close="closeUpdateRoomExtraAttributesModel">
+      <editable-table
+      :tableData="updateRoomExtraAttributesReq.extraAttributes" @onGetPlainObject="onUpdateRoomExtraAttributes"></editable-table>
+    </el-dialog>
+
+    <p class="text-unit">删除房间某些扩展属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item label="extraKeys">
+            <el-input v-model="deleteRoomExtraAttributesReq.extraKeys"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="deleteRoomExtraAttributes" style="border-radius:4px">deleteRoomExtraAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{deleteRoomExtraAttributesRes}}</p>
+    </div>
+
+    <p class="text-unit">清空房间扩展属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height:35px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary" @click="clearRoomExtraAttributes" style="border-radius:4px">clearRoomExtraAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{clearRoomExtraAttributesRes}}</p>
+    </div>
+
+    <p class="text-unit">查询房间指定属性名的扩展属性</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px; text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item label="extraKeys">
+            <el-input v-model="fetchRoomExtraAttributesReq.extraKeys"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="fetchRoomExtraAttributes" style="border-radius:4px">fetchRoomExtraAttributes</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{fetchRoomExtraAttributesRes}}</p>
+    </div>
+
   </div>
 </template>
 
@@ -636,6 +729,23 @@
         sendTextChatAttributes: {},
         sendSingleUserAttributes: {},
         sendGroupMessageAttributes: {},
+        setRoomExtraAttributesReq: {
+          extraAttributes: {},
+        },
+        setRoomExtraAttributesRes: '',
+        updateRoomExtraAttributesReq: {
+          extraAttributes: {},
+        },
+        updateRoomExtraAttributesRes: '',
+        deleteRoomExtraAttributesReq: {
+          extraKeys: '',
+        },
+        deleteRoomExtraAttributesRes: '',
+        clearRoomExtraAttributesRes: '',
+        fetchRoomExtraAttributesReq: {
+          extraKeys: '',
+        },
+        fetchRoomExtraAttributesRes: '',
         joinProps: {},
       }
     },
@@ -658,6 +768,8 @@
         setSendGroupMessageAttributesVisible: state => state.setSendGroupMessageAttributes.setSendGroupMessageAttributesVisible,
         setSendTextChatAttributesVisible: state => state.setSendTextChatAttributes.setSendTextChatAttributesVisible,
         joinChatRoomPropsVisible: state => state.joinChatRoomProps.joinChatRoomPropsVisible,
+        setRoomExtraAttributesVisible: state => state.setRoomExtraAttributes.setRoomExtraAttributesVisible,
+        updateRoomExtraAttributesVisible: state => state.updateRoomExtraAttributes.updateRoomExtraAttributesVisible,
       })
     },
     watch: {
@@ -844,6 +956,7 @@
         this.onUserOnlineUpdated(client);
         this.onUserAttributesSet(client);
         this.onChatRoomUserOffline(client);
+        this.subscribeRoomExtraAtrributes(client);
 
         setStorage("roomid", roomid);
       },
@@ -1193,6 +1306,130 @@
         }
       },
 
+      onSetRoomExtraAttributes(data) {
+        console.log('onSetRoomExtraAttributes extraAttributes=', data);
+        this.setRoomExtraAttributesReq.extraAttributes = data;
+      },
+      // Room Extra Attributes
+      async setRoomExtraAttributes() {
+        if (!this.chatClient)
+          return;
+
+        try {
+          let extraAttributes = this.setRoomExtraAttributesReq.extraAttributes || {};
+          let req = { extraAttributes };
+   
+          log4test('setRoomExtraAttributes: req=', req);
+
+          this.setRoomExtraAttributesRes = '';
+          const res = await this.chatClient.chatroom.setRoomExtraAttributes(req);
+          log4test("setRoomExtraAttributes res=" , res);
+          this.setRoomExtraAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("setRoomExtraAttributes err:" , e);
+          this.setRoomExtraAttributesRes = JSON.stringify(e);
+        }
+      },
+
+      onUpdateRoomExtraAttributes(data) {
+        console.log('onUpdateRoomExtraAttributes extraAttributes=', data);
+        this.updateRoomExtraAttributesReq.extraAttributes = data;
+      },
+      async updateRoomExtraAttributes() {
+        if (!this.chatClient)
+          return;
+
+        try {
+          let extraAttributes = this.updateRoomExtraAttributesReq.extraAttributes || {};
+          let req = { extraAttributes };
+   
+          log4test('updateRoomExtraAttributes req=', req);
+
+          this.updateRoomExtraAttributesRes = '';
+          const res = await this.chatClient.chatroom.updateRoomExtraAttributes(req);
+          log4test("updateRoomExtraAttributes res=" , res);
+          this.updateRoomExtraAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("updateRoomExtraAttributes res=" , e);
+          this.updateRoomExtraAttributesRes = JSON.stringify(e);
+        }
+      },
+
+      async deleteRoomExtraAttributes() {
+        if (!this.chatClient)
+          return;
+
+        try {
+          let keys_str = this.deleteRoomExtraAttributesReq.extraKeys;
+
+          let extraKeys = [];
+
+          let elements = keys_str.split(",");
+          for (let k of elements) {
+            if (k.length > 0) {
+              extraKeys.push(k);
+            }
+          }
+
+          let req = { extraKeys };
+          log4test('deleteRoomExtraAttributes: req=', req);
+
+          this.deleteRoomExtraAttributesRes = '';
+          const res = await this.chatClient.chatroom.deleteRoomExtraAttributes(req);
+          log4test("deleteRoomExtraAttributes res=", res);
+          this.deleteRoomExtraAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("deleteRoomExtraAttributes res=", e);
+          this.deleteRoomExtraAttributesRes = JSON.stringify(e);
+        }
+      },
+      async clearRoomExtraAttributes() {
+        if (!this.chatClient)
+          return;
+
+        try {
+          let req = {};
+          log4test('clearRoomExtraAttributes: req=', req);
+
+          this.clearRoomExtraAttributesRes = '';
+          const res = await this.chatClient.chatroom.clearRoomExtraAttributes(req);
+          log4test("clearRoomExtraAttributes res=", res);
+          this.clearRoomExtraAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("clearRoomExtraAttributes err:", e);
+          this.clearRoomExtraAttributesRes = JSON.stringify(e);
+        }
+      },
+
+      async fetchRoomExtraAttributes() {
+        if (!this.chatClient)
+          return;
+
+        try {
+          let keys_str = this.fetchRoomExtraAttributesReq.extraKeys;
+
+          let extraKeys = [];
+
+          let elements = keys_str.split(",");
+          for (let k of elements) {
+            if (k.length > 0) {
+              extraKeys.push(k);
+            }
+          }
+
+          let req = { extraKeys };
+          log4test('fetchRoomExtraAttributes req=', req);
+
+          this.fetchRoomExtraAttributesRes = '';
+          const res = await this.chatClient.chatroom.fetchRoomExtraAttributes(req);
+          log4test("fetchRoomExtraAttributes res=", res);
+          this.fetchRoomExtraAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("fetchRoomExtraAttributes res=", e);
+          this.fetchRoomExtraAttributesRes = JSON.stringify(e);
+        }
+      },
+
       /*  消息接收模块 */
       onSingleUserMessageReceived(client) {
         client.chatroom.on('SingleUserMessage', (data) => {
@@ -1291,12 +1528,13 @@
         });
       },
       onUserOnlineUpdated(client) {
-        client.chatroom.on('UserOnlineUpdated', (data) => {
-          log4test("接收消息UserOnlineUpdated：" + JSON.stringify(data));
+        const eventName = "UserOnlineUpdated";
+        client.chatroom.on(eventName, (data) => {
+          log4test(`接收消息${eventName}：` + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "接收消息UserOnlineUpdated：" + JSON.stringify(data),
+            message: `接收消息${eventName}：` + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1312,12 +1550,30 @@
           });
         });
       },
-      onConnectionStateChanged() {
-        this.hummer.on('ConnectionStateChanged', (data) => {
-          log4test("=== ConnectionStateChanged ===:" + JSON.stringify(data));
+      subscribeRoomExtraAtrributes(client) {
+        const eventName = [
+          "RoomExtraAttributesSeted",
+          "RoomExtraAttributesUpdated",
+          "RoomExtraAttributesDeleted",
+          "RoomExtraAttributesCleared",
+        ];
+
+        client.chatroom.on(eventName, () => {
+          log4test(`接收消息${eventName}`);
           this.$message({
             duration: 3000,
-            message: `ConnectionStateChanged: ` + JSON.stringify(data),
+            message: `${eventName}`,
+            type: 'success'
+          });
+        });
+      },
+      onConnectionStateChanged() {
+        const eventName = "ConnectionStateChanged";
+        this.hummer.on(eventName, (data) => {
+          log4test(`=== ${eventName} ===:` + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
 
@@ -1417,6 +1673,18 @@
       },
       closeSendTextChatAttributesModel () {
         this.$store.commit('updateSendTextChatAttributesVisible', false);
+      },
+      showSetRoomExtraAttributesModel() {
+        this.$store.commit('updateSetRoomExtraAttributesVisible', true);
+      },
+      closeSetRoomExtraAttributesModel() {
+        this.$store.commit('updateSetRoomExtraAttributesVisible', false)
+      },
+      showUpdateRoomExtraAttributesModel() {
+        this.$store.commit('updateUpdateRoomExtraAttributesVisible', true);
+      },
+      closeUpdateRoomExtraAttributesModel() {
+        this.$store.commit('updateUpdateRoomExtraAttributesVisible', false)
       },
     }
   }
