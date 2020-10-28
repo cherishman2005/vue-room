@@ -517,6 +517,29 @@
     </div>
     -->
 
+    <p class="text-unit">查询历史消息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px; text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item label="msgTypes">
+            <el-input v-model="fetchHistoryMessagesReq.msgTypes"></el-input>
+          </el-form-item>
+          <el-form-item label="direction">
+            <el-input v-model="fetchHistoryMessagesReq.direction"></el-input>
+          </el-form-item>
+          <el-form-item label="limit">
+            <el-input v-model="fetchHistoryMessagesReq.limit"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="fetchHistoryMessages" style="border-radius:4px">fetchHistoryMessages</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{fetchRoomExtraAttributesRes}}</p>
+    </div>
+
     <el-divider content-position="left">房间扩展属性</el-divider>
     <p class="text-unit">设置房间扩展属性</p>
     <el-row type="flex" class="row-bg">
@@ -747,6 +770,12 @@
         sendTextChatAttributes: {},
         sendSingleUserAttributes: {},
         sendGroupMessageAttributes: {},
+        fetchHistoryMessagesReq: {
+          msgTypes: '0',
+          direction: 0,
+          limit: 100,
+        },
+        fetchHistoryMessagesRes: '',
         setRoomExtraAttributesReq: {
           extraAttributes: {},
         },
@@ -1328,6 +1357,39 @@
         }
       },
 
+      /* ------ 拉取历史消息 ------ */
+      async fetchHistoryMessages() {
+        if (!this.chatClient)
+          return;
+
+        try {
+          let msgTypes_str = this.fetchHistoryMessagesReq.msgTypes;
+          let msgTypes = [];
+
+          let elements = msgTypes_str.split(",");
+          for (let k of elements) {
+            if (k.length > 0) {
+              msgTypes.push(k);
+            }
+          }
+          
+          let direction = this.fetchHistoryMessagesReq.direction;
+          let limit = this.fetchHistoryMessagesReq.limit;
+
+          let req = { msgTypes, direction, limit };
+          log4test('fetchHistoryMessages req=', req);
+
+          this.fetchHistoryMessagesRes = '';
+          const res = await this.chatClient.chatroom.fetchHistoryMessages(req);
+          log4test("fetchHistoryMessages res=", res);
+          this.fetchHistoryMessagesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("fetchHistoryMessages res=", e);
+          this.fetchHistoryMessagesRes = JSON.stringify(e);
+        }
+      },
+
+      /* ------ 房间扩展属性 ------ */
       onSetRoomExtraAttributes(data) {
         console.log('onSetRoomExtraAttributes extraAttributes=', data);
         this.setRoomExtraAttributesReq.extraAttributes = data;
