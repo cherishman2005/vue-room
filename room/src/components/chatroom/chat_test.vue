@@ -610,6 +610,24 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{fetchRoomExtraAttributesRes}}</p>
     </div>
 
+    <el-divider content-position="left">消息通道</el-divider>
+    <p class="text-unit">查询在线状态</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px; text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item label="uids">
+            <el-input v-model="fetchUserOnlineStatusReq.uids"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="fetchUserOnlineStatus" style="border-radius:4px">fetchUserOnlineStatus</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{fetchUserOnlineStatusRes}}</p>
+    </div>
+
   </div>
 </template>
 
@@ -746,6 +764,10 @@
           extraKeys: '',
         },
         fetchRoomExtraAttributesRes: '',
+        fetchUserOnlineStatusReq: {
+          uids: '',
+        },
+        fetchUserOnlineStatusRes: '',
         joinProps: {},
       }
     },
@@ -1427,6 +1449,35 @@
         } catch(e) {
           log4test("fetchRoomExtraAttributes res=", e);
           this.fetchRoomExtraAttributesRes = JSON.stringify(e);
+        }
+      },
+      
+      // 消息通道
+      async fetchUserOnlineStatus() {
+        if (!this.hummer)
+          return;
+
+        try {
+          let uids_str = this.fetchUserOnlineStatusReq.uids;
+          let uids = [];
+
+          let elements = uids_str.split(",");
+          for (let k of elements) {
+            if (k.length > 0) {
+              uids.push(k);
+            }
+          }
+
+          let req = { uids };
+          log4test('fetchUserOnlineStatus req=', req);
+
+          this.fetchUserOnlineStatusRes = '';
+          const res = await this.hummer.fetchUserOnlineStatus(req);
+          log4test("fetchUserOnlineStatus res=", res);
+          this.fetchUserOnlineStatusRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("fetchUserOnlineStatus res=", e);
+          this.fetchUserOnlineStatusRes = JSON.stringify(e);
         }
       },
 
