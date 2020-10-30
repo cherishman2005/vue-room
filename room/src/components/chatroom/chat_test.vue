@@ -965,10 +965,12 @@
           return;
         }
 
+        /*
         // todo:
         if (Object.keys(this.chatrooms).indexOf(this.regionChatroomId) !== -1) {
           return;
         }
+        */
 
         const region = this.region;
         const roomid = this.roomid;
@@ -1369,7 +1371,7 @@
           let elements = msgTypes_str.split(",");
           for (let k of elements) {
             if (k.length > 0) {
-              msgTypes.push(k);
+              msgTypes.push(Number(k));
             }
           }
           
