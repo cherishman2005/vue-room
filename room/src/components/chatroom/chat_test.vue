@@ -651,6 +651,84 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{fetchUserOnlineStatusRes}}</p>
     </div>
 
+    <p class="text-unit">发送点对点消息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24"  style="height: 45px;text-align:left;" >
+        <el-form :inline="true"  size="small">
+          <el-form-item>
+            <el-button @click="showCreateAppExtrasModel" style="border-radius:4px">appExtras</el-button>
+          </el-form-item>
+          <el-form-item label="content">
+            <el-input v-model="sendP2PMessageReq.content" style="width:200px;"></el-input>
+          </el-form-item>
+          <el-form-item label="receiver">
+            <el-input v-model="sendP2PMessageReq.receiver" style="width:150px;"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="sendP2PMessage" style="border-radius:4px">sendP2PMessage</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{sendP2PMessageRes}}</p>
+    </div>
+
+    <!-- Channel消息 -->
+    <el-divider content-position="left">Channel消息</el-divider>
+
+    <p class="text-unit" style="color: #ef4f4f">创建Channel实例</p>
+    <el-row type="flex">
+      <el-col :span="24" style="height:35px;text-align:left;">
+        <el-form :inline="true"  size="small">
+          <el-form-item class="search">
+            <el-button type="primary" @click="showCreateChannelModel" style="border-radius: 4px">createChannel</el-button>
+          </el-form-item>
+          <el-form-item label="Channel列表[region:channelId](用于选择Channel)">
+            <template>
+              <el-select v-model="regionChannelId" placeholder="" style="width: 200px;">
+                <el-option
+                  v-for="item in regionChannelIds"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                  <span style="float: left;" >{{ item.label.substr(0, Math.min(item.label.length, 30))}}</span>
+                  <el-tooltip class="item" effect="light" :content="item.label" placement="right-end">
+                  <span v-if="item.hasJoin" style="float: right; color: #00FF7F; font-size: 13px">已加入</span>
+                  <span v-else style="float: right; color: #8492a6; font-size: 13px; margin-left: 5px">未加入</span>
+                  </el-tooltip>
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+
+    <el-dialog align="left" title="创建Channel实例" :visible="createChannelModelVisible" @close="closeCreateChannelModel" customClass="customWidth">
+      <create-channel :client="hummer" @onGetChannel=getChannel></create-channel>
+    </el-dialog>
+
+    <p class="text-unit">发送Channel消息</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item>
+            <el-button @click="showCreateChannelAppExtrasModel" style="border-radius:4px">appExtras</el-button>
+          </el-form-item>
+          <el-form-item label="content">
+            <el-input v-model="sendP2CMessageReq.content" style="width:200px;"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="sendP2CMessage" style="border-radius:4px">sendP2CMessage</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{sendP2CMessageRes}}</p>
+    </div>
+
   </div>
 </template>
 
@@ -661,6 +739,7 @@
   import RefreshToken from '@/components/token/refresh_token.vue';
   import RefreshToken1 from '@/components/token/refresh_token1.vue';
   import CreateGroup from './create_group.vue';
+  import CreateChannel from './create_channel.vue';
   import EditableTable from '@/components/units/editable_table.vue';
   //import Hummer from 'hummer-chatroom-sdk'
 
@@ -797,11 +876,21 @@
           uids: '',
         },
         fetchUserOnlineStatusRes: '',
+        sendP2PMessageReq: {
+          content: 'js_sdk sendP2PMessage',
+          receiver: UID,
+        },
+        sendP2PMessageRes: "",
+        sendP2CMessageReq: {
+          content: 'js_sdk sendP2CMessage',
+        },
+        sendP2CMessageRes: "",
         joinProps: {},
       }
     },
     components: {
       CreateGroup,
+      CreateChannel,
       RefreshToken,
       RefreshToken1,
       EditableTable,
@@ -811,6 +900,7 @@
         refreshTokenModelVisible: state => state.refreshToken.refreshTokenModelVisible,
         refreshToken1ModelVisible: state => state.refreshToken1.refreshToken1ModelVisible,
         createGroupModelVisible: state => state.group.createGroupModelVisible,
+        createChannelModelVisible: state => state.channel.createChannelModelVisible,
         setGroupAttributesVisible: state => state.setGroupAttributes.setGroupAttributesVisible,
         updateGroupAttributesVisible: state => state.updateGroupAttributes.updateGroupAttributesVisible,
         setGroupUserAttributesVisible: state => state.setGroupUserAttributes.setGroupUserAttributesVisible,
@@ -842,6 +932,7 @@
       this.onConnectionStateChanged();
       this.onTokenExpire();
       this.onForceoutOffline();
+      this.subscribeP2PMessage();
     },
     destroyed() {
     },
@@ -1544,6 +1635,60 @@
           this.fetchUserOnlineStatusRes = JSON.stringify(e);
         }
       },
+      async sendP2PMessage() {
+        if (!this.hummer)
+          return;
+
+        try {
+          let content = this.sendP2PMessageReq.content;
+          let receiver = this.sendP2PMessageReq.receiver;
+
+          let message = Hummer.createMessage(0, content);
+
+          let req = {
+            receiver: receiver,
+            message: message,
+            appExtras: this.appExtras
+          };
+
+          log4test("sendP2PMessage req=", req);
+
+          this.sendP2PMessageRes = '';
+          const res = await this.hummer.sendP2PMessage(req);
+          log4test("sendP2PMessage res=", res);
+          this.sendP2PMessageRes = JSON.stringify(res);
+
+        } catch(e) {
+          log4test("sendP2PMessage res=", e);
+          this.sendP2PMessageRes = JSON.stringify(e);
+        }
+      },
+
+      async sendP2CMessage() {
+        if (!this.channel)
+          return;
+
+        try {
+          let content = this.sendP2CMessageReq.content;
+
+          let message = Hummer.createMessage(0, content);
+          log4test("createMessage message=", message);
+
+          let req = {
+            content: message,
+            appExtras: this.roomAppExtras
+          }
+          log4test("sendP2CMessage req=", req);
+
+          this.sendP2CMessageRes = '';
+          const res = await this.channel.channel.sendP2CMessage(req);
+          log4test("sendP2CMessage res=", res);
+          this.sendP2CMessageRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("sendP2CMessage res=", e);
+          this.sendP2CMessageRes = JSON.stringify(e);
+        }
+      },
 
       /*  消息接收模块 */
       onSingleUserMessageReceived(client) {
@@ -1670,7 +1815,7 @@
       },
       subscribeRoomExtraAtrributes(client) {
         const eventNames = [
-          "RoomExtraAttributesSeted",
+          "RoomExtraAttributesSet",
           "RoomExtraAttributesUpdated",
           "RoomExtraAttributesDeleted",
           "RoomExtraAttributesCleared",
@@ -1728,6 +1873,31 @@
           });
         });
       },
+      subscribeP2PMessage() {
+        const eventName = "P2PMessageReceived";
+        this.hummer.on(eventName, (data) => {
+          log4test(`接收消息${eventName}：` + JSON.stringify(data));
+          this.$message({
+            duration: 3000,
+            message: `接收消息${eventName}：` + JSON.stringify(data),
+            type: 'success'
+          });
+        });
+      },
+      subscribeChannelMessage(channel) {
+        const eventName = 'P2CMessageReceived';
+        channel.channel.on(eventName, (data) => {
+          data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
+          log4test(`接收消息${eventName}: [${channel.region}:${channel.channelId}]:` + JSON.stringify(data));
+
+          this.$message({
+            duration: 3000,
+            message: `${eventName}: [${channel.region}:${channel.channelId}]:` + JSON.stringify(data),
+            type: 'success'
+          });
+        });
+      },
+
       showRefreshTokenModel() {
         this.$store.commit('updateRefreshTokenModelVisible', true);
       },
@@ -1745,6 +1915,12 @@
       },
       closeCreateGroupModel() {
         this.$store.commit('updateCreateGroupModelVisible', false)
+      },
+      showCreateChannelModel() {
+        this.$store.commit('updateCreateChannelModelVisible', true);
+      },
+      closeCreateChannelModel() {
+        this.$store.commit('updateCreateChannelModelVisible', false)
       },
       showSetGroupAttributesModel() {
         this.$store.commit('updateSetGroupAttributesVisible', true);

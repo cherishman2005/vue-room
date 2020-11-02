@@ -1109,7 +1109,7 @@
 
           //console.log("消息队列mq_room_data: " + JSON.stringify(this.mq_room_data));
         } catch(e) {
-          log4test("sendMessage err:", e);
+          log4test("sendMessage res=", e);
           this.sendMessageRes = JSON.stringify(e);
         }
       },
@@ -1132,7 +1132,7 @@
           log4test("send32KMessage res=" ,res);
           this.send32KMessageRes = JSON.stringify(res);
         } catch(e) {
-          log4test("send32KMessage err:", e);
+          log4test("send32KMessage res=", e);
           this.send32KMessageRes = JSON.stringify(e);
         }
       },

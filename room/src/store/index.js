@@ -5,6 +5,7 @@ import {mutations} from "./mutations"
 import {actions} from './actions'
 import room from './modules/room'
 import group from './modules/group'
+import channel from './modules/channel'
 import setGroupAttributes from './modules/setGroupAttributes'
 import updateGroupAttributes from './modules/updateGroupAttributes'
 import setGroupUserAttributes from './modules/setGroupUserAttributes'
@@ -38,6 +39,7 @@ const state = {
 const modules = {
   room,
   group,
+  channel,
   setGroupAttributes,
   updateGroupAttributes,
   setGroupUserAttributes,
