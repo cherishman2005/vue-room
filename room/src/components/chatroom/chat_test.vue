@@ -1987,7 +1987,6 @@
       subscribeChannelMessage(channel) {
         const eventName = 'P2CMessageReceived';
         channel.channel.on(eventName, (data) => {
-          data.message.data = Hummer.Utify.decodeUtf8BytesToString(data.message.data);
           log4test(`接收消息${eventName}: [${channel.region}:${channel.channelId}]:` + JSON.stringify(data));
 
           this.$message({
