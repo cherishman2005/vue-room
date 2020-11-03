@@ -12,6 +12,10 @@ export const getRegionRoomId = (region, roomId) => {
   return `${region}:${roomId}`;
 }
 
+export const getRegionChannelId = (region, channelId) => {
+  return `${region}:${channelId}`;
+}
+
 export function getAppids() {
   const appidList = [ 1504984159, 1350626568 ];
   let appids = [];

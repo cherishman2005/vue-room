@@ -85,7 +85,7 @@
         })
       },
       closeCreateChannelModel() {
-        this.$store.commit('updateCreateRoomModelVisible', false);
+        this.$store.commit('updateCreateChannelModelVisible', false);
       },
       createChannel() {
         if (!this.client) {
@@ -93,7 +93,7 @@
           this.closeCreateChannelModel();
           return;
         }
-        let channel = this.client.createChannelInstance({
+        let channel = this.client.createChannel({
           region: this.form.region,
           channelId: this.form.channelId
         });

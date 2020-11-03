@@ -735,7 +735,7 @@
 <script>
   import { mapState } from 'vuex';
   import { getStorage, setStorage, padMs } from '@/utils/BaseUtil'
-  import { getRegions, getRegionRoomId } from '@/components/room_config.js';
+  import { getRegions, getRegionRoomId, getRegionChannelId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import RefreshToken1 from '@/components/token/refresh_token1.vue';
   import CreateGroup from './create_group.vue';
@@ -754,6 +754,7 @@
   const ROOMID = Number(getStorage('roomid'));
   const APPID = getStorage("appid");
   const TOKEN = getStorage('token');
+  const REGION = getStorage('region');
 
   export default {
     name: 'chatroom-test',
@@ -773,6 +774,12 @@
         chatrooms: [],
         regionChatroomId: '',
         regionChatroomIds: [],
+        channelRegion: REGION || 'cn',
+        userRegionFlag: false,
+        regionChannelId: null,
+        regionChannelIds: [],
+        channels: [],
+        channel: null,
         loginRes: '',
         getInstanceInfoRes: '',
         JoinChatRoomReq: {
@@ -916,6 +923,9 @@
     watch: {
       regionChatroomId(val) {
         this.chatClient = this.chatrooms[val];
+      },
+      regionChannelId(val) {
+        this.channel = this.channels[val];
       }
     },
     created() {
@@ -1055,13 +1065,6 @@
           console.log('chatroom exists, and chatrooms=', this.chatrooms);
           return;
         }
-
-        /*
-        // todo:
-        if (Object.keys(this.chatrooms).indexOf(this.regionChatroomId) !== -1) {
-          return;
-        }
-        */
 
         const region = this.region;
         const roomid = this.roomid;
@@ -1662,6 +1665,49 @@
           log4test("sendP2PMessage res=", e);
           this.sendP2PMessageRes = JSON.stringify(e);
         }
+      },
+      updateChannelJoinStatus(join) {
+        if (!this.channel)
+          return;
+        let region = this.channel.region;
+        let channelId = this.channel.channelId;
+        this.updateChannelJoinStatusByRegionAndChannelId(region, channelId, join)
+      },
+      updateChannelJoinStatusByRegionAndChannelId(region, channelId, join) {
+        let regionChannelId = getRegionChannelId(region, channelId);
+        if (this.channels[this.regionChannelId]) {
+          let target = this.regionChannelIds.find( (value, index, arr) => {
+            return value.label === regionChannelId
+          })
+          if (target) {
+            target.hasJoin = join
+          }
+        }
+      },
+      getChannel(data) {
+        console.log('getChannel data=', data);
+
+        let region = data.region;
+        let channelId = data.channelId;
+        this.regionChannelId = getRegionChannelId(region, channelId);
+        if (this.channels[this.regionChannelId]) {
+          console.log('channel exists, and channels=', this.channels);
+          return;
+        }
+
+        this.channels[this.regionChannelId] = data;
+        this.regionChannelIds.push({value: this.regionChannelId, label: this.regionChannelId, hasJoin: false});
+
+        console.log('channels=', this.channels);
+
+        let channel = this.channels[this.regionChannelId];
+        this.subscribeChannelMessage(channel);
+      },
+      getCurrentRoomTag() {
+        if (!this.channel) {
+          return ""
+        }
+        return `[${this.channel.region}]:[${this.channel.roomId}]`;
       },
 
       async sendP2CMessage() {
