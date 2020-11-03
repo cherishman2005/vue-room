@@ -709,6 +709,23 @@
       <create-channel :client="hummer" @onGetChannel=getChannel></create-channel>
     </el-dialog>
 
+    <p class="text-unit">加入/退出Channel</p>
+    <el-row type="flex" class="row-bg">
+      <el-col :span="24" style="height:35px; text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item class="search">
+            <el-button type="primary" @click="joinChannel" style="border-radius:4px">joinChannel</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="leaveChannel" style="border-radius:4px">leaveChannel</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">{{joinOrLeaveChannelRes}}</p>
+    </div>
+
     <p class="text-unit">发送Channel消息</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
@@ -888,6 +905,7 @@
           receiver: UID,
         },
         sendP2PMessageRes: "",
+        joinOrLeaveChannelRes: "",
         sendP2CMessageReq: {
           content: 'js_sdk sendP2CMessage',
         },
@@ -1707,9 +1725,46 @@
         if (!this.channel) {
           return ""
         }
-        return `[${this.channel.region}]:[${this.channel.roomId}]`;
+        return `[${this.channel.region}:${this.channel.channelId}]`;
       },
+      async joinChannel() {
+        if (!this.channel)
+          return;
 
+        try {
+          log4test("joinChannel req={}");
+
+          this.joinOrLeaveChannelRes = '';
+          const res = await this.channel.channel.joinChannel();
+          log4test(`自己进入Channel ${this.getCurrentRoomTag()}, joinChannel res=`, res);
+          this.joinOrLeaveChannelRes = JSON.stringify(res);
+          if (res.rescode === 0) {
+            this.updateChannelJoinStatus(true)
+          }
+        } catch(e) {
+          log4test("joinChannel res=", e);
+          this.joinOrLeaveChannelRes = JSON.stringify(e);
+        }
+      },
+      async leaveChannel() {
+        if (!this.channel)
+          return;
+
+        try {
+          log4test("leaveChannel req={}");
+          
+          this.joinOrLeaveChannelRes = '';
+          const res = await this.channel.channel.leaveChannel();
+          log4test("自己离开leaveChannel: res=", res);
+          this.joinOrLeaveChannelRes = JSON.stringify(res);
+          if (res.rescode === 0) {
+            this.updateChannelJoinStatus(false)
+          }
+        } catch(e) {
+          log4test("leaveChannel res=", e);
+          this.joinOrLeaveChannelRes = JSON.stringify(e);
+        }
+      },
       async sendP2CMessage() {
         if (!this.channel)
           return;
@@ -1721,8 +1776,7 @@
           log4test("createMessage message=", message);
 
           let req = {
-            content: message,
-            appExtras: this.roomAppExtras
+            message: message,
           }
           log4test("sendP2CMessage req=", req);
 
