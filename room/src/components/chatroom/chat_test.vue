@@ -537,7 +537,7 @@
       </el-col>
     </el-row>
     <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{fetchRoomExtraAttributesRes}}</p>
+      <p class="rsp-text" type="textarea" contenteditable="false">{{fetchHistoryMessagesRes}}</p>
     </div>
 
     <el-divider content-position="left">房间扩展属性</el-divider>
@@ -1494,7 +1494,8 @@
           log4test('fetchHistoryMessages req=', req);
 
           this.fetchHistoryMessagesRes = '';
-          const res = await this.chatClient.chatroom.fetchHistoryMessages(req);
+          let res = await this.chatClient.chatroom.fetchHistoryMessages(req);
+          res.size = res.msgs.length || 0; 
           log4test("fetchHistoryMessages res=", res);
           this.fetchHistoryMessagesRes = JSON.stringify(res);
         } catch(e) {
