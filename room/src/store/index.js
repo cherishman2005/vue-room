@@ -14,6 +14,8 @@ import refreshToken from './modules/refreshToken'
 import refreshToken1 from './modules/refreshToken1'
 import appExtras from './modules/appExtras'
 import roomAppExtras from './modules/roomAppExtras'
+import peerAppExtras from './modules/peerAppExtras'
+import channelAppExtras from './modules/channelAppExtras'
 import setUserAttributes from './modules/setUserAttributes'
 import addOrUpdateUserAttributes from './modules/addOrUpdateUserAttributes'
 import setRoomAttributes from './modules/setRoomAttributes'
@@ -48,6 +50,8 @@ const modules = {
   refreshToken1,
   appExtras,
   roomAppExtras,
+  peerAppExtras,
+  channelAppExtras,
   setUserAttributes,
   addOrUpdateUserAttributes,
   setRoomAttributes,

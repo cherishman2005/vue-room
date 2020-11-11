@@ -486,7 +486,6 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{getUserAttributesListRes}}</p>
     </div>
 
-
     <p class="text-unit">HummerSDK 当前所处的状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
@@ -500,22 +499,6 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="false">{{state}}</p>
     </div>
-
-    <!--
-    <p class="text-unit">获取实例信息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="getInstanceInfo" style="border-radius:4px">getInstanceInfo</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{getInstanceInfoRes}}</p>
-    </div>
-    -->
 
     <p class="text-unit">查询历史消息</p>
     <el-row type="flex" class="row-bg">
@@ -651,12 +634,12 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{fetchUserOnlineStatusRes}}</p>
     </div>
 
-    <p class="text-unit">发送点对点消息</p>
+    <p class="text-unit">发送点对点（P2P）消息</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height: 45px;text-align:left;" >
         <el-form :inline="true"  size="small">
           <el-form-item>
-            <el-button @click="showCreateAppExtrasModel" style="border-radius:4px">appExtras</el-button>
+            <el-button @click="showCreatePeerAppExtrasModel" style="border-radius:4px">appExtras</el-button>
           </el-form-item>
           <el-form-item label="content">
             <el-input v-model="sendP2PMessageReq.content" style="width:200px;"></el-input>
@@ -673,6 +656,18 @@
     <div class="text">
       <p class="rsp-text" type="textarea" contenteditable="false">{{sendP2PMessageRes}}</p>
     </div>
+
+    <el-dialog
+      align="left"
+      title="atrributes"
+      :visible="createPeerAppExtrasVisible"
+      @close="closeCreatePeerAppExtrasModel">
+      <editable-table
+        :tableData="this.peerAppExtras"
+        @onGetPlainObject="getPeerAppExtras"
+        @close="closeCreatePeerAppExtrasModel">
+      </editable-table>
+    </el-dialog>
 
     <!-- Channel消息 -->
     <el-divider content-position="left">Channel消息</el-divider>
@@ -746,6 +741,18 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{sendP2CMessageRes}}</p>
     </div>
 
+    <el-dialog
+      align="left"
+      title="atrributes"
+      :visible="createChannelAppExtrasVisible"
+      @close="closeCreateChannelAppExtrasModel">
+      <editable-table
+        :tableData="this.channelAppExtras"
+        @onGetPlainObject="getChannelAppExtras"
+        @close="closeCreateChannelAppExtrasModel">
+      </editable-table>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -798,7 +805,6 @@
         channels: [],
         channel: null,
         loginRes: '',
-        getInstanceInfoRes: '',
         JoinChatRoomReq: {
           joinProps: {},
         },
@@ -904,8 +910,10 @@
           content: 'js_sdk sendP2PMessage',
           receiver: UID,
         },
+        peerAppExtras: {},
         sendP2PMessageRes: "",
         joinOrLeaveChannelRes: "",
+        channelAppExtras: {},
         sendP2CMessageReq: {
           content: 'js_sdk sendP2CMessage',
         },
@@ -935,7 +943,8 @@
         setSendTextChatAttributesVisible: state => state.setSendTextChatAttributes.setSendTextChatAttributesVisible,
         joinChatRoomPropsVisible: state => state.joinChatRoomProps.joinChatRoomPropsVisible,
         setRoomExtraAttributesVisible: state => state.setRoomExtraAttributes.setRoomExtraAttributesVisible,
-        updateRoomExtraAttributesVisible: state => state.updateRoomExtraAttributes.updateRoomExtraAttributesVisible,
+        createPeerAppExtrasVisible: state => state.peerAppExtras.createPeerAppExtrasVisible,
+        createChannelAppExtrasVisible: state => state.channelAppExtras.createChannelAppExtrasVisible,
       })
     },
     watch: {
@@ -1169,8 +1178,11 @@
         this.groupAttributes = data;
       },
       async updateChatRoomAttributes() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
+          
 
         try {
           let attributes = this.groupAttributes || {};
@@ -1187,8 +1199,10 @@
         }
       },
       async dismissChatRoom() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           this.dismissChatRoomRes = '';
@@ -1207,8 +1221,10 @@
         }
       },
       async kickOffUser() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let uid = this.kickOffUserReq.uid;
@@ -1228,8 +1244,10 @@
         }
       },
       async sendGroupMessage() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let content = this.sendGroupMessageReq.content;
@@ -1247,8 +1265,10 @@
         }
       },
       async sendSingleUserMessage() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let content = this.sendSingleUserMessageReq.content;
@@ -1268,8 +1288,10 @@
         }
       },
       async sendTextChat() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let chat = this.sendTextChatReq.chat;
@@ -1290,8 +1312,10 @@
         }
       },
       async muteUser() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let uid = this.muteUserReq.uid;
@@ -1310,8 +1334,10 @@
         };
       },
       async unMuteUser() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let uid = this.muteUserReq.uid;
@@ -1331,8 +1357,10 @@
         };
       },
       async getChatRoomAttributes() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
  
         try {
           this.getChatRoomAttributesRes = '';
@@ -1345,8 +1373,10 @@
         }
       },
       async getChatRoomManager() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let roler = this.getChatRoomManagerReq.roler;
@@ -1363,8 +1393,10 @@
         }
       },
       async getUserList() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let num = this.getUserListReq.num;
@@ -1383,8 +1415,10 @@
         }
       },
       async getMutedUserList() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         this.getMutedUserListRes = '';
         try {
@@ -1401,8 +1435,10 @@
         this.groupUserAttributes = data;
       },
       async setUserAttributes() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let attributes = this.groupUserAttributes || {};
@@ -1418,8 +1454,10 @@
         }
       },
       async getUserAttributesList() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           this.getUserAttributesListRes = '';
@@ -1432,8 +1470,10 @@
         }
       },
       async getUserCount() {
-        if (!this.hummer)
+        if (!this.hummer) {
+          log4test("hummer not init");
           return;
+        }
 
         const region = this.getUserCountReq.region;
         const roomid = Number(this.getUserCountReq.roomid);
@@ -1449,32 +1489,22 @@
         })
       },
       getConnectionState() {
-        this.state = '';
-        if (this.hummer)
-        {
-          this.state = this.hummer.getConnectionState();
-          log4test("getConnectionState=" + this.state);
-        }
-      },
-      async getInstanceInfo() {
-        if (!this.hummer)
+        if (!this.hummer) {
+          log4test("hummer not init");
           return;
-
-        try {
-          this.getInstanceInfoRes = '';
-          const res = await this.hummer.getInstanceInfo();
-          log4test("getInstanceInfo res=" + JSON.stringify(res));
-          this.getInstanceInfoRes = JSON.stringify(res);
-        } catch(e) {
-          log4test('getInstanceInfo res=', e);
-          this.getInstanceInfoRes = JSON.stringify(e);
         }
+
+        this.state = '';
+        this.state = this.hummer.getConnectionState();
+        log4test("getConnectionState=" + this.state);
       },
 
       /* ------ 拉取历史消息 ------ */
       async fetchHistoryMessages() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let msgTypes_str = this.fetchHistoryMessagesReq.msgTypes;
@@ -1511,8 +1541,10 @@
       },
       // Room Extra Attributes
       async setRoomExtraAttributes() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let extraAttributes = this.setRoomExtraAttributesReq.extraAttributes || {};
@@ -1535,8 +1567,10 @@
         this.updateRoomExtraAttributesReq.extraAttributes = data;
       },
       async updateRoomExtraAttributes() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let extraAttributes = this.updateRoomExtraAttributesReq.extraAttributes || {};
@@ -1555,8 +1589,10 @@
       },
 
       async deleteRoomExtraAttributes() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let keys_str = this.deleteRoomExtraAttributesReq.extraKeys;
@@ -1583,8 +1619,10 @@
         }
       },
       async clearRoomExtraAttributes() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let req = {};
@@ -1601,8 +1639,10 @@
       },
 
       async fetchRoomExtraAttributes() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           let keys_str = this.fetchRoomExtraAttributesReq.extraKeys;
@@ -1631,8 +1671,10 @@
       
       // 消息通道
       async fetchUserOnlineStatus() {
-        if (!this.hummer)
+        if (!this.hummer) {
+          log4test("hummer not init");
           return;
+        }
 
         try {
           let uids_str = this.fetchUserOnlineStatusReq.uids;
@@ -1657,9 +1699,15 @@
           this.fetchUserOnlineStatusRes = JSON.stringify(e);
         }
       },
+      getPeerAppExtras(data) {
+        console.log('getPeerAppExtras appExtras=', data);
+        this.peerAppExtras = data;
+      },
       async sendP2PMessage() {
-        if (!this.hummer)
+        if (!this.hummer) {
+          log4test("hummer not init");
           return;
+        }
 
         try {
           let content = this.sendP2PMessageReq.content;
@@ -1670,7 +1718,7 @@
           let req = {
             receiver: receiver,
             message: message,
-            appExtras: this.appExtras
+            appExtras: this.peerAppExtras,
           };
 
           log4test("sendP2PMessage req=", req);
@@ -1688,6 +1736,7 @@
       updateChannelJoinStatus(join) {
         if (!this.channel)
           return;
+
         let region = this.channel.region;
         let channelId = this.channel.channelId;
         this.updateChannelJoinStatusByRegionAndChannelId(region, channelId, join);
@@ -1766,6 +1815,10 @@
           this.joinOrLeaveChannelRes = JSON.stringify(e);
         }
       },
+      getChannelAppExtras(data) {
+        console.log('getChannelAppExtras channelAppExtras=', data);
+        this.channelAppExtras = data;
+      },
       async sendP2CMessage() {
         if (!this.channel)
           return;
@@ -1778,8 +1831,9 @@
 
           let req = {
             message: message,
+            appExtras: this.channelAppExtras,
           }
-          log4test("sendP2CMessage req=", req);
+          log4test(`${this.getCurrentChannelTag()} sendP2CMessage req=`, req);
 
           this.sendP2CMessageRes = '';
           const res = await this.channel.channel.sendP2CMessage(req);
@@ -1798,29 +1852,29 @@
 
           this.$message({
             duration: 3000,
-            message: "SingleUserMessage： " + JSON.stringify(data),
+            message: "SingleUserMessage: " + JSON.stringify(data),
             type: 'success'
           });
         });
       },
       onChatRoomDismissed(client) {
         client.chatroom.on('ChatRoomDismissed', (data) => {
-          log4test("接收消息ChatRoomDismissed： " + JSON.stringify(data));
+          log4test("接收消息ChatRoomDismissed: " + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "ChatRoomDismissed： " + JSON.stringify(data),
+            message: "ChatRoomDismissed: " + JSON.stringify(data),
             type: 'success'
           });
         });
       },
       onChatRoomAttributesUpdated(client)  {
         client.chatroom.on('ChatRoomAttributesUpdated', (data) => {
-          log4test("接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data));
+          log4test("接收消息ChatRoomAttributesUpdated: " + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "ChatRoomAttributesUpdated：" + JSON.stringify(data),
+            message: "ChatRoomAttributesUpdated: " + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1869,12 +1923,13 @@
         });
       },
       onUserCountUpdated(client) {
-        client.chatroom.on('UserCountUpdated', (data) => {
-          log4test("接收消息UserCountUpdated：" + JSON.stringify(data));
+        const eventName = 'UserCountUpdated';
+        client.chatroom.on(eventName, (data) => {
+          log4test(`接收消息${eventName}：` + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "UserCountUpdated：" + JSON.stringify(data),
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1886,7 +1941,7 @@
 
           this.$message({
             duration: 3000,
-            message: `${eventName}：` + JSON.stringify(data),
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1898,7 +1953,7 @@
 
           this.$message({
             duration: 3000,
-            message: `${eventName}：` + JSON.stringify(data),
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -2082,6 +2137,18 @@
       },
       closeUpdateRoomExtraAttributesModel() {
         this.$store.commit('updateUpdateRoomExtraAttributesVisible', false)
+      },
+      showCreatePeerAppExtrasModel() {
+        this.$store.commit('updateCreatePeerAppExtrasVisible', true);
+      },
+      closeCreatePeerAppExtrasModel() {
+        this.$store.commit('updateCreatePeerAppExtrasVisible', false)
+      },
+      showCreateChannelAppExtrasModel() {
+        this.$store.commit('updateCreateChannelAppExtrasVisible', true);
+      },
+      closeCreateChannelAppExtrasModel() {
+        this.$store.commit('updateCreateChannelAppExtrasVisible', false)
       },
     }
   }

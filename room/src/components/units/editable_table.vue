@@ -127,6 +127,8 @@
                 this.$store.commit('updateJoinChatRoomPropsVisible', false);
                 this.$store.commit('updateSetRoomExtraAttributesVisible', false);
                 this.$store.commit('updateUpdateRoomExtraAttributesVisible', false);
+                this.$store.commit('updateCreatePeerAppExtrasVisible', false);
+                this.$store.commit('updateCreateChannelAppExtrasVisible', false);
                 this.$emit('close')
             },
             createPlainObject() {
