@@ -616,7 +616,7 @@
       <p class="rsp-text" type="textarea" contenteditable="false">{{clearRoomExtraAttributesRes}}</p>
     </div>
 
-    <p class="text-unit">查询房间扩展属性</p>
+    <p class="text-unit">查询房间扩展属性(key用","隔开)</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px; text-align:left;" >
         <el-form :inline="true" size="small">
@@ -634,7 +634,7 @@
     </div>
 
     <el-divider content-position="left">消息通道</el-divider>
-    <p class="text-unit">查询在线状态</p>
+    <p class="text-unit">查询在线状态(uid用","隔开)</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px; text-align:left;" >
         <el-form :inline="true" size="small">
@@ -1690,16 +1690,16 @@
           return;
         let region = this.channel.region;
         let channelId = this.channel.channelId;
-        this.updateChannelJoinStatusByRegionAndChannelId(region, channelId, join)
+        this.updateChannelJoinStatusByRegionAndChannelId(region, channelId, join);
       },
       updateChannelJoinStatusByRegionAndChannelId(region, channelId, join) {
         let regionChannelId = getRegionChannelId(region, channelId);
         if (this.channels[this.regionChannelId]) {
           let target = this.regionChannelIds.find( (value, index, arr) => {
-            return value.label === regionChannelId
+            return value.label === regionChannelId;
           })
           if (target) {
-            target.hasJoin = join
+            target.hasJoin = join;
           }
         }
       },
@@ -1722,9 +1722,9 @@
         let channel = this.channels[this.regionChannelId];
         this.subscribeChannelMessage(channel);
       },
-      getCurrentRoomTag() {
+      getCurrentChannelTag() {
         if (!this.channel) {
-          return ""
+          return "";
         }
         return `[${this.channel.region}:${this.channel.channelId}]`;
       },
@@ -1737,7 +1737,7 @@
 
           this.joinOrLeaveChannelRes = '';
           const res = await this.channel.channel.joinChannel();
-          log4test(`自己进入Channel ${this.getCurrentRoomTag()}, joinChannel res=`, res);
+          log4test(`自己进入Channel ${this.getCurrentChannelTag()}, joinChannel res=`, res);
           this.joinOrLeaveChannelRes = JSON.stringify(res);
           if (res.rescode === 0) {
             this.updateChannelJoinStatus(true)
@@ -1756,10 +1756,10 @@
           
           this.joinOrLeaveChannelRes = '';
           const res = await this.channel.channel.leaveChannel();
-          log4test("自己离开leaveChannel: res=", res);
+          log4test(`自己离开Channel ${this.getCurrentChannelTag()}, leaveChannel res=`, res);
           this.joinOrLeaveChannelRes = JSON.stringify(res);
           if (res.rescode === 0) {
-            this.updateChannelJoinStatus(false)
+            this.updateChannelJoinStatus(false);
           }
         } catch(e) {
           log4test("leaveChannel res=", e);
@@ -1798,7 +1798,7 @@
 
           this.$message({
             duration: 3000,
-            message: "接收消息SingleUserMessage： " + JSON.stringify(data),
+            message: "SingleUserMessage： " + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1809,7 +1809,7 @@
 
           this.$message({
             duration: 3000,
-            message: "接收消息ChatRoomDismissed： " + JSON.stringify(data),
+            message: "ChatRoomDismissed： " + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1820,7 +1820,7 @@
 
           this.$message({
             duration: 3000,
-            message: "接收消息ChatRoomAttributesUpdated：" + JSON.stringify(data),
+            message: "ChatRoomAttributesUpdated：" + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1832,7 +1832,7 @@
 
           this.$message({
             duration: 3000,
-            message: `接收消息${eventName}：` + JSON.stringify(data),
+            message: `${eventName}：` + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1844,7 +1844,7 @@
 
           this.$message({
             duration: 3000,
-            message: `接收消息${eventName}：` + JSON.stringify(data),
+            message: `${eventName}：` + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1862,7 +1862,7 @@
 
             this.$message({
               duration: 3000,
-              message: `接收消息${eventName}：` + JSON.stringify(data),
+              message: `${eventName}：` + JSON.stringify(data),
               type: 'success'
             });
           });
@@ -1874,7 +1874,7 @@
 
           this.$message({
             duration: 3000,
-            message: "接收消息UserCountUpdated：" + JSON.stringify(data),
+            message: "UserCountUpdated：" + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1886,7 +1886,7 @@
 
           this.$message({
             duration: 3000,
-            message: `接收消息${eventName}：` + JSON.stringify(data),
+            message: `${eventName}：` + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1898,7 +1898,7 @@
 
           this.$message({
             duration: 3000,
-            message: `接收消息${eventName}：` + JSON.stringify(data),
+            message: `${eventName}：` + JSON.stringify(data),
             type: 'success'
           });
         });
@@ -1909,7 +1909,7 @@
           log4test(`接收消息${eventName}`);
           this.$message({
             duration: 3000,
-            message: `接收消息${eventName}`,
+            message: `${eventName}`,
             type: 'success'
           });
         });
@@ -1927,7 +1927,7 @@
             log4test(`接收消息${eventName}：` + JSON.stringify(data));
             this.$message({
               duration: 3000,
-              message: `接收消息${eventName}：` + JSON.stringify(data),
+              message: `${eventName}：` + JSON.stringify(data),
               type: 'success'
             });
           });
@@ -1974,13 +1974,14 @@
           });
         });
       },
+      // message-channel
       subscribeP2PMessage() {
         const eventName = "P2PMessageReceived";
         this.hummer.on(eventName, (data) => {
           log4test(`接收消息${eventName}：` + JSON.stringify(data));
           this.$message({
             duration: 3000,
-            message: `接收消息${eventName}：` + JSON.stringify(data),
+            message: `${eventName}：` + JSON.stringify(data),
             type: 'success'
           });
         });
