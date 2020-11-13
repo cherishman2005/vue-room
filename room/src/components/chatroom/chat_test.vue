@@ -117,7 +117,7 @@
       <el-col :span="24"  style="height:35px; text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item class="search">
-            <el-button @click="showJoinChatRoomPropsModel" style="border-radius:4px">joinProps</el-button>
+            <el-button @click="showJoinChatRoomPropsModel" style="border-radius: 4px">joinProps</el-button>
           </el-form-item>
           <el-form-item class="search">
             <el-button type="primary" @click="joinChatRoom" style="border-radius: 4px">joinChatRoom</el-button>
@@ -225,7 +225,7 @@
 
     <p class="text-unit">发送广播消息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;">
         <el-form :inline="true" size="small">
           <el-form-item class="search">
             <el-button @click="showSendGroupMessageAttributesModel" style="border-radius:4px">kvExtra</el-button>
@@ -294,11 +294,6 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true"  size="small">
-          <!--
-          <el-form-item class="search">
-            <el-button @click="showSendTextChatAttributesModel" style="border-radius:4px">chatProps</el-button>
-          </el-form-item>
-          -->
           <el-form-item label="extra">
             <el-input v-model="sendTextChatReq.extra"></el-input>
           </el-form-item>
@@ -526,7 +521,7 @@
     <el-divider content-position="left">房间扩展属性</el-divider>
     <p class="text-unit">设置房间扩展属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item>
             <el-button @click="showSetRoomExtraAttributesModel" style="border-radius:4px">extraAttributes</el-button>
@@ -548,7 +543,7 @@
 
     <p class="text-unit">更新房间某些扩展属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item>
             <el-button @click="showUpdateRoomExtraAttributesModel" style="border-radius:4px">extraAttributes</el-button>
@@ -570,7 +565,7 @@
 
     <p class="text-unit">删除房间某些扩展属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;">
         <el-form :inline="true" size="small">
           <el-form-item label="extraKeys">
             <el-input v-model="deleteRoomExtraAttributesReq.extraKeys"></el-input>
@@ -587,7 +582,7 @@
 
     <p class="text-unit">清空房间扩展属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;">
         <el-form :inline="true"  size="small">
           <el-form-item class="search">
             <el-button type="primary" @click="clearRoomExtraAttributes" style="border-radius:4px">clearRoomExtraAttributes</el-button>
@@ -601,7 +596,7 @@
 
     <p class="text-unit">查询房间扩展属性(key用","隔开)</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px; text-align:left;" >
+      <el-col :span="24" style="height:35px; text-align:left;">
         <el-form :inline="true" size="small">
           <el-form-item label="extraKeys">
             <el-input v-model="fetchRoomExtraAttributesReq.extraKeys"></el-input>
@@ -636,8 +631,20 @@
 
     <p class="text-unit">发送点对点（P2P）消息</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height: 45px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height: 45px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item label="isOffline">
+            <template>
+              <el-select v-model="sendP2PMessageReq.options.isOffline" placeholder="isOffline" style="width:80px;">
+                <el-option
+                  v-for="item in isOffline"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-button @click="showCreatePeerAppExtrasModel" style="border-radius:4px">appExtras</el-button>
           </el-form-item>
@@ -725,6 +732,18 @@
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
+          <el-form-item label="isOffline">
+            <template>
+              <el-select v-model="sendP2CMessageReq.options.isOffline" placeholder="isOffline" style="width:80px;">
+                <el-option
+                  v-for="item in isOffline"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-button @click="showCreateChannelAppExtrasModel" style="border-radius:4px">appExtras</el-button>
           </el-form-item>
@@ -906,9 +925,17 @@
           uids: '',
         },
         fetchUserOnlineStatusRes: '',
+        isOffline: [{
+            value: false,
+            label: 'false'
+          }, {
+            value: true,
+            label: 'true'
+          }],
         sendP2PMessageReq: {
           content: 'js_sdk sendP2PMessage',
           receiver: UID,
+          options: {isOffline: false},
         },
         peerAppExtras: {},
         sendP2PMessageRes: "",
@@ -916,6 +943,7 @@
         channelAppExtras: {},
         sendP2CMessageReq: {
           content: 'js_sdk sendP2CMessage',
+          options: {isOffline: false},
         },
         sendP2CMessageRes: "",
         joinProps: {},
@@ -1712,6 +1740,7 @@
         try {
           let content = this.sendP2PMessageReq.content;
           let receiver = this.sendP2PMessageReq.receiver;
+          let isOffline = this.sendP2PMessageReq.options.isOffline || false;
 
           let message = Hummer.createMessage(0, content);
 
@@ -1719,6 +1748,7 @@
             receiver: receiver,
             message: message,
             appExtras: this.peerAppExtras,
+            options: { isOffline: isOffline },
           };
 
           log4test("sendP2PMessage req=", req);
@@ -1825,6 +1855,7 @@
 
         try {
           let content = this.sendP2CMessageReq.content;
+          let isOffline = this.sendP2CMessageReq.options.isOffline || false;
 
           let message = Hummer.createMessage(0, content);
           log4test("createMessage message=", message);
@@ -1832,6 +1863,7 @@
           let req = {
             message: message,
             appExtras: this.channelAppExtras,
+            options: {isOffline: isOffline},
           }
           log4test(`${this.getCurrentChannelTag()} sendP2CMessage req=`, req);
 
