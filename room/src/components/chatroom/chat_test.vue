@@ -484,20 +484,6 @@
             <p class="rsp-text" type="textarea" contenteditable="false">{{getUserAttributesListRes}}</p>
           </div>
 
-          <p class="text-unit">HummerSDK 当前所处的状态</p>
-          <el-row type="flex" class="row-bg">
-            <el-col :span="24" style="height:35px;text-align:left;" >
-              <el-form :inline="true"  size="small">
-                <el-form-item class="search">
-                  <el-button type="primary" @click="getConnectionState" style="border-radius:4px">getConnectionState</el-button>
-                </el-form-item>
-              </el-form>
-            </el-col>
-          </el-row>
-          <div class="text">
-            <p class="rsp-text" type="textarea" contenteditable="false">{{state}}</p>
-          </div>
-
           <p class="text-unit">查询历史消息</p>
           <el-row type="flex" class="row-bg">
             <el-col :span="24" style="height:35px; text-align:left;" >
@@ -778,6 +764,23 @@
             </editable-table>
           </el-dialog>
         </el-tab-pane>
+        
+        <el-tab-pane label="HummerSDK状态" name="HummerSDK">
+          <p class="text-unit">HummerSDK 当前所处的状态</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item class="search">
+                  <el-button type="primary" @click="getConnectionState" style="border-radius:4px">getConnectionState</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{state}}</p>
+          </div>
+        </el-tab-pane>
+        
       </el-tabs>
   </div>
 </template>
