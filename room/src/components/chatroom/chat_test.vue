@@ -1032,7 +1032,7 @@
       },
       createChatRoom() {
         if (!this.hummer) {
-          console.warn('hummer is null');
+          log4test('hummer does not init');
           return;
         }
 
@@ -1110,7 +1110,7 @@
       },
       initChatRoom() {
         if (!this.hummer) {
-          console.log("hummer is null");
+          log4test("hummer is null");
           return;
         }
 
@@ -1167,8 +1167,10 @@
         this.joinProps = data;
       },
       async joinChatRoom() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         console.log('regionChatroomId=', this.regionChatroomId, ' chatroom=', this.chatClient);
 
@@ -1187,8 +1189,10 @@
         }
       },
       async leaveChatRoom() {
-        if (!this.chatClient)
+        if (!this.chatClient) {
+          log4test("chatroom not init");
           return;
+        }
 
         try {
           this.joinOrLeaveRes = '';
@@ -1743,6 +1747,8 @@
           let isOffline = this.sendP2PMessageReq.options.isOffline || false;
 
           let message = Hummer.createMessage(0, content);
+          log4test("createMessage success");
+          console.log("createMessage message=", message);
 
           let req = {
             receiver: receiver,
@@ -1858,7 +1864,8 @@
           let isOffline = this.sendP2CMessageReq.options.isOffline || false;
 
           let message = Hummer.createMessage(0, content);
-          log4test("createMessage message=", message);
+          log4test("createMessage success");
+          console.log("createMessage message=", message);
 
           let req = {
             message: message,
@@ -1879,34 +1886,37 @@
 
       /*  消息接收模块 */
       onSingleUserMessageReceived(client) {
-        client.chatroom.on('SingleUserMessage', (data) => {
-          log4test("接收消息SingleUserMessage： " + JSON.stringify(data));
+        const eventName = 'SingleUserMessage';
+        client.chatroom.on(eventName, (data) => {
+          log4test(`接收消息${eventName}： ` + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "SingleUserMessage: " + JSON.stringify(data),
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
       onChatRoomDismissed(client) {
-        client.chatroom.on('ChatRoomDismissed', (data) => {
-          log4test("接收消息ChatRoomDismissed: " + JSON.stringify(data));
+        const eventName = 'ChatRoomDismissed';
+        client.chatroom.on(eventName, (data) => {
+          log4test(`接收消息${eventName}: ` + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "ChatRoomDismissed: " + JSON.stringify(data),
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
         });
       },
       onChatRoomAttributesUpdated(client)  {
-        client.chatroom.on('ChatRoomAttributesUpdated', (data) => {
-          log4test("接收消息ChatRoomAttributesUpdated: " + JSON.stringify(data));
+        const eventName = 'ChatRoomAttributesUpdated';
+        client.chatroom.on(eventName, (data) => {
+          log4test(`接收消息${eventName}: ` + JSON.stringify(data));
 
           this.$message({
             duration: 3000,
-            message: "ChatRoomAttributesUpdated: " + JSON.stringify(data),
+            message: `${eventName}: ` + JSON.stringify(data),
             type: 'success'
           });
         });
