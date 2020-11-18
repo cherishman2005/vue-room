@@ -612,7 +612,7 @@
     </div>
 
     <el-divider content-position="left">消息通道</el-divider>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
         <el-tab-pane label="P2P消息" name="p2p">
           <p class="text-unit">查询在线状态(uid用","隔开)</p>
           <el-row type="flex" class="row-bg">
