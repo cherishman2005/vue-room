@@ -612,166 +612,171 @@
     </div>
 
     <el-divider content-position="left">消息通道</el-divider>
-    <p class="text-unit">查询在线状态(uid用","隔开)</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px; text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item label="uids">
-            <el-input v-model="fetchUserOnlineStatusReq.uids"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="fetchUserOnlineStatus" style="border-radius:4px">fetchUserOnlineStatus</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{fetchUserOnlineStatusRes}}</p>
-    </div>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="P2P消息" name="p2p">
+          <p class="text-unit">查询在线状态(uid用","隔开)</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px; text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item label="uids">
+                  <el-input v-model="fetchUserOnlineStatusReq.uids"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="fetchUserOnlineStatus" style="border-radius:4px">fetchUserOnlineStatus</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{fetchUserOnlineStatusRes}}</p>
+          </div>
 
-    <p class="text-unit">发送点对点（P2P）消息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height: 45px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item label="isOffline">
-            <template>
-              <el-select v-model="sendP2PMessageReq.options.isOffline" placeholder="isOffline" style="width:80px;">
-                <el-option
-                  v-for="item in isOffline"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          <el-form-item>
-            <el-button @click="showCreatePeerAppExtrasModel" style="border-radius:4px">appExtras</el-button>
-          </el-form-item>
-          <el-form-item label="content">
-            <el-input v-model="sendP2PMessageReq.content" style="width:200px;"></el-input>
-          </el-form-item>
-          <el-form-item label="receiver">
-            <el-input v-model="sendP2PMessageReq.receiver" style="width:150px;"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="sendP2PMessage" style="border-radius:4px">sendP2PMessage</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{sendP2PMessageRes}}</p>
-    </div>
+          <p class="text-unit">发送点对点（P2P）消息</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height: 45px;text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item label="isOffline">
+                  <template>
+                    <el-select v-model="sendP2PMessageReq.options.isOffline" placeholder="isOffline" style="width:80px;">
+                      <el-option
+                        v-for="item in isOffline"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </template>
+                </el-form-item>
+                <el-form-item>
+                  <el-button @click="showCreatePeerAppExtrasModel" style="border-radius:4px">appExtras</el-button>
+                </el-form-item>
+                <el-form-item label="content">
+                  <el-input v-model="sendP2PMessageReq.content" style="width:200px;"></el-input>
+                </el-form-item>
+                <el-form-item label="receiver">
+                  <el-input v-model="sendP2PMessageReq.receiver" style="width:150px;"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="sendP2PMessage" style="border-radius:4px">sendP2PMessage</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{sendP2PMessageRes}}</p>
+          </div>
 
-    <el-dialog
-      align="left"
-      title="atrributes"
-      :visible="createPeerAppExtrasVisible"
-      @close="closeCreatePeerAppExtrasModel">
-      <editable-table
-        :tableData="this.peerAppExtras"
-        @onGetPlainObject="getPeerAppExtras"
-        @close="closeCreatePeerAppExtrasModel">
-      </editable-table>
-    </el-dialog>
+          <el-dialog
+            align="left"
+            title="atrributes"
+            :visible="createPeerAppExtrasVisible"
+            @close="closeCreatePeerAppExtrasModel">
+            <editable-table
+              :tableData="this.peerAppExtras"
+              @onGetPlainObject="getPeerAppExtras"
+              @close="closeCreatePeerAppExtrasModel">
+            </editable-table>
+          </el-dialog>
+        </el-tab-pane>
+        
+        <el-tab-pane label="P2C消息" name="p2c">
+          <!-- Channel消息 -->
+          <!--<el-divider content-position="left">Channel消息</el-divider>-->
 
-    <!-- Channel消息 -->
-    <el-divider content-position="left">Channel消息</el-divider>
+          <p class="text-unit" style="color: #ef4f4f">创建Channel实例</p>
+          <el-row type="flex">
+            <el-col :span="24" style="height:35px;text-align:left;">
+              <el-form :inline="true"  size="small">
+                <el-form-item class="search">
+                  <el-button type="primary" @click="showCreateChannelModel" style="border-radius: 4px">createChannel</el-button>
+                </el-form-item>
+                <el-form-item label="Channel列表[region:channelId](用于选择Channel)">
+                  <template>
+                    <el-select v-model="regionChannelId" placeholder="" style="width: 200px;">
+                      <el-option
+                        v-for="item in regionChannelIds"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        <span style="float: left;" >{{ item.label.substr(0, Math.min(item.label.length, 30))}}</span>
+                        <el-tooltip class="item" effect="light" :content="item.label" placement="right-end">
+                        <span v-if="item.hasJoin" style="float: right; color: #00FF7F; font-size: 13px">已加入</span>
+                        <span v-else style="float: right; color: #8492a6; font-size: 13px; margin-left: 5px">未加入</span>
+                        </el-tooltip>
+                      </el-option>
+                    </el-select>
+                  </template>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
 
-    <p class="text-unit" style="color: #ef4f4f">创建Channel实例</p>
-    <el-row type="flex">
-      <el-col :span="24" style="height:35px;text-align:left;">
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="showCreateChannelModel" style="border-radius: 4px">createChannel</el-button>
-          </el-form-item>
-          <el-form-item label="Channel列表[region:channelId](用于选择Channel)">
-            <template>
-              <el-select v-model="regionChannelId" placeholder="" style="width: 200px;">
-                <el-option
-                  v-for="item in regionChannelIds"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                  <span style="float: left;" >{{ item.label.substr(0, Math.min(item.label.length, 30))}}</span>
-                  <el-tooltip class="item" effect="light" :content="item.label" placement="right-end">
-                  <span v-if="item.hasJoin" style="float: right; color: #00FF7F; font-size: 13px">已加入</span>
-                  <span v-else style="float: right; color: #8492a6; font-size: 13px; margin-left: 5px">未加入</span>
-                  </el-tooltip>
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+          <el-dialog align="left" title="创建Channel实例" :visible="createChannelModelVisible" @close="closeCreateChannelModel" customClass="customWidth">
+            <create-channel :client="hummer" @onGetChannel=getChannel></create-channel>
+          </el-dialog>
 
-    <el-dialog align="left" title="创建Channel实例" :visible="createChannelModelVisible" @close="closeCreateChannelModel" customClass="customWidth">
-      <create-channel :client="hummer" @onGetChannel=getChannel></create-channel>
-    </el-dialog>
+          <p class="text-unit">加入/退出Channel</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px; text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item class="search">
+                  <el-button type="primary" @click="joinChannel" style="border-radius:4px">joinChannel</el-button>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="leaveChannel" style="border-radius:4px">leaveChannel</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{joinOrLeaveChannelRes}}</p>
+          </div>
 
-    <p class="text-unit">加入/退出Channel</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px; text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="joinChannel" style="border-radius:4px">joinChannel</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="leaveChannel" style="border-radius:4px">leaveChannel</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{joinOrLeaveChannelRes}}</p>
-    </div>
+          <p class="text-unit">发送Channel消息</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item label="isOffline">
+                  <template>
+                    <el-select v-model="sendP2CMessageReq.options.isOffline" placeholder="isOffline" style="width:80px;">
+                      <el-option
+                        v-for="item in isOffline"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </template>
+                </el-form-item>
+                <el-form-item>
+                  <el-button @click="showCreateChannelAppExtrasModel" style="border-radius:4px">appExtras</el-button>
+                </el-form-item>
+                <el-form-item label="content">
+                  <el-input v-model="sendP2CMessageReq.content" style="width:200px;"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="sendP2CMessage" style="border-radius:4px">sendP2CMessage</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{sendP2CMessageRes}}</p>
+          </div>
 
-    <p class="text-unit">发送Channel消息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item label="isOffline">
-            <template>
-              <el-select v-model="sendP2CMessageReq.options.isOffline" placeholder="isOffline" style="width:80px;">
-                <el-option
-                  v-for="item in isOffline"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          <el-form-item>
-            <el-button @click="showCreateChannelAppExtrasModel" style="border-radius:4px">appExtras</el-button>
-          </el-form-item>
-          <el-form-item label="content">
-            <el-input v-model="sendP2CMessageReq.content" style="width:200px;"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="sendP2CMessage" style="border-radius:4px">sendP2CMessage</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{sendP2CMessageRes}}</p>
-    </div>
-
-    <el-dialog
-      align="left"
-      title="atrributes"
-      :visible="createChannelAppExtrasVisible"
-      @close="closeCreateChannelAppExtrasModel">
-      <editable-table
-        :tableData="this.channelAppExtras"
-        @onGetPlainObject="getChannelAppExtras"
-        @close="closeCreateChannelAppExtrasModel">
-      </editable-table>
-    </el-dialog>
-
+          <el-dialog
+            align="left"
+            title="atrributes"
+            :visible="createChannelAppExtrasVisible"
+            @close="closeCreateChannelAppExtrasModel">
+            <editable-table
+              :tableData="this.channelAppExtras"
+              @onGetPlainObject="getChannelAppExtras"
+              @close="closeCreateChannelAppExtrasModel">
+            </editable-table>
+          </el-dialog>
+        </el-tab-pane>
+      </el-tabs>
   </div>
 </template>
 
@@ -803,6 +808,7 @@
     name: 'chatroom-test',
     data() {
       return {
+        activeName: 'p2p',
         hummer: null,
         appid: Number(APPID),
         roomid: Number(ROOMID),
