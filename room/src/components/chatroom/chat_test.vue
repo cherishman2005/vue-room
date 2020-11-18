@@ -63,556 +63,558 @@
       </refresh-token1>
     </el-dialog>
 
-    <!-- 初始化chatroom -->
-    <p class="text-unit" style="color: #ef4f4f">初始化initChatRoom（如果需要创建聊天室，请先调用createChatRoom）</p>
-    <el-row type="flex">
-      <el-col :span="24" style="height:35px; text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item label="region">
-            <template>
-              <el-select v-model="region" placeholder="region" style="width:150px;">
-                <el-option
-                  v-for="item in regions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          <el-form-item label="roomid">
-            <el-input v-model="roomid" style="width:150px;"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button @click="showSetGroupAttributesModel" style="border-radius:4px">attributes</el-button>
-          </el-form-item>
-          <!--
-          <el-form-item class="search">
-            <el-button type="primary" @click="showCreateGroupModel" style="border-radius: 4px">createChatRoom</el-button>
-          </el-form-item>
-          -->
-          <el-form-item class="search">
-            <el-button type="primary" @click="createChatRoom" style="border-radius: 4px">createChatRoom</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="initChatRoom" style="border-radius: 4px">initChatRoom</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-
-    <!--
-    <el-dialog align="left" title="创建ChatRoom" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
-      <create-group :hummer="hummer" @onGetChatRoom=getChatRoom></create-group>
-    </el-dialog>
-    -->
-
-    <el-dialog align="left" title="atrributes" :visible="setGroupAttributesVisible" @close="closeSetGroupAttributesModel">
-      <editable-table
-      :tableData="this.setGroupAttributes" @onGetPlainObject="onSetChatRoomAttributes"></editable-table>
-    </el-dialog>
-
-    <p class="text-unit">加入/退出聊天室</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px; text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item class="search">
-            <el-button @click="showJoinChatRoomPropsModel" style="border-radius: 4px">joinProps</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="joinChatRoom" style="border-radius: 4px">joinChatRoom</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="leaveChatRoom" style="border-radius: 4px">leaveChatRoom</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{joinOrLeaveRes}}</p>
-    </div>
-
-    <el-dialog align="left" title="joinProps" :visible="joinChatRoomPropsVisible" @close="closeJoinChatRoomPropsModel">
-      <editable-table
-      :tableData="this.joinProps" @onGetPlainObject="onJoinChatRoomProps"></editable-table>
-    </el-dialog>
-
-    <p class="text-unit">更新聊天室信息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px; text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button @click="showUpdateGroupAttributesModel" style="border-radius:4px">attributes</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="updateChatRoomAttributes" style="border-radius:4px">updateChatRoomAttributes</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{updateChatRoomAttributesRes}}</p>
-    </div>
-
-    <el-dialog align="left" title="atrributes" :visible="updateGroupAttributesVisible" @close="closeUpdateGroupAttributesModel">
-      <editable-table
-      :tableData="this.groupAttributes" @onGetPlainObject="onUpdateChatRoomAttributes"></editable-table>
-    </el-dialog>
-
-    <p class="text-unit">获取聊天室属性</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="getChatRoomAttributes" style="border-radius:4px">getChatRoomAttributes</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{getChatRoomAttributesRes}}</p>
-    </div>
-
-    <p class="text-unit">解散聊天室</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px; text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item class="search">
-            <template>
-              <el-popconfirm
-                confirmButtonText='确定'
-                cancelButtonText='取消'
-                icon="el-icon-info"
-                iconColor="red"
-                title="确认解散聊天室Room?"
-                @onConfirm="dismissChatRoom"
-              >
-                <el-button type="primary" slot="reference" style="border-radius: 4px">dismissChatRoom</el-button>
-              </el-popconfirm>
-            </template>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{dismissChatRoomRes}}</p>
-    </div>
-
-    <!--
-    <p class="text-unit">剔除用户</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="uid">
-            <el-input v-model="kickOffUserReq.uid"></el-input>
-          </el-form-item>
-          <el-form-item label="secs">
-            <el-input v-model="kickOffUserReq.secs"></el-input>
-          </el-form-item>
-          <el-form-item label="reason">
-            <el-input v-model="kickOffUserReq.reason"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="kickOffUser" style="border-radius: 4px">kickOffUser</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{kickOffUserRes}}</p>
-    </div>
-    -->
-
-    <p class="text-unit">发送广播消息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;">
-        <el-form :inline="true" size="small">
-          <el-form-item class="search">
-            <el-button @click="showSendGroupMessageAttributesModel" style="border-radius:4px">kvExtra</el-button>
-          </el-form-item>
-          <el-form-item label="content">
-            <el-input v-model="sendGroupMessageReq.content"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="sendGroupMessage" style="border-radius: 4px">sendGroupMessage</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{sendGroupMessageRes}}</p>
-    </div>
-
-    <el-dialog
-      align="left"
-      title="atrributes"
-      :visible="setSendGroupMessageAttributesVisible"
-      @close="closeSendGroupMessageAttributesModel">
-      <editable-table
-        :tableData="this.sendGroupMessageAttributes"
-        @onGetPlainObject="onSendGroupMessageAttributes"
-        @close="closeSendGroupMessageAttributesModel">
-      </editable-table>
-    </el-dialog>
-
-    <p class="text-unit">发送单播消息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item class="search">
-            <el-button @click="showSendSingleUserAttributesModel" style="border-radius:4px">kvExtra</el-button>
-          </el-form-item>
-          <el-form-item label="content">
-            <el-input v-model="sendSingleUserMessageReq.content"></el-input>
-          </el-form-item>
-          <el-form-item label="receiver">
-            <el-input v-model="sendSingleUserMessageReq.receiver"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="sendSingleUserMessage" style="border-radius: 4px">sendSingleUserMessage</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{sendSingleUserMessageRes}}</p>
-    </div>
-
-    <el-dialog
-      align="left"
-      title="atrributes"
-      :visible="setSendSingleUserAttributesVisible"
-      @close="closeSendSingleUserAttributesModel">
-      <editable-table
-        :tableData="this.sendSingleUserAttributes"
-        @onGetPlainObject="onSendSingleUserAttributes"
-        @close="closeSendSingleUserAttributesModel">
-      </editable-table>
-    </el-dialog>
-
-    <p class="text-unit">发送公屏</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="extra">
-            <el-input v-model="sendTextChatReq.extra"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button @click="showSendTextExtAttributesModel" style="border-radius:4px">kvExtra</el-button>
-          </el-form-item>
-          <el-form-item label="chat">
-            <el-input v-model="sendTextChatReq.chat"></el-input>
-          </el-form-item>
-         <el-form-item class="search">
-            <el-button type="primary" @click="sendTextChat" style="border-radius: 4px">sendTextChat</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{sendTextChatRes}}</p>
-    </div>
-
-    <el-dialog
-      align="left"
-      title="extProps"
-      :visible="setSendTextExtAttributesVisible"
-      @close="closeSendTextExtAttributesModel">
-      <editable-table
-        :tableData="this.sendTextExtAttributes"
-        @onGetPlainObject="onSendTextExtAttributes"
-        @close="closeSendTextExtAttributesModel">
-      </editable-table>
-    </el-dialog>
-
-    <el-dialog
-      align="left"
-      title="chatProps"
-      :visible="setSendTextChatAttributesVisible"
-      @close="closeSendTextChatAttributesModel">
-      <editable-table
-        :tableData="this.sendTextChatAttributes"
-        @onGetPlainObject="onSendTextChatAttributes"
-        @close="closeSendTextChatAttributesModel">
-      </editable-table>
-    </el-dialog>
-
-    <!--
-    <p class="text-unit">获取聊天室所有管理员</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px; text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="roler">
-            <el-input v-model="getChatRoomManagerReq.roler" disabled></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="getChatRoomManager" style="border-radius: 4px">getChatRoomManager</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{getChatRoomManagerRes}}</p>
-    </div>
-    -->
-
-    <p class="text-unit">获取聊天室用户数</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px; text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="region">
-            <template>
-              <el-select v-model="getUserCountReq.region" placeholder="region" style="width:150px;">
-                <el-option
-                  v-for="item in regions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-          <el-form-item label="roomid">
-            <el-input v-model="getUserCountReq.roomid" style="width:150px;"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="getUserCount" style="border-radius:4px">getUserCount</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{getUserCountRes}}</p>
-    </div>
-
-    <p class="text-unit">获取聊天室用户列表</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px; text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item label="num">
-            <el-input v-model="getUserListReq.num"></el-input>
-          </el-form-item>
-          <el-form-item label="pos">
-            <el-input v-model="getUserListReq.pos"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="getUserList" style="border-radius:4px">GetUserList</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{getUserListRes}}</p>
-    </div>
-
-    <p class="text-unit">禁言/解禁</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item label="uid">
-            <el-input v-model="muteUserReq.uid"></el-input>
-          </el-form-item>
-          <el-form-item label="secs">
-            <el-input v-model="muteUserReq.secs"></el-input>
-          </el-form-item>
-          <el-form-item label="reason">
-            <el-input v-model="muteUserReq.reason"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="muteUser" style="border-radius:4px">muteUser</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="unMuteUser" style="border-radius:4px">unMuteUser</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{muteUserRes}}</p>
-    </div>
-
-    <p class="text-unit">获取禁言用户列表</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-         <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="getMutedUserList" style="border-radius:4px">getMutedUserList</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{getMutedUserListRes}}</p>
-    </div>
-
-    <p class="text-unit">设置用户属性</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item>
-            <el-button @click="showSetGroupUserAttributesModel" style="border-radius:4px">attributes</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{setUserAttributesRes}}</p>
-    </div>
-
-    <el-dialog align="left" title="atrributes" :visible="setGroupUserAttributesVisible" @close="closeSetGroupUserAttributesModel">
-      <editable-table
-      :tableData="this.groupUserAttributes" @onGetPlainObject="onSetChatRoomUserAttributes"></editable-table>
-    </el-dialog>
-
-    <p class="text-unit">查询用户属性列表</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="getUserAttributesList" style="border-radius:4px">getUserAttributesList</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{getUserAttributesListRes}}</p>
-    </div>
-
-    <p class="text-unit">HummerSDK 当前所处的状态</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="getConnectionState" style="border-radius:4px">getConnectionState</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{state}}</p>
-    </div>
-
-    <p class="text-unit">查询历史消息</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px; text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item label="msgTypes">
-            <el-input v-model="fetchHistoryMessagesReq.msgTypes"></el-input>
-          </el-form-item>
-          <el-form-item label="direction">
-            <el-input v-model="fetchHistoryMessagesReq.direction"></el-input>
-          </el-form-item>
-          <el-form-item label="limit">
-            <el-input v-model="fetchHistoryMessagesReq.limit"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="fetchHistoryMessages" style="border-radius:4px">fetchHistoryMessages</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{fetchHistoryMessagesRes}}</p>
-    </div>
-
-    <el-divider content-position="left">房间扩展属性</el-divider>
-    <p class="text-unit">设置房间扩展属性</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item>
-            <el-button @click="showSetRoomExtraAttributesModel" style="border-radius:4px">extraAttributes</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="setRoomExtraAttributes" style="border-radius: 4px">setRoomExtraAttributes</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{setRoomExtraAttributesRes}}</p>
-    </div>
-
-    <el-dialog align="left" title="extraAttributes" :visible="setRoomExtraAttributesVisible" @close="closeSetRoomExtraAttributesModel">
-      <editable-table
-      :tableData="setRoomExtraAttributesReq.extraAttributes" @onGetPlainObject="onSetRoomExtraAttributes"></editable-table>
-    </el-dialog>
-
-    <p class="text-unit">更新房间某些扩展属性</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;" >
-        <el-form :inline="true" size="small">
-          <el-form-item>
-            <el-button @click="showUpdateRoomExtraAttributesModel" style="border-radius:4px">extraAttributes</el-button>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="updateRoomExtraAttributes" style="border-radius:4px">updateRoomExtraAttributes</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{updateRoomExtraAttributesRes}}</p>
-    </div>
-
-    <el-dialog align="left" title="extraAttributes" :visible="updateRoomExtraAttributesVisible" @close="closeUpdateRoomExtraAttributesModel">
-      <editable-table
-      :tableData="updateRoomExtraAttributesReq.extraAttributes" @onGetPlainObject="onUpdateRoomExtraAttributes"></editable-table>
-    </el-dialog>
-
-    <p class="text-unit">删除房间某些扩展属性</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;">
-        <el-form :inline="true" size="small">
-          <el-form-item label="extraKeys">
-            <el-input v-model="deleteRoomExtraAttributesReq.extraKeys"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="deleteRoomExtraAttributes" style="border-radius:4px">deleteRoomExtraAttributes</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{deleteRoomExtraAttributesRes}}</p>
-    </div>
-
-    <p class="text-unit">清空房间扩展属性</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px;text-align:left;">
-        <el-form :inline="true"  size="small">
-          <el-form-item class="search">
-            <el-button type="primary" @click="clearRoomExtraAttributes" style="border-radius:4px">clearRoomExtraAttributes</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{clearRoomExtraAttributesRes}}</p>
-    </div>
-
-    <p class="text-unit">查询房间扩展属性(key用","隔开)</p>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="24" style="height:35px; text-align:left;">
-        <el-form :inline="true" size="small">
-          <el-form-item label="extraKeys">
-            <el-input v-model="fetchRoomExtraAttributesReq.extraKeys"></el-input>
-          </el-form-item>
-          <el-form-item class="search">
-            <el-button type="primary" @click="fetchRoomExtraAttributes" style="border-radius:4px">fetchRoomExtraAttributes</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <div class="text">
-      <p class="rsp-text" type="textarea" contenteditable="false">{{fetchRoomExtraAttributesRes}}</p>
-    </div>
-
-    <el-divider content-position="left">消息通道</el-divider>
+    <el-divider content-position="left">chatroom-demo</el-divider>
       <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+        <el-tab-pane label="chatroom聊天室" name="chatroom">
+          <!-- 初始化chatroom -->
+          <p class="text-unit" style="color: #ef4f4f">初始化initChatRoom（如果需要创建聊天室，请先调用createChatRoom）</p>
+          <el-row type="flex">
+            <el-col :span="24" style="height:35px; text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item label="region">
+                  <template>
+                    <el-select v-model="region" placeholder="region" style="width:150px;">
+                      <el-option
+                        v-for="item in regions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </template>
+                </el-form-item>
+                <el-form-item label="roomid">
+                  <el-input v-model="roomid" style="width:150px;"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button @click="showSetGroupAttributesModel" style="border-radius:4px">attributes</el-button>
+                </el-form-item>
+                <!--
+                <el-form-item class="search">
+                  <el-button type="primary" @click="showCreateGroupModel" style="border-radius: 4px">createChatRoom</el-button>
+                </el-form-item>
+                -->
+                <el-form-item class="search">
+                  <el-button type="primary" @click="createChatRoom" style="border-radius: 4px">createChatRoom</el-button>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="initChatRoom" style="border-radius: 4px">initChatRoom</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+
+          <!--
+          <el-dialog align="left" title="创建ChatRoom" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
+            <create-group :hummer="hummer" @onGetChatRoom=getChatRoom></create-group>
+          </el-dialog>
+          -->
+
+          <el-dialog align="left" title="atrributes" :visible="setGroupAttributesVisible" @close="closeSetGroupAttributesModel">
+            <editable-table
+            :tableData="this.setGroupAttributes" @onGetPlainObject="onSetChatRoomAttributes"></editable-table>
+          </el-dialog>
+
+          <p class="text-unit">加入/退出聊天室</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24"  style="height:35px; text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item class="search">
+                  <el-button @click="showJoinChatRoomPropsModel" style="border-radius: 4px">joinProps</el-button>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="joinChatRoom" style="border-radius: 4px">joinChatRoom</el-button>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="leaveChatRoom" style="border-radius: 4px">leaveChatRoom</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{joinOrLeaveRes}}</p>
+          </div>
+
+          <el-dialog align="left" title="joinProps" :visible="joinChatRoomPropsVisible" @close="closeJoinChatRoomPropsModel">
+            <editable-table
+            :tableData="this.joinProps" @onGetPlainObject="onJoinChatRoomProps"></editable-table>
+          </el-dialog>
+
+          <p class="text-unit">更新聊天室信息</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24"  style="height:35px; text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item class="search">
+                  <el-button @click="showUpdateGroupAttributesModel" style="border-radius:4px">attributes</el-button>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="updateChatRoomAttributes" style="border-radius:4px">updateChatRoomAttributes</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{updateChatRoomAttributesRes}}</p>
+          </div>
+
+          <el-dialog align="left" title="atrributes" :visible="updateGroupAttributesVisible" @close="closeUpdateGroupAttributesModel">
+            <editable-table
+            :tableData="this.groupAttributes" @onGetPlainObject="onUpdateChatRoomAttributes"></editable-table>
+          </el-dialog>
+
+          <p class="text-unit">获取聊天室属性</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24"  style="height:35px;text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item class="search">
+                  <el-button type="primary" @click="getChatRoomAttributes" style="border-radius:4px">getChatRoomAttributes</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{getChatRoomAttributesRes}}</p>
+          </div>
+
+          <p class="text-unit">解散聊天室</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px; text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item class="search">
+                  <template>
+                    <el-popconfirm
+                      confirmButtonText='确定'
+                      cancelButtonText='取消'
+                      icon="el-icon-info"
+                      iconColor="red"
+                      title="确认解散聊天室Room?"
+                      @onConfirm="dismissChatRoom"
+                    >
+                      <el-button type="primary" slot="reference" style="border-radius: 4px">dismissChatRoom</el-button>
+                    </el-popconfirm>
+                  </template>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{dismissChatRoomRes}}</p>
+          </div>
+
+          <!--
+          <p class="text-unit">剔除用户</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24"  style="height:35px;text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item label="uid">
+                  <el-input v-model="kickOffUserReq.uid"></el-input>
+                </el-form-item>
+                <el-form-item label="secs">
+                  <el-input v-model="kickOffUserReq.secs"></el-input>
+                </el-form-item>
+                <el-form-item label="reason">
+                  <el-input v-model="kickOffUserReq.reason"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="kickOffUser" style="border-radius: 4px">kickOffUser</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{kickOffUserRes}}</p>
+          </div>
+          -->
+
+          <p class="text-unit">发送广播消息</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;">
+              <el-form :inline="true" size="small">
+                <el-form-item class="search">
+                  <el-button @click="showSendGroupMessageAttributesModel" style="border-radius:4px">kvExtra</el-button>
+                </el-form-item>
+                <el-form-item label="content">
+                  <el-input v-model="sendGroupMessageReq.content"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="sendGroupMessage" style="border-radius: 4px">sendGroupMessage</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{sendGroupMessageRes}}</p>
+          </div>
+
+          <el-dialog
+            align="left"
+            title="atrributes"
+            :visible="setSendGroupMessageAttributesVisible"
+            @close="closeSendGroupMessageAttributesModel">
+            <editable-table
+              :tableData="this.sendGroupMessageAttributes"
+              @onGetPlainObject="onSendGroupMessageAttributes"
+              @close="closeSendGroupMessageAttributesModel">
+            </editable-table>
+          </el-dialog>
+
+          <p class="text-unit">发送单播消息</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item class="search">
+                  <el-button @click="showSendSingleUserAttributesModel" style="border-radius:4px">kvExtra</el-button>
+                </el-form-item>
+                <el-form-item label="content">
+                  <el-input v-model="sendSingleUserMessageReq.content"></el-input>
+                </el-form-item>
+                <el-form-item label="receiver">
+                  <el-input v-model="sendSingleUserMessageReq.receiver"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="sendSingleUserMessage" style="border-radius: 4px">sendSingleUserMessage</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{sendSingleUserMessageRes}}</p>
+          </div>
+
+          <el-dialog
+            align="left"
+            title="atrributes"
+            :visible="setSendSingleUserAttributesVisible"
+            @close="closeSendSingleUserAttributesModel">
+            <editable-table
+              :tableData="this.sendSingleUserAttributes"
+              @onGetPlainObject="onSendSingleUserAttributes"
+              @close="closeSendSingleUserAttributesModel">
+            </editable-table>
+          </el-dialog>
+
+          <p class="text-unit">发送公屏</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item label="extra">
+                  <el-input v-model="sendTextChatReq.extra"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button @click="showSendTextExtAttributesModel" style="border-radius:4px">kvExtra</el-button>
+                </el-form-item>
+                <el-form-item label="chat">
+                  <el-input v-model="sendTextChatReq.chat"></el-input>
+                </el-form-item>
+              <el-form-item class="search">
+                  <el-button type="primary" @click="sendTextChat" style="border-radius: 4px">sendTextChat</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{sendTextChatRes}}</p>
+          </div>
+
+          <el-dialog
+            align="left"
+            title="extProps"
+            :visible="setSendTextExtAttributesVisible"
+            @close="closeSendTextExtAttributesModel">
+            <editable-table
+              :tableData="this.sendTextExtAttributes"
+              @onGetPlainObject="onSendTextExtAttributes"
+              @close="closeSendTextExtAttributesModel">
+            </editable-table>
+          </el-dialog>
+
+          <el-dialog
+            align="left"
+            title="chatProps"
+            :visible="setSendTextChatAttributesVisible"
+            @close="closeSendTextChatAttributesModel">
+            <editable-table
+              :tableData="this.sendTextChatAttributes"
+              @onGetPlainObject="onSendTextChatAttributes"
+              @close="closeSendTextChatAttributesModel">
+            </editable-table>
+          </el-dialog>
+
+          <!--
+          <p class="text-unit">获取聊天室所有管理员</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24"  style="height:35px; text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item label="roler">
+                  <el-input v-model="getChatRoomManagerReq.roler" disabled></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="getChatRoomManager" style="border-radius: 4px">getChatRoomManager</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{getChatRoomManagerRes}}</p>
+          </div>
+          -->
+
+          <p class="text-unit">获取聊天室用户数</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24"  style="height:35px; text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item label="region">
+                  <template>
+                    <el-select v-model="getUserCountReq.region" placeholder="region" style="width:150px;">
+                      <el-option
+                        v-for="item in regions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </template>
+                </el-form-item>
+                <el-form-item label="roomid">
+                  <el-input v-model="getUserCountReq.roomid" style="width:150px;"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="getUserCount" style="border-radius:4px">getUserCount</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{getUserCountRes}}</p>
+          </div>
+
+          <p class="text-unit">获取聊天室用户列表</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24"  style="height:35px; text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item label="num">
+                  <el-input v-model="getUserListReq.num"></el-input>
+                </el-form-item>
+                <el-form-item label="pos">
+                  <el-input v-model="getUserListReq.pos"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="getUserList" style="border-radius:4px">GetUserList</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{getUserListRes}}</p>
+          </div>
+
+          <p class="text-unit">禁言/解禁</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item label="uid">
+                  <el-input v-model="muteUserReq.uid"></el-input>
+                </el-form-item>
+                <el-form-item label="secs">
+                  <el-input v-model="muteUserReq.secs"></el-input>
+                </el-form-item>
+                <el-form-item label="reason">
+                  <el-input v-model="muteUserReq.reason"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="muteUser" style="border-radius:4px">muteUser</el-button>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="unMuteUser" style="border-radius:4px">unMuteUser</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{muteUserRes}}</p>
+          </div>
+
+          <p class="text-unit">获取禁言用户列表</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item class="search">
+                  <el-button type="primary" @click="getMutedUserList" style="border-radius:4px">getMutedUserList</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{getMutedUserListRes}}</p>
+          </div>
+
+          <p class="text-unit">设置用户属性</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item>
+                  <el-button @click="showSetGroupUserAttributesModel" style="border-radius:4px">attributes</el-button>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="setUserAttributes" style="border-radius: 4px">setUserAttributes</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{setUserAttributesRes}}</p>
+          </div>
+
+          <el-dialog align="left" title="atrributes" :visible="setGroupUserAttributesVisible" @close="closeSetGroupUserAttributesModel">
+            <editable-table
+            :tableData="this.groupUserAttributes" @onGetPlainObject="onSetChatRoomUserAttributes"></editable-table>
+          </el-dialog>
+
+          <p class="text-unit">查询用户属性列表</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item class="search">
+                  <el-button type="primary" @click="getUserAttributesList" style="border-radius:4px">getUserAttributesList</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{getUserAttributesListRes}}</p>
+          </div>
+
+          <p class="text-unit">HummerSDK 当前所处的状态</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true"  size="small">
+                <el-form-item class="search">
+                  <el-button type="primary" @click="getConnectionState" style="border-radius:4px">getConnectionState</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{state}}</p>
+          </div>
+
+          <p class="text-unit">查询历史消息</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px; text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item label="msgTypes">
+                  <el-input v-model="fetchHistoryMessagesReq.msgTypes"></el-input>
+                </el-form-item>
+                <el-form-item label="direction">
+                  <el-input v-model="fetchHistoryMessagesReq.direction"></el-input>
+                </el-form-item>
+                <el-form-item label="limit">
+                  <el-input v-model="fetchHistoryMessagesReq.limit"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="fetchHistoryMessages" style="border-radius:4px">fetchHistoryMessages</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{fetchHistoryMessagesRes}}</p>
+          </div>
+
+          <el-divider content-position="left">房间扩展属性</el-divider>
+          <p class="text-unit">设置房间扩展属性</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item>
+                  <el-button @click="showSetRoomExtraAttributesModel" style="border-radius:4px">extraAttributes</el-button>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="setRoomExtraAttributes" style="border-radius: 4px">setRoomExtraAttributes</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{setRoomExtraAttributesRes}}</p>
+          </div>
+
+          <el-dialog align="left" title="extraAttributes" :visible="setRoomExtraAttributesVisible" @close="closeSetRoomExtraAttributesModel">
+            <editable-table
+            :tableData="setRoomExtraAttributesReq.extraAttributes" @onGetPlainObject="onSetRoomExtraAttributes"></editable-table>
+          </el-dialog>
+
+          <p class="text-unit">更新房间某些扩展属性</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;" >
+              <el-form :inline="true" size="small">
+                <el-form-item>
+                  <el-button @click="showUpdateRoomExtraAttributesModel" style="border-radius:4px">extraAttributes</el-button>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="updateRoomExtraAttributes" style="border-radius:4px">updateRoomExtraAttributes</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{updateRoomExtraAttributesRes}}</p>
+          </div>
+
+          <el-dialog align="left" title="extraAttributes" :visible="updateRoomExtraAttributesVisible" @close="closeUpdateRoomExtraAttributesModel">
+            <editable-table
+            :tableData="updateRoomExtraAttributesReq.extraAttributes" @onGetPlainObject="onUpdateRoomExtraAttributes"></editable-table>
+          </el-dialog>
+
+          <p class="text-unit">删除房间某些扩展属性</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;">
+              <el-form :inline="true" size="small">
+                <el-form-item label="extraKeys">
+                  <el-input v-model="deleteRoomExtraAttributesReq.extraKeys"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="deleteRoomExtraAttributes" style="border-radius:4px">deleteRoomExtraAttributes</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{deleteRoomExtraAttributesRes}}</p>
+          </div>
+
+          <p class="text-unit">清空房间扩展属性</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px;text-align:left;">
+              <el-form :inline="true"  size="small">
+                <el-form-item class="search">
+                  <el-button type="primary" @click="clearRoomExtraAttributes" style="border-radius:4px">clearRoomExtraAttributes</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{clearRoomExtraAttributesRes}}</p>
+          </div>
+
+          <p class="text-unit">查询房间扩展属性(key用","隔开)</p>
+          <el-row type="flex" class="row-bg">
+            <el-col :span="24" style="height:35px; text-align:left;">
+              <el-form :inline="true" size="small">
+                <el-form-item label="extraKeys">
+                  <el-input v-model="fetchRoomExtraAttributesReq.extraKeys"></el-input>
+                </el-form-item>
+                <el-form-item class="search">
+                  <el-button type="primary" @click="fetchRoomExtraAttributes" style="border-radius:4px">fetchRoomExtraAttributes</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <div class="text">
+            <p class="rsp-text" type="textarea" contenteditable="false">{{fetchRoomExtraAttributesRes}}</p>
+          </div>
+        </el-tab-pane>
+        
         <el-tab-pane label="P2P消息" name="p2p">
           <p class="text-unit">查询在线状态(uid用","隔开)</p>
           <el-row type="flex" class="row-bg">
@@ -808,7 +810,7 @@
     name: 'chatroom-test',
     data() {
       return {
-        activeName: 'p2p',
+        activeName: 'chatroom',
         hummer: null,
         appid: Number(APPID),
         roomid: Number(ROOMID),
