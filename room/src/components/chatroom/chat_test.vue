@@ -574,6 +574,24 @@
         <div class="text">
           <p class="rsp-text" type="textarea" contenteditable="false">{{fetchRoomExtraAttributesRes}}</p>
         </div>
+
+        <el-divider content-position="left">特殊案例</el-divider>
+        <el-row type="flex" class="row-bg">
+          <el-button @click="set32RoomExtraAttributes" type="primary" size="small">设置32个房间扩展属性</el-button>
+          <el-button @click="set33RoomExtraAttributes" type="primary" size="small">设置33个房间扩展属性</el-button>
+        </el-row>
+        <div class="text">
+          <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set32RoomExtraAttributesRes}}</p>
+        </div>
+
+        <el-row type="flex" class="row-bg">
+          <el-button @click="update32RoomExtraAttributes" type="primary" size="small">更新32个房间扩展属性</el-button>
+          <el-button @click="update33RoomExtraAttributes" type="primary" size="small">更新33个房间扩展属性</el-button>
+        </el-row>
+        <div class="text">
+          <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{update32RoomExtraAttributesRes}}</p>
+        </div>
+
       </el-tab-pane>
       
       <el-tab-pane label="P2P消息" name="p2p">
@@ -697,7 +715,7 @@
 
         <p class="text-unit">发送Channel消息</p>
         <el-row type="flex" class="row-bg">
-          <el-col :span="24" style="height:35px;text-align:left;" >
+          <el-col :span="24" style="height:35px; text-align:left;" >
             <el-form :inline="true" size="small">
               <el-form-item label="isOffline">
                 <template>
@@ -796,7 +814,7 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { getStorage, setStorage, padMs } from '@/utils/BaseUtil'
+  import { getStorage, setStorage, padMs, generateAttributes } from '@/utils/BaseUtil'
   import { getRegions, getRegionRoomId, getRegionChannelId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import RefreshToken1 from '@/components/token/refresh_token1.vue';
@@ -968,6 +986,8 @@
         },
         sendP2CMessageRes: "",
         joinProps: {},
+        set32RoomExtraAttributesRes: "",
+        update32RoomExtraAttributesRes: "",
       }
     },
     components: {
@@ -1720,6 +1740,66 @@
           log4test("fetchRoomExtraAttributes res=", e);
           this.fetchRoomExtraAttributesRes = JSON.stringify(e);
         }
+      },
+
+      set32RoomExtraAttributes() {
+        this.setMultiRoomExtraAttributes(32)
+      },
+      set33RoomExtraAttributes() {
+        this.setMultiRoomExtraAttributes(33)
+      },
+
+      async setMultiRoomExtraAttributes(size) {
+        if (!this.chatClient) {
+          log4test("chatroom not init");
+          return;
+        }
+        
+        try {
+          let extraAttributes = generateAttributes(size, "set")
+          let req = { extraAttributes };
+   
+          log4test('setRoomExtraAttributes req=', req);
+
+          this.set32RoomExtraAttributesRes = '';
+          const res = await this.chatClient.chatroom.setRoomExtraAttributes(req);
+          log4test("setRoomExtraAttributes res=" , res);
+          this.set32RoomExtraAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("setRoomExtraAttributes res=" , e);
+          this.set32RoomExtraAttributesRes = JSON.stringify(e);
+        }
+
+      },
+
+      update32RoomExtraAttributes() {
+        this.updateMultiRoomExtraAttributes(32)
+      },
+      update33RoomExtraAttributes() {
+        this.updateMultiRoomExtraAttributes(33)
+      },
+
+      async updateMultiRoomExtraAttributes(size) {
+        if (!this.chatClient) {
+          log4test("chatroom not init");
+          return;
+        }
+
+        try {
+          let extraAttributes = generateAttributes(size, "update")
+          let req = { extraAttributes };
+   
+          log4test('updateRoomExtraAttributes req=', req);
+
+          this.update32RoomExtraAttributesRes = '';
+          const res = await this.chatClient.chatroom.updateRoomExtraAttributes(req);
+          log4test("updateRoomExtraAttributes res=" , res);
+          this.update32RoomExtraAttributesRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("updateRoomExtraAttributes res=" , e);
+          this.update32RoomExtraAttributesRes = JSON.stringify(e);
+        }
+
       },
       
       // 消息通道
