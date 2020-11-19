@@ -100,15 +100,15 @@
 
     <p class="text-unit">房间事件监听设置</p>
     <el-row type="flex" class="row-bg">
-      <el-button type="primary" @click="addRoomEventMonitor">+ 添加房间事件监听</el-button>
-      <el-button type="primary" @click="removeRoomEventMonitor">- 移除房间事件监听</el-button>
+      <el-button type="primary" size="small" @click="addRoomEventMonitor">+ 添加房间事件监听</el-button>
+      <el-button type="primary" size="small" @click="removeRoomEventMonitor">- 移除房间事件监听</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height: 20px" type="textarea" contenteditable="false">{{monitorRoomEventRes}}</p>
     </div>
     <el-row type="flex" class="row-bg">
-      <el-button type="primary" @click="addRoomNumberEventMonitor">+ 添加成员事件监听</el-button>
-      <el-button type="primary" @click="removeRoomNumberEventMonitor">- 移除成员事件监听</el-button>
+      <el-button type="primary" size="small" @click="addRoomNumberEventMonitor">+ 添加成员事件监听</el-button>
+      <el-button type="primary" size="small" @click="removeRoomNumberEventMonitor">- 移除成员事件监听</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height: 20px" type="textarea" contenteditable="false">{{monitorRoomNumberEventRes}}</p>
@@ -319,7 +319,7 @@
     <p class="text-unit">查询房间用户列表</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+        <el-form :inline="true" size="small">
           <el-form-item class="search">
             <el-button type="primary" @click="getMembers" style="border-radius: 4px">getMembers</el-button>
           </el-form-item>
@@ -332,8 +332,8 @@
 
     <p class="text-unit">查询单个或多个房间的成员人数</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+      <el-col :span="24" style="height:35px;text-align:left;" >
+        <el-form :inline="true" size="small">
           <el-form-item label="region">
             <template>
               <el-select v-model="getRoomMemberCountReq.region" placeholder="region" style="width:150px;">
@@ -361,7 +361,7 @@
 
     <p class="text-unit">设置房间属性</p>
     <el-row type="flex" class="row-bg">
-      <el-col :span="24"  style="height:35px;text-align:left;" >
+      <el-col :span="24" style="height:35px;text-align:left;" >
         <el-form :inline="true" size="small">
           <el-form-item label="enableNotification">
             <template>
@@ -425,7 +425,7 @@
     <p class="text-unit">清空房间属性</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px;text-align:left;" >
-        <el-form :inline="true"  size="small">
+        <el-form :inline="true" size="small">
           <el-form-item label="enableNotification">
             <template>
               <el-select v-model="clearRoomAttributesReq.options.enableNotification" placeholder="false" style="width:120px;">
@@ -518,8 +518,8 @@
     <el-divider content-position="left">P2P消息</el-divider>
     <p class="text-unit">事件监听设置</p>
     <el-row type="flex" class="row-bg">
-      <el-button @click="addP2PEventMonitor" type="primary">+ 添加Peer事件监听</el-button>
-      <el-button @click="removeP2PEventMonitor" type="primary">- 移除Peer事件监听</el-button>
+      <el-button @click="addP2PEventMonitor" type="primary" size="small">+ 添加Peer事件监听</el-button>
+      <el-button @click="removeP2PEventMonitor" type="primary" size="small">- 移除Peer事件监听</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height: 20px" type="textarea" contenteditable="false">{{p2pEventMonitorRes}}</p>
@@ -555,7 +555,7 @@
     <p class="text-unit">批量查询登录在线状态</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24"  style="height:35px; text-align:left;" >
-        <el-form :inline="true"  size="small">
+        <el-form :inline="true" size="small">
           <el-form-item label="uids">
             <el-input v-model="queryUsersOnlineStatusReq.uids"></el-input>
           </el-form-item>
@@ -572,14 +572,14 @@
     <el-divider content-position="left">特殊案例</el-divider>
     <p class="text-unit">房间消息</p>
     <el-row type="flex" class="row-bg">
-      <el-button @click="send32KMessage" type="primary">发32K内容的房间消息</el-button>
+      <el-button @click="send32KMessage" type="primary" size="small">发32K内容的房间消息</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{send32KMessageRes}}</p>
     </div>
 
     <el-row type="flex" class="row-bg">
-      <el-button @click="sendMessageWith1KExtras" type="primary">发1K扩展字段的房间消息</el-button>
+      <el-button @click="sendMessageWith1KExtras" type="primary" size="small">发1K扩展字段的房间消息</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{sendMessageWith1KBExtrasRes}}</p>
@@ -587,14 +587,14 @@
 
     <p class="text-unit">P2P消息</p>
     <el-row type="flex" class="row-bg">
-      <el-button @click="send32KBMessageToUser" type="primary">发32K内容的P2P消息</el-button>
+      <el-button @click="send32KBMessageToUser" type="primary" size="small">发32K内容的P2P消息</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{send32KBMessageToUserRes}}</p>
     </div>
 
     <el-row type="flex" class="row-bg">
-      <el-button @click="sendMessageWith1KBExtraToUser" type="primary">发1K扩展字段的P2P消息</el-button>
+      <el-button @click="sendMessageWith1KBExtraToUser" type="primary" size="small">发1K扩展字段的P2P消息</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{sendMessageWith1KBExtraToUserRes}}</p>
@@ -602,46 +602,46 @@
 
     <p class="text-unit">属性设置</p>
     <el-row type="flex" class="row-bg">
-      <el-button @click="set8KBRoomAttributes" type="primary">设置8K的房间属性</el-button>
+      <el-button @click="set8KBRoomAttributes" type="primary" size="small">设置8K的房间属性</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set8KBRoomAttributesRes}}</p>
     </div>
 
     <el-row type="flex" class="row-bg">
-      <el-button @click="set8KBUserAttributes" type="primary">设置8K的用户属性</el-button>
+      <el-button @click="set8KBUserAttributes" type="primary" size="small">设置8K的用户属性</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set8KBUserAttributesRes}}</p>
     </div>
 
     <el-row type="flex" class="row-bg">
-      <el-button @click="set32RoomAttributes" type="primary">设置32个房间属性</el-button>
-      <el-button @click="set33RoomAttributes" type="primary">设置33个房间属性</el-button>
+      <el-button @click="set32RoomAttributes" type="primary" size="small">设置32个房间属性</el-button>
+      <el-button @click="set33RoomAttributes" type="primary" size="small">设置33个房间属性</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set32RoomAttributesRes}}</p>
     </div>
 
     <el-row type="flex" class="row-bg">
-      <el-button @click="update32RoomAttributes" type="primary">增加或更新32个房间属性</el-button>
-      <el-button @click="update33RoomAttributes" type="primary">增加或更新33个房间属性</el-button>
+      <el-button @click="update32RoomAttributes" type="primary" size="small">增加或更新32个房间属性</el-button>
+      <el-button @click="update33RoomAttributes" type="primary" size="small">增加或更新33个房间属性</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{update32RoomAttributesRes}}</p>
     </div>
 
     <el-row type="flex" class="row-bg">
-      <el-button @click="set32UserAttributes" type="primary">设置32个用户属性</el-button>
-      <el-button @click="set33UserAttributes" type="primary">设置33个用户属性</el-button>
+      <el-button @click="set32UserAttributes" type="primary" size="small">设置32个用户属性</el-button>
+      <el-button @click="set33UserAttributes" type="primary" size="small">设置33个用户属性</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{set32UserAttributesRes}}</p>
     </div>
 
     <el-row type="flex" class="row-bg">
-      <el-button @click="update32UserAttributes" type="primary">增加或更新32个用户属性</el-button>
-      <el-button @click="update33UserAttributes" type="primary">增加或更新33个用户属性</el-button>
+      <el-button @click="update32UserAttributes" type="primary" size="small">增加或更新32个用户属性</el-button>
+      <el-button @click="update33UserAttributes" type="primary" size="small">增加或更新33个用户属性</el-button>
     </el-row>
     <div class="text">
       <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{update32UserAttributesRes}}</p>
