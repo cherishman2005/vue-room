@@ -464,13 +464,16 @@
           <el-col :span="24" style="height:35px; text-align:left;" >
             <el-form :inline="true" size="small">
               <el-form-item label="msgTypes">
-                <el-input v-model="fetchHistoryMessagesReq.msgTypes"></el-input>
+                <el-input v-model="fetchHistoryMessagesReq.msgTypes" style="width:50px;"></el-input>
               </el-form-item>
               <el-form-item label="direction">
-                <el-input v-model="fetchHistoryMessagesReq.direction"></el-input>
+                <el-input v-model="fetchHistoryMessagesReq.direction" style="width:50px;"></el-input>
               </el-form-item>
               <el-form-item label="limit">
-                <el-input v-model="fetchHistoryMessagesReq.limit"></el-input>
+                <el-input v-model="fetchHistoryMessagesReq.limit" style="width:100px;"></el-input>
+              </el-form-item>
+              <el-form-item label="anchor">
+                <el-input v-model="fetchHistoryMessagesReq.anchor" style="width:250px;"></el-input>
               </el-form-item>
               <el-form-item class="search">
                 <el-button type="primary" @click="fetchHistoryMessages" style="border-radius:4px">fetchHistoryMessages</el-button>
@@ -948,6 +951,7 @@
           msgTypes: '0',
           direction: 0,
           limit: 100,
+          anchor: "",
         },
         fetchHistoryMessagesRes: '',
         setRoomExtraAttributesReq: {
@@ -1601,7 +1605,16 @@
           let direction = this.fetchHistoryMessagesReq.direction;
           let limit = this.fetchHistoryMessagesReq.limit;
 
-          let req = { msgTypes, direction, limit };
+          let anchor = this.fetchHistoryMessagesReq.anchor;
+          let req;
+          if (!anchor || anchor.length === 0) {
+            req = { msgTypes, direction, limit };
+          } else {
+            let items = anchor.split(":");
+            let anchorTimestamp = Number(items[0]) || 0;
+            let anchorUuid = items[1] || "";
+            req = { msgTypes, direction, limit, anchorUuid, anchorTimestamp };
+          }
           log4test('fetchHistoryMessages req=', req);
 
           this.fetchHistoryMessagesRes = '';
