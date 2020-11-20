@@ -544,7 +544,7 @@
           :tableData="updateRoomExtraAttributesReq.extraAttributes" @onGetPlainObject="onUpdateRoomExtraAttributes"></editable-table>
         </el-dialog>
 
-        <p class="text-unit">删除房间某些扩展属性</p>
+        <p class="text-unit">删除房间某些扩展属性(key用","隔开)</p>
         <el-row type="flex" class="row-bg">
           <el-col :span="24" style="height:35px;text-align:left;">
             <el-form :inline="true" size="small">
@@ -741,6 +741,7 @@
         <el-row type="flex" class="row-bg">
           <el-col :span="24" style="height:35px; text-align:left;" >
             <el-form :inline="true" size="small">
+              <!--
               <el-form-item label="isOffline">
                 <template>
                   <el-select v-model="sendP2CMessageReq.options.isOffline" placeholder="isOffline" style="width:80px;">
@@ -753,6 +754,7 @@
                   </el-select>
                 </template>
               </el-form-item>
+              -->
               <el-form-item>
                 <el-button @click="showCreateChannelAppExtrasModel" style="border-radius:4px">appExtras</el-button>
               </el-form-item>
@@ -1008,7 +1010,7 @@
         channelAppExtras: {},
         sendP2CMessageReq: {
           content: 'js_sdk sendP2CMessage',
-          options: {isOffline: false},
+          //options: {isOffline: false},
         },
         sendP2CMessageRes: "",
         joinProps: {},
@@ -1039,6 +1041,7 @@
         setSendTextChatAttributesVisible: state => state.setSendTextChatAttributes.setSendTextChatAttributesVisible,
         joinChatRoomPropsVisible: state => state.joinChatRoomProps.joinChatRoomPropsVisible,
         setRoomExtraAttributesVisible: state => state.setRoomExtraAttributes.setRoomExtraAttributesVisible,
+        updateRoomExtraAttributesVisible: state => state.updateRoomExtraAttributes.updateRoomExtraAttributesVisible,
         createPeerAppExtrasVisible: state => state.peerAppExtras.createPeerAppExtrasVisible,
         createChannelAppExtrasVisible: state => state.channelAppExtras.createChannelAppExtrasVisible,
       })
@@ -2060,7 +2063,7 @@
 
         try {
           let content = this.sendP2CMessageReq.content;
-          let isOffline = this.sendP2CMessageReq.options.isOffline || false;
+          //let isOffline = this.sendP2CMessageReq.options.isOffline || false;
 
           let message = Hummer.createMessage(0, content);
           log4test("createMessage success");
@@ -2069,7 +2072,7 @@
           let req = {
             message: message,
             appExtras: this.channelAppExtras,
-            options: {isOffline: isOffline},
+            //options: {isOffline: isOffline},
           }
           log4test(`${this.getCurrentChannelTag()} sendP2CMessage req=`, req);
 
