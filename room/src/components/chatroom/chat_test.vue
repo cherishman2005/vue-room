@@ -838,7 +838,7 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { getStorage, setStorage, padMs, generateAttributes } from '@/utils/BaseUtil'
+  import { getStorage, setStorage, padMs, generateAttributes, timestampToTime } from '@/utils/BaseUtil'
   import { getRegions, getRegionRoomId, getRegionChannelId } from '@/components/room_config.js';
   import RefreshToken from '@/components/token/refresh_token.vue';
   import RefreshToken1 from '@/components/token/refresh_token1.vue';
@@ -1602,7 +1602,8 @@
       getAnchors(msgs) {
         let anchors = [];
         for (let msg of msgs) {
-          anchors.push({value: `${msg.timestamp}:${msg.uuid}`, label: `#${msg.timestamp}#${msg.uuid}`});
+          let time = timestampToTime(msg.timestamp);
+          anchors.push({value: `${msg.timestamp}:${msg.uuid}`, label: `#${time}#${msg.uuid}`});
         }
         return anchors;
       },
