@@ -658,12 +658,19 @@
             @close="closeCreatePeerAppExtrasModel">
           </editable-table>
         </el-dialog>
+
+        <el-divider content-position="left">特殊案例</el-divider>
+        <el-row type="flex" class="row-bg">
+          <el-button @click="sendP2PMessage_Key32" type="primary" size="small">P2P设置32个属性</el-button>
+          <el-button @click="sendP2PMessage_Key33" type="primary" size="small">P2P设置33个属性</el-button>
+        </el-row>
+        <div class="text">
+          <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{sendP2PMessage_Key32Res}}</p>
+        </div>
+
       </el-tab-pane>
       
-      <el-tab-pane label="P2C消息" name="p2c">
-        <!-- Channel消息 -->
-        <!--<el-divider content-position="left">Channel消息</el-divider>-->
-
+      <el-tab-pane label="P2C Channel消息" name="p2c">
         <p class="text-unit" style="color: #ef4f4f">创建Channel实例</p>
         <el-row type="flex">
           <el-col :span="24" style="height:35px;text-align:left;">
@@ -988,6 +995,7 @@
         joinProps: {},
         set32RoomExtraAttributesRes: "",
         update32RoomExtraAttributesRes: "",
+        sendP2PMessage_Key32Res: "",
       }
     },
     components: {
@@ -1870,6 +1878,54 @@
           this.sendP2PMessageRes = JSON.stringify(e);
         }
       },
+
+      sendP2PMessage_Key32() {
+        this.sendP2PMessage_MultiKey(32)
+      },
+      sendP2PMessage_Key33() {
+        this.sendP2PMessage_MultiKey(33)
+      },
+
+      async sendP2PMessage_MultiKey(size) {
+        if (!this.hummer) {
+          log4test("hummer not init");
+          return;
+        }
+
+        try {
+          let content = this.sendP2PMessageReq.content;
+          let receiver = this.sendP2PMessageReq.receiver;
+          let isOffline = this.sendP2PMessageReq.options.isOffline || false;
+
+          let message = Hummer.createMessage(0, content);
+          log4test("createMessage success");
+          console.log("createMessage message=", message);
+          
+          let appExtras = generateAttributes(size, "p2p")
+
+          let req = {
+            receiver: receiver,
+            message: message,
+            appExtras: appExtras,
+            options: { isOffline: isOffline },
+          };
+
+          log4test("sendP2PMessage req=", req);
+
+          this.sendP2PMessage_Key32Res = '';
+          const res = await this.hummer.sendP2PMessage(req);
+          log4test("sendP2PMessage res=", res);
+          this.sendP2PMessage_Key32Res = JSON.stringify(res);
+
+        } catch(e) {
+          log4test("sendP2PMessage res=", e);
+          this.sendP2PMessage_Key32Res = JSON.stringify(e);
+        }
+
+
+      },
+
+
       updateChannelJoinStatus(join) {
         if (!this.channel)
           return;
