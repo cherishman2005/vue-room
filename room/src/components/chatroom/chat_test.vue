@@ -1602,16 +1602,18 @@
         log4test("getConnectionState=" + this.state);
       },
 
+      /* ------ 拉取历史消息 ------ */
+      selectBlur(e) {
+        this.fetchHistoryMessagesReq.anchor = e.target.value;
+      },
       getAnchors(msgs) {
         let anchors = [];
-        for (let msg of msgs) {
+        for (let [i, msg] of msgs.entries()){
           let time = timestampToTime(msg.timestamp);
-          anchors.push({value: `${msg.timestamp}:${msg.uuid}`, label: `#${time}#${msg.uuid}`});
+          anchors.push({value: `${msg.timestamp}:${msg.uuid}`, label: `#${i+1}#${time}#${msg.uuid}`});
         }
         return anchors;
       },
-
-      /* ------ 拉取历史消息 ------ */
       async fetchHistoryMessages() {
         if (!this.chatClient) {
           log4test("chatroom not init");
