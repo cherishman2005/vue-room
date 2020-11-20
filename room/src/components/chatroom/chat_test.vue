@@ -472,8 +472,22 @@
               <el-form-item label="limit">
                 <el-input v-model="fetchHistoryMessagesReq.limit" style="width:100px;"></el-input>
               </el-form-item>
+              <!--
               <el-form-item label="anchor">
                 <el-input v-model="fetchHistoryMessagesReq.anchor" style="width:250px;"></el-input>
+              </el-form-item>
+              -->
+              <el-form-item label="anchor">
+                <template>
+                  <el-select v-model="fetchHistoryMessagesReq.anchor" placeholder="anchor" filterable @blur="selectBlur" style="width:250px;">
+                    <el-option
+                      v-for="item in anchors"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </template>
               </el-form-item>
               <el-form-item class="search">
                 <el-button type="primary" @click="fetchHistoryMessages" style="border-radius:4px">fetchHistoryMessages</el-button>
@@ -974,6 +988,7 @@
         fetchUserOnlineStatusReq: {
           uids: '',
         },
+        anchor: {},
         fetchUserOnlineStatusRes: '',
         isOffline: [{
             value: false,
@@ -1584,6 +1599,14 @@
         log4test("getConnectionState=" + this.state);
       },
 
+      getAnchors(msgs) {
+        let anchors = [];
+        for (let msg of msgs) {
+          anchors.push({value: `${msg.timestamp}:${msg.uuid}`, label: `#${msg.timestamp}#${msg.uuid}`});
+        }
+        return anchors;
+      },
+
       /* ------ 拉取历史消息 ------ */
       async fetchHistoryMessages() {
         if (!this.chatClient) {
@@ -1606,6 +1629,8 @@
           let limit = this.fetchHistoryMessagesReq.limit;
 
           let anchor = this.fetchHistoryMessagesReq.anchor;
+          console.log("fetchHistoryMessages: anchor=", anchor);
+
           let req;
           if (!anchor || anchor.length === 0) {
             req = { msgTypes, direction, limit };
@@ -1622,6 +1647,9 @@
           res.size = res.msgs.length || 0; 
           log4test("fetchHistoryMessages res=", res);
           this.fetchHistoryMessagesRes = JSON.stringify(res);
+          if (res.rescode === 0) {
+            this.anchors = this.getAnchors(res.msgs || []);
+          }
         } catch(e) {
           log4test("fetchHistoryMessages res=", e);
           this.fetchHistoryMessagesRes = JSON.stringify(e);
