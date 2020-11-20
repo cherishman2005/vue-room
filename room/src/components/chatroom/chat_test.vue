@@ -853,11 +853,7 @@
   const log4test = (info, ext, ...args) => {
     let date = new Date();
     let timestamp = date.toLocaleTimeString('en-US', { hour12: false}) + "." + padMs(date.getMilliseconds())
-    if (!args) {
-      console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + (ext ? JSON.stringify(ext) : ""))
-    } else {
-      console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + (ext ? JSON.stringify(ext) : ""), ...args)
-    }
+    console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + (ext ? JSON.stringify(ext) : ""), ...args)
   }
 
   const UID = getStorage('uid');
