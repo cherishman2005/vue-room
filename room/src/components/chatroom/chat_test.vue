@@ -678,8 +678,8 @@
 
         <el-divider content-position="left">特殊案例</el-divider>
         <el-row type="flex" class="row-bg">
-          <el-button @click="sendP2PMessage_Key32" type="primary" size="small">P2PMessage设置32个属性</el-button>
-          <el-button @click="sendP2PMessage_Key33" type="primary" size="small">P2PMessage设置33个属性</el-button>
+          <el-button @click="sendP2PMessage_MultiKey(32)" type="primary" size="small">P2PMessage设置32个属性</el-button>
+          <el-button @click="sendP2PMessage_MultiKey(33)" type="primary" size="small">P2PMessage设置33个属性</el-button>
         </el-row>
         <div class="text">
           <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{sendP2PMessage_Key32Res}}</p>
@@ -785,8 +785,8 @@
 
         <el-divider content-position="left">特殊案例</el-divider>
         <el-row type="flex" class="row-bg">
-          <el-button @click="sendP2CMessage_Key32" type="primary" size="small">P2CMessage设置32个属性</el-button>
-          <el-button @click="sendP2CMessage_Key33" type="primary" size="small">P2CMessage设置33个属性</el-button>
+          <el-button @click="sendP2CMessage_MultiKey(32)" type="primary" size="small">P2CMessage设置32个属性</el-button>
+          <el-button @click="sendP2CMessage_MultiKey(33)" type="primary" size="small">P2CMessage设置33个属性</el-button>
         </el-row>
         <div class="text">
           <p class="rsp-text" style="height:20px" type="textarea" contenteditable="false">{{sendP2CMessage_Key32Res}}</p>
@@ -1936,14 +1936,6 @@
           this.sendP2PMessageRes = JSON.stringify(e);
         }
       },
-
-      sendP2PMessage_Key32() {
-        this.sendP2PMessage_MultiKey(32)
-      },
-      sendP2PMessage_Key33() {
-        this.sendP2PMessage_MultiKey(33)
-      },
-
       async sendP2PMessage_MultiKey(size) {
         if (!this.hummer) {
           log4test("hummer not init");
@@ -1979,10 +1971,7 @@
           log4test("sendP2PMessage res=", e);
           this.sendP2PMessage_Key32Res = JSON.stringify(e);
         }
-
-
       },
-
 
       updateChannelJoinStatus(join) {
         if (!this.channel)
@@ -2097,13 +2086,6 @@
           log4test("sendP2CMessage res=", e);
           this.sendP2CMessageRes = JSON.stringify(e);
         }
-      },
-
-      sendP2CMessage_Key32() {
-        this.sendP2CMessage_MultiKey(32)
-      },
-      sendP2CMessage_Key33() {
-        this.sendP2CMessage_MultiKey(33)
       },
       async sendP2CMessage_MultiKey(size) {
         if (!this.channel) {
