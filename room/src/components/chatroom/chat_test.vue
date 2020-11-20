@@ -850,10 +850,14 @@
   //import Hummer from 'hummer-chatroom-sdk'
 
   const DEMO_TAG = "chatroom-demo"
-  const log4test = (info, ext) => {
+  const log4test = (info, ext, ...args) => {
     let date = new Date();
     let timestamp = date.toLocaleTimeString('en-US', { hour12: false}) + "." + padMs(date.getMilliseconds())
-    console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + (ext ? JSON.stringify(ext) : ""))
+    if (!args) {
+      console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + (ext ? JSON.stringify(ext) : ""))
+    } else {
+      console.log(`${DEMO_TAG} ${timestamp} : ${info} ` + (ext ? JSON.stringify(ext) : ""), ...args)
+    }
   }
 
   const UID = getStorage('uid');
@@ -1649,7 +1653,7 @@
           this.fetchHistoryMessagesRes = '';
           let res = await this.chatClient.chatroom.fetchHistoryMessages(req);
           res.size = res.msgs.length || 0; 
-          log4test("fetchHistoryMessages res=", res);
+          log4test("fetchHistoryMessages res=", res, "size=", res.size, "hasMore=", res.hasMore);
           this.fetchHistoryMessagesRes = JSON.stringify(res);
           if (res.rescode === 0) {
             this.anchors = this.getAnchors(res.msgs || []);
