@@ -467,16 +467,20 @@
                 <el-input v-model="fetchHistoryMessagesReq.msgTypes" style="width:50px;"></el-input>
               </el-form-item>
               <el-form-item label="direction">
-                <el-input v-model="fetchHistoryMessagesReq.direction" style="width:50px;"></el-input>
+                <template>
+                  <el-select v-model="fetchHistoryMessagesReq.direction" placeholder="direction" style="width:100px;">
+                    <el-option
+                      v-for="item in direction"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </template>
               </el-form-item>
               <el-form-item label="limit">
                 <el-input v-model="fetchHistoryMessagesReq.limit" style="width:100px;"></el-input>
               </el-form-item>
-              <!--
-              <el-form-item label="anchor">
-                <el-input v-model="fetchHistoryMessagesReq.anchor" style="width:250px;"></el-input>
-              </el-form-item>
-              -->
               <el-form-item label="anchor">
                 <template>
                   <el-select v-model="fetchHistoryMessagesReq.anchor" placeholder="anchor" filterable @blur="selectBlur" style="width:250px;">
@@ -973,6 +977,13 @@
         sendTextChatAttributes: {},
         sendSingleUserAttributes: {},
         sendGroupMessageAttributes: {},
+        direction: [{
+          value: 0,
+          label: 'OLD(0)'
+        }, {
+          value: 1,
+          label: 'NEW(1)'
+        }],
         fetchHistoryMessagesReq: {
           msgTypes: '0',
           direction: 0,
@@ -1643,7 +1654,7 @@
           }
           
           let direction = this.fetchHistoryMessagesReq.direction;
-          let limit = this.fetchHistoryMessagesReq.limit;
+          let limit = Number(this.fetchHistoryMessagesReq.limit);
 
           let anchor = this.fetchHistoryMessagesReq.anchor;
           console.log("fetchHistoryMessages: anchor=", anchor);
@@ -1653,9 +1664,9 @@
             req = { msgTypes, direction, limit };
           } else {
             let items = anchor.split(":");
-            let anchorTimestamp = Number(items[0]) || 0;
-            let anchorUuid = items[1] || "";
-            req = { msgTypes, direction, limit, anchorUuid, anchorTimestamp };
+            let timestamp = Number(items[0]) || 0;
+            let uuid = items[1] || "";
+            req = { msgTypes, direction, limit, anchor: {uuid, timestamp} };
           }
           log4test('fetchHistoryMessages req=', req);
 
