@@ -681,6 +681,28 @@
         </el-dialog>
 
         <el-divider content-position="left">特殊案例</el-divider>
+
+        <p class="text-unit">批量查询在线状态(该特殊案例只支持53bit uid)</p>
+        <el-row type="flex" class="row-bg">
+          <el-col :span="24" style="height:35px; text-align:left;" >
+            <el-form :inline="true" size="small">
+              <el-form-item label="uid_start">
+                <el-input v-model="uids.start" style="width:250px;"></el-input>
+              </el-form-item>
+              <el-form-item label="uid_len">
+                <el-input v-model="uids.len" style="width:150px;"></el-input>
+              </el-form-item>
+              <el-form-item class="search">
+                <el-button type="primary" @click="fetchUserOnlineStatus_Uids" style="border-radius:4px">fetchUserOnlineStatus_Uids</el-button>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+        <div class="text">
+          <p class="rsp-text" type="textarea" contenteditable="false">{{fetchUserOnlineStatus_UidsRes}}</p>
+        </div>
+
+
         <el-row type="flex" class="row-bg">
           <el-button @click="sendP2PMessage_MultiKey(32)" type="primary" size="small">P2PMessage设置32个属性</el-button>
           <el-button @click="sendP2PMessage_MultiKey(33)" type="primary" size="small">P2PMessage设置33个属性</el-button>
@@ -1039,6 +1061,8 @@
         update32RoomExtraAttributesRes: "",
         sendP2PMessage_Key32Res: "",
         sendP2CMessage_Key32Res: "",
+        uids: { start: UID, len: 200 },
+        fetchUserOnlineStatus_UidsRes: '',
       }
     },
     components: {
@@ -1420,7 +1444,6 @@
 
         try {
           let chat = this.sendTextChatReq.chat;
-          //let chatProps = this.sendTextChatAttributes;
           let extra = this.sendTextChatReq.extra;
           let kvExtra = this.sendTextExtAttributes;
 
@@ -1909,6 +1932,34 @@
           this.fetchUserOnlineStatusRes = JSON.stringify(e);
         }
       },
+      async fetchUserOnlineStatus_Uids() {
+        if (!this.hummer) {
+          log4test("hummer not init");
+          return;
+        }
+
+        try {
+          let uid_start = Number(this.uids.start || UID);
+          let uid_len = Number(this.uids.len) || 200;
+
+          let uids = [];
+          for (let i = 0; i < uid_len; i++) {
+            let uid = uid_start + i;
+            uids.push(uid.toString());
+          }
+
+          let req = { uids };
+          log4test('fetchUserOnlineStatus req=', req);
+
+          this.fetchUserOnlineStatus_UidsRes = '';
+          const res = await this.hummer.fetchUserOnlineStatus(req);
+          log4test("fetchUserOnlineStatus res=", res);
+          this.fetchUserOnlineStatus_UidsRes = JSON.stringify(res);
+        } catch(e) {
+          log4test("fetchUserOnlineStatus res=", e);
+          this.fetchUserOnlineStatus_UidsRes = JSON.stringify(e);
+        }
+      },
       getPeerAppExtras(data) {
         console.log('getPeerAppExtras appExtras=', data);
         this.peerAppExtras = data;
@@ -1995,8 +2046,8 @@
       updateChannelJoinStatusByRegionAndChannelId(region, channelId, join) {
         let regionChannelId = getRegionChannelId(region, channelId);
         if (this.channels[this.regionChannelId]) {
-          let target = this.regionChannelIds.find( (value, index, arr) => {
-            return value.label === regionChannelId;
+          let target = this.regionChannelIds.find((item, index, arr) => {
+            return item.value === regionChannelId;
           })
           if (target) {
             target.hasJoin = join;
@@ -2015,7 +2066,11 @@
         }
 
         this.channels[this.regionChannelId] = data;
-        this.regionChannelIds.push({value: this.regionChannelId, label: this.regionChannelId, hasJoin: false});
+        //this.regionChannelIds.push({value: this.regionChannelId, label: this.regionChannelId, hasJoin: false});
+        this.regionChannelIds.push({value: this.regionChannelId, hasJoin: false});
+        for (let [i, item] of this.regionChannelIds.entries()) {
+          item.label = `#${i+1}#${item.value}`;
+        }
 
         console.log('channels=', this.channels);
 
