@@ -374,7 +374,7 @@
                 <el-input v-model="getUserListReq.pos"></el-input>
               </el-form-item>
               <el-form-item class="search">
-                <el-button type="primary" @click="getUserList" style="border-radius:4px">GetUserList</el-button>
+                <el-button type="primary" @click="getUserList" style="border-radius:4px">getUserList</el-button>
               </el-form-item>
             </el-form>
           </el-col>
