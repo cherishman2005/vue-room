@@ -723,13 +723,13 @@
               </el-form-item>
               <el-form-item label="Channel列表[region:channelId](用于选择Channel)">
                 <template>
-                  <el-select v-model="regionChannelId" placeholder="" style="width: 200px;">
+                  <el-select v-model="regionChannelId" placeholder="" style="width:200px;">
                     <el-option
                       v-for="item in regionChannelIds"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
-                      <span style="float: left;" >{{ item.label.substr(0, Math.min(item.label.length, 30))}}</span>
+                      <span style="float: left;" >{{ item.label.substr(0, Math.min(item.label.length, 30)) }}</span>
                       <el-tooltip class="item" effect="light" :content="item.label" placement="right-end">
                       <span v-if="item.hasJoin" style="float: right; color: #00FF7F; font-size: 13px">已加入</span>
                       <span v-else style="float: right; color: #8492a6; font-size: 13px; margin-left: 5px">未加入</span>
@@ -1209,8 +1209,13 @@
           log4test("logout res=" + JSON.stringify(res));
           this.loginRes = JSON.stringify(res);
           if (res.rescode === 0) {
-            this.chatrooms = [];
-            this.regionChatroomIds = [];
+            //this.chatrooms = [];
+            //this.regionChatroomIds = [];
+            //this.channels = [];
+            //this.regionChannelIds = [];
+            this.regionChannelIds.forEach(item => {
+              item.hasJoin = false;
+            });
           }
         } catch(e) {
           log4test("logout res=", e);
@@ -1821,7 +1826,6 @@
           let keys_str = this.fetchRoomExtraAttributesReq.extraKeys;
 
           let extraKeys = [];
-
           let elements = keys_str.split(",");
           for (let k of elements) {
             if (k.length > 0) {
