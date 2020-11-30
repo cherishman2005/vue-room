@@ -1363,9 +1363,9 @@
           const res = await this.chatClient.chatroom.dismissChatRoom();
           log4test("dismissChatRoom res=" + JSON.stringify(res));
           this.dismissChatRoomRes = JSON.stringify(res);
-          if (res.rescode == 0) {
-            delete this.chatClient;
-            this.chatClient = null;
+          if (res.rescode === 0) {
+            delete this.chatrooms[this.regionChatroomId];
+            this.chatrooms[this.regionChatroomId] = null;
             this.roomid = 0;
             setStorage("roomid", this.roomid);
           }
