@@ -1700,11 +1700,13 @@
 
           this.fetchHistoryMessagesRes = '';
           let res = await this.chatClient.chatroom.fetchHistoryMessages(req);
-          res.size = res.msgs.length || 0; 
-          log4test("fetchHistoryMessages res=", res, "size=", res.size, "hasMore=", res.hasMore);
-          this.fetchHistoryMessagesRes = JSON.stringify(res);
-          if (res.rescode === 0) {
+          if (res.rescode == 0) {
+            res.size = res.msgs.length || 0; 
+            log4test("fetchHistoryMessages res=", res, "size=", res.size, "hasMore=", res.hasMore);
+            this.fetchHistoryMessagesRes = JSON.stringify(res);
             this.anchors = this.getAnchors(res.msgs || []);
+          } else {
+            this.fetchHistoryMessagesRes = JSON.stringify(res);
           }
         } catch(e) {
           log4test("fetchHistoryMessages res=", e);
