@@ -967,7 +967,7 @@
         sendSingleUserMessageRes: '',
         sendTextChatReq: {
           chat: "js_sdk sendTextChat",
-          extra: 'extra',
+          extra: '',
         },
         sendTextChatRes: '',
         getChatRoomAttributesRes: '',
