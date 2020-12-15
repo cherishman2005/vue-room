@@ -354,7 +354,7 @@
                 <el-input v-model="getUserCountReq.roomid" style="width:150px;"></el-input>
               </el-form-item>
               <el-form-item class="search">
-                <el-button type="primary" @click="getUserCount" style="border-radius:4px">getUserCount</el-button>
+                <el-button type="primary" @click="getChatRoomUserCount" style="border-radius:4px">getChatRoomUserCount</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -1430,11 +1430,11 @@
           let kvExtra = this.sendSingleUserAttributes;
 
           let req = { content, receiver, kvExtra };
-          log4test("sendSingleUserMessage req=" +  JSON.stringify(req));
+          log4test("sendSingleUserMessage req=" + JSON.stringify(req));
 
           this.sendSingleUserMessageRes = '';
           const res = await this.chatClient.chatroom.sendSingleUserMessage(req);
-          log4test("sendSingleUserMessage res=" +  JSON.stringify(res));
+          log4test("sendSingleUserMessage res=" + JSON.stringify(res));
           this.sendSingleUserMessageRes = JSON.stringify(res);
         } catch(e) {
           log4test("sendSingleUserMessage res=", e);
@@ -1505,7 +1505,7 @@
           this.muteUserRes = JSON.stringify(res);
           log4test("unMuteUser res=" + JSON.stringify(res));
         } catch (e) {
-          console.log("unMuteUser err=", e);
+          log4test("unMuteUser res=", e);
           this.muteUserRes = JSON.stringify(e);
         };
       },
@@ -1622,7 +1622,7 @@
           this.getUserAttributesListRes = JSON.stringify(e);
         }
       },
-      async getUserCount() {
+      async getChatRoomUserCount() {
         if (!this.hummer) {
           log4test("hummer not init");
           return;
@@ -1631,14 +1631,15 @@
         const region = this.getUserCountReq.region;
         const roomid = Number(this.getUserCountReq.roomid);
         const req = {region, roomid};
+        log4test("getChatRoomUserCount req=", req);
 
         this.getUserCountRes = '';
         this.hummer.getChatRoomUserCount(req).then((res) => {
-          console.log("getChatRoomUserCount Res: " + JSON.stringify(res));
+          log4test("getChatRoomUserCount res=" + JSON.stringify(res));
           this.getUserCountRes = JSON.stringify(res);
         }).catch(e => {
-          console.log(e)
           this.getUserCountRes = JSON.stringify(e);
+          log4test("getChatRoomUserCount res=", e);
         })
       },
       getConnectionState() {
@@ -1707,6 +1708,7 @@
             this.anchors = this.getAnchors(res.msgs || []);
           } else {
             this.fetchHistoryMessagesRes = JSON.stringify(res);
+            log4test("fetchHistoryMessages res=", res);
           }
         } catch(e) {
           log4test("fetchHistoryMessages res=", e);
@@ -1813,7 +1815,7 @@
           log4test("clearRoomExtraAttributes res=", res);
           this.clearRoomExtraAttributesRes = JSON.stringify(res);
         } catch(e) {
-          log4test("clearRoomExtraAttributes err:", e);
+          log4test("clearRoomExtraAttributes res=", e);
           this.clearRoomExtraAttributesRes = JSON.stringify(e);
         }
       },
@@ -1869,10 +1871,10 @@
 
           this.set32RoomExtraAttributesRes = '';
           const res = await this.chatClient.chatroom.setRoomExtraAttributes(req);
-          log4test("setRoomExtraAttributes res=" , res);
+          log4test("setRoomExtraAttributes res=", res);
           this.set32RoomExtraAttributesRes = JSON.stringify(res);
         } catch(e) {
-          log4test("setRoomExtraAttributes res=" , e);
+          log4test("setRoomExtraAttributes res=", e);
           this.set32RoomExtraAttributesRes = JSON.stringify(e);
         }
 
@@ -1899,10 +1901,10 @@
 
           this.update32RoomExtraAttributesRes = '';
           const res = await this.chatClient.chatroom.updateRoomExtraAttributes(req);
-          log4test("updateRoomExtraAttributes res=" , res);
+          log4test("updateRoomExtraAttributes res=", res);
           this.update32RoomExtraAttributesRes = JSON.stringify(res);
         } catch(e) {
-          log4test("updateRoomExtraAttributes res=" , e);
+          log4test("updateRoomExtraAttributes res=", e);
           this.update32RoomExtraAttributesRes = JSON.stringify(e);
         }
 
