@@ -521,6 +521,26 @@
       <p class="rsp-text" type="textarea" contenteditable="false">sub:{{subscribeBcGroupRes}} unsub:{{unSubscribeBcGroupRes}}</p>
     </div>
 
+    <p class="text-unit">订阅/退订广播组V2</p>
+    <el-row type="flex">
+      <el-col :span="24" style="height:30px;text-align:left;" >
+        <el-form :inline="true" size="small">
+          <el-form-item label="groupnames">
+            <el-input v-model="groupnames"></el-input>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="subscribeBcGroupV2" style="border-radius: 4px">subscribeBcGroupV2</el-button>
+          </el-form-item>
+          <el-form-item class="search">
+            <el-button type="primary" @click="unSubscribeBcGroupV2" style="border-radius: 4px">unSubscribeBcGroupV2</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <div class="text">
+      <p class="rsp-text" type="textarea" contenteditable="false">sub:{{subscribeBcGroupV2Res}} unsub:{{unSubscribeBcGroupV2Res}}</p>
+    </div>
+
     <p class="text-unit">发送上行消息</p>
     <el-row type="flex" class="row-bg">
       <el-col :span="24" style="height:35px; text-align:left;" >
@@ -553,7 +573,7 @@
   const TOKEN = getStorage('token');
 
   export default {
-    name: 'chatroom-test',
+    name: 'chatroom-svc-test',
     data() {
       return {
         hummer: null,
@@ -651,6 +671,9 @@
         groupId: '1577406886',
         subscribeBcGroupRes: '',
         unSubscribeBcGroupRes: '',
+        subscribeBcGroupV2Res: '',
+        unSubscribeBcGroupV2Res: '',
+        groupnames: '',
         sendDataRes: '',
       }
     },
@@ -695,84 +718,6 @@
     mounted() {
     },
     methods: {
-      showRefreshTokenModel() {
-        this.$store.commit('updateRefreshTokenModelVisible', true);
-      },
-      closeRefreshTokenModel() {
-        this.$store.commit('updateRefreshTokenModelVisible', false)
-      },
-      showCreateGroupModel() {
-        this.$store.commit('updateCreateGroupModelVisible', true);
-      },
-      closeCreateGroupModel() {
-        this.$store.commit('updateCreateGroupModelVisible', false)
-      },
-      showSetGroupAttributesModel() {
-        this.$store.commit('updateSetGroupAttributesVisible', true);
-      },
-      closeSetGroupAttributesModel() {
-        this.$store.commit('updateSetGroupAttributesVisible', false)
-      },
-
-      showJoinChatRoomPropsModel() {
-        this.$store.commit('updateJoinChatRoomPropsVisible', true);
-      },
-      closeJoinChatRoomPropsModel() {
-        this.$store.commit('updateJoinChatRoomPropsVisible', false)
-      },
-
-      showUpdateGroupAttributesModel() {
-        this.$store.commit('updateUpdateGroupAttributesVisible', true);
-      },
-      closeUpdateGroupAttributesModel() {
-        this.$store.commit('updateUpdateGroupAttributesVisible', false)
-      },
-      showSetGroupUserAttributesModel() {
-        this.$store.commit('updateSetGroupUserAttributesVisible', true);
-      },
-      closeSetGroupUserAttributesModel() {
-        this.$store.commit('updateSetGroupUserAttributesVisible', false)
-      },
-      showSendTextExtAttributesModel() {
-        this.$store.commit('updateSendTextExtAttributesVisible', true);
-      },
-      closeSendTextExtAttributesModel() {
-        this.$store.commit('updateSendTextExtAttributesVisible', false);
-      },
-      showSendSingleUserAttributesModel () {
-        this.$store.commit('updateSendSingleUserAttributesVisible', true);
-      },
-      closeSendSingleUserAttributesModel () {
-        this.$store.commit('updateSendSingleUserAttributesVisible', false);
-      },
-      showSendGroupMessageAttributesModel () {
-        this.$store.commit('updateSendGroupMessageAttributesVisible', true);
-      },
-      closeSendGroupMessageAttributesModel () {
-        this.$store.commit('updateSendGroupMessageAttributesVisible', false);
-      },
-      showSendTextChatAttributesModel () {
-        this.$store.commit('updateSendTextChatAttributesVisible', true);
-      },
-      closeSendTextChatAttributesModel () {
-        this.$store.commit('updateSendTextChatAttributesVisible', false);
-      },
-      onSendTextChatAttributes (data) {
-        console.log('onSendTextChatAttributes attributes=', data)
-        this.sendTextChatAttributes = data
-      },
-      onSendSingleUserAttributes (data) {
-        console.log('onSendSingleUserAttributes attributes=', data)
-        this.sendSingleUserAttributes = data
-      },
-      onSendTextExtAttributes (data) {
-        console.log('onSendTextAttributes attributes=', data)
-        this.sendTextExtAttributes = data
-      },
-      onSendGroupMessageAttributes (data) {
-        console.log('onSendGroupMessageAttributes attributes=', data)
-        this.sendGroupMessageAttributes = data
-      },
       getChatRoom(data) {
         console.log('getChatRoom data=', data);
 
@@ -789,14 +734,6 @@
           return;
         }
 
-        /*
-        let attributes = {
-          "Name": "Hummer聊天室",
-          "Description": "测试",
-          "Bulletin": "公告",
-          "Extention": "自定义",
-        };
-        */
         let attributes = this.setGroupAttributes;
 
         this.$confirm('创建chatroom聊天室?', '提示', {
@@ -924,7 +861,7 @@
 
         this.joinOrLeaveRes = '';
         this.chatClient.chatroom.joinChatRoom(req).then(res => {
-          console.log("joinChatRoom Res: " + JSON.stringify(res));
+          console.log("joinChatRoom res=", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
           console.error("joinChatRoom", err);
@@ -937,7 +874,7 @@
 
         this.joinOrLeaveRes = '';
         this.chatClient.chatroom.leaveChatRoom().then((res) => {
-          console.log("leaveChatRoom Res: " + JSON.stringify(res));
+          console.log("leaveChatRoom res=", res);
           this.joinOrLeaveRes = JSON.stringify(res);
         }).catch(err => {
           console.error("leaveChatRoom", err);
@@ -952,14 +889,6 @@
         if (!this.chatClient)
           return;
 
-        /*
-        let attributes = {
-          "Name": "nginx大讲堂",
-          "Description": "全栈技术",
-          "Bulletin": "bull",
-          "AppExtra": "ex",
-        };
-        */
         let attributes = this.groupAttributes || {};
 
         let req = { attributes };
@@ -967,7 +896,7 @@
         this.updateChatRoomAttributesRes = '';
         this.chatClient.chatroom.updateChatRoomAttributes(req).then((res) => {
           this.updateChatRoomAttributesRes = JSON.stringify(res);
-          console.log("updateChatRoomAttributes Res: " + JSON.stringify(res));
+          console.log("updateChatRoomAttributes res=" + JSON.stringify(res));
         }).catch(err => {
           console.log(err)
           this.updateChatRoomAttributesRes = JSON.stringify(err);
@@ -979,7 +908,7 @@
 
         this.dismissChatRoomRes = '';
         this.chatClient.chatroom.dismissChatRoom().then((res) => {
-          console.log("dismissChatRoom Res: ", res);
+          console.log("dismissChatRoom res=", res);
           this.dismissChatRoomRes = JSON.stringify(res);
           if (res.rescode == 0) {
             delete this.chatClient;
@@ -1037,7 +966,7 @@
         let req = { content, receiver, kvExtra };
         this.sendSingleUserMessageRes = '';
         this.chatClient.chatroom.sendSingleUserMessage(req).then(res => {
-          console.log("sendSingleUserMessage res: " +  JSON.stringify(res));
+          console.log("sendSingleUserMessage res=", res);
           this.sendSingleUserMessageRes = JSON.stringify(res);
         }).catch(err => {
           console.log(err)
@@ -1049,14 +978,12 @@
           return;
 
         let chat = this.sendTextChatReq.chat;
-        //let chatProps = this.sendTextChatAttributes;
         let extra = this.sendTextChatReq.extra;
         let kvExtra = this.sendTextExtAttributes;
 
         let req = { chat, extra, kvExtra }
 
         this.sendTextChatRes = '';
-        console.log(1111, req)
         this.chatClient.chatroom.sendTextChat(req).then(res => {
           console.log("sendTextChat res: " + JSON.stringify(res));
           this.sendTextChatRes = JSON.stringify(res);
@@ -1172,17 +1099,6 @@
         if (!this.chatClient)
           return;
 
-        /*
-        let attributes = {
-          "Name": "awu",
-          "Description": "js_sdk测试",
-          "Bulletin": "bull",
-          "Extention": "ex"
-        };
-        let key = this.setUserAttributesReq.key;
-        let prop = this.setUserAttributesReq.prop;
-        attributes[key] = prop;
-        */
         let attributes = this.groupUserAttributes || {};
 
         let req = { attributes };
@@ -1441,9 +1357,48 @@
           console.error("unSubscribeBcGroup err=", e);
         }
       },
+      async subscribeBcGroupV2() {
+        if (!this.svc)
+          return;
+
+        try {
+          let groupnames = [];
+          let elements = this.groupnames.split(",");
+          for (let el of elements) {
+            if (el.length > 0) {
+              groupnames.push(el);
+            }
+          }
+          const res = await this.svc.subscribeBcGroupV2(groupnames);
+          console.log("subscribeBcGroupV2 res=", res);
+          this.subscribeBcGroupV2Res = JSON.stringify(res);
+        } catch(e) {
+          console.error("subscribeBcGroupV2 err=", e);
+        }
+      },
+      async unSubscribeBcGroupV2() {
+        if (!this.svc)
+          return;
+
+        try {
+          let groupnames = [];
+          let elements = this.groupnames.split(",");
+          for (let el of elements) {
+            if (el.length > 0) {
+              groupnames.push(el);
+            }
+          }
+          const res = await this.svc.unSubscribeBcGroupV2(groupnames);
+          console.log("unSubscribeBcGroupV2 res=", res);
+          this.unSubscribeBcGroupV2Res = JSON.stringify(res);
+        } catch(e) {
+          console.error("unSubscribeBcGroupV2 err=", e);
+        }
+      },
       onMessageReceived(svc) {
         const eventName = [
           'BroadcastMessage',
+          'BroadcastMessageV2',
           'UnicastMessage'
         ];
 
@@ -1452,7 +1407,86 @@
             console.log(`接收数据${eventName}：` + JSON.stringify(data));
           });
         });
-      }
+      },
+
+      showRefreshTokenModel() {
+        this.$store.commit('updateRefreshTokenModelVisible', true);
+      },
+      closeRefreshTokenModel() {
+        this.$store.commit('updateRefreshTokenModelVisible', false)
+      },
+      showCreateGroupModel() {
+        this.$store.commit('updateCreateGroupModelVisible', true);
+      },
+      closeCreateGroupModel() {
+        this.$store.commit('updateCreateGroupModelVisible', false)
+      },
+      showSetGroupAttributesModel() {
+        this.$store.commit('updateSetGroupAttributesVisible', true);
+      },
+      closeSetGroupAttributesModel() {
+        this.$store.commit('updateSetGroupAttributesVisible', false)
+      },
+
+      showJoinChatRoomPropsModel() {
+        this.$store.commit('updateJoinChatRoomPropsVisible', true);
+      },
+      closeJoinChatRoomPropsModel() {
+        this.$store.commit('updateJoinChatRoomPropsVisible', false)
+      },
+
+      showUpdateGroupAttributesModel() {
+        this.$store.commit('updateUpdateGroupAttributesVisible', true);
+      },
+      closeUpdateGroupAttributesModel() {
+        this.$store.commit('updateUpdateGroupAttributesVisible', false)
+      },
+      showSetGroupUserAttributesModel() {
+        this.$store.commit('updateSetGroupUserAttributesVisible', true);
+      },
+      closeSetGroupUserAttributesModel() {
+        this.$store.commit('updateSetGroupUserAttributesVisible', false)
+      },
+      showSendTextExtAttributesModel() {
+        this.$store.commit('updateSendTextExtAttributesVisible', true);
+      },
+      closeSendTextExtAttributesModel() {
+        this.$store.commit('updateSendTextExtAttributesVisible', false);
+      },
+      showSendSingleUserAttributesModel () {
+        this.$store.commit('updateSendSingleUserAttributesVisible', true);
+      },
+      closeSendSingleUserAttributesModel () {
+        this.$store.commit('updateSendSingleUserAttributesVisible', false);
+      },
+      showSendGroupMessageAttributesModel () {
+        this.$store.commit('updateSendGroupMessageAttributesVisible', true);
+      },
+      closeSendGroupMessageAttributesModel () {
+        this.$store.commit('updateSendGroupMessageAttributesVisible', false);
+      },
+      showSendTextChatAttributesModel () {
+        this.$store.commit('updateSendTextChatAttributesVisible', true);
+      },
+      closeSendTextChatAttributesModel () {
+        this.$store.commit('updateSendTextChatAttributesVisible', false);
+      },
+      onSendTextChatAttributes (data) {
+        console.log('onSendTextChatAttributes attributes=', data)
+        this.sendTextChatAttributes = data
+      },
+      onSendSingleUserAttributes (data) {
+        console.log('onSendSingleUserAttributes attributes=', data)
+        this.sendSingleUserAttributes = data
+      },
+      onSendTextExtAttributes (data) {
+        console.log('onSendTextAttributes attributes=', data)
+        this.sendTextExtAttributes = data
+      },
+      onSendGroupMessageAttributes (data) {
+        console.log('onSendGroupMessageAttributes attributes=', data)
+        this.sendGroupMessageAttributes = data
+      },
     }
   }
 </script>
