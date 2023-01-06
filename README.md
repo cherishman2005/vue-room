@@ -12,7 +12,7 @@ zhangbiwu
 
 * 后端研发
   * nginx/openresty
-  * C/C++
+  * C/C++/golang
   * nodejs
   * js-sdk
   * RTM/RTC
